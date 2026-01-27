@@ -26,36 +26,100 @@ namespace MedicalAppointmentWebApp.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
 
                     b.Property<string>("Amka")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)")
+                        .HasColumnName("amka");
 
                     b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)")
+                        .HasColumnName("email");
 
                     b.Property<int>("Gender")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("gender");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("password");
 
                     b.Property<int>("Phone")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("phone");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("surname");
+
+                    b.Property<DateTime>("registrationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("registration_date");
+
+                    b.Property<string>("role")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
+
+                    b.HasDiscriminator<string>("role").HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.HasDiscriminator().HasValue("admin");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("bio");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("image");
+
+                    b.Property<int>("Specialty")
+                        .HasColumnType("int")
+                        .HasColumnName("speciality");
+
+                    b.HasDiscriminator().HasValue("doctor");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.HasDiscriminator().HasValue("atient");
                 });
 #pragma warning restore 612, 618
         }

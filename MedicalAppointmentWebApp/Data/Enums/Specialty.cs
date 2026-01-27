@@ -1,0 +1,38 @@
+﻿namespace MedicalAppointmentWebApp.Data.Enums
+{
+    public enum Specialty
+    {
+        Allergy_And_Clinical_Immunology,
+        Anesthesiology,
+        Cardiology,
+        Critical_Care,
+        Dermatology,
+        Diabetes_And_Endocrinology,
+        Emergency_Medicine,
+        Family_Medicine,
+        Gastroenterology,
+        General_Surgery,
+        Hematology,
+        Oncology,
+        HIV_AIDS,
+        Hospital_Medicine,
+        Infectious_Diseases,
+        Internal_Medicine,
+        Multispecialty,
+        Nephrology,
+        Neurology,
+        Womens_Health,
+        Ophthalmology,
+        Orthopedics,
+        Pathology_And_Lab_Medicine,
+        Pediatrics,
+        Plastic_Surgery,
+        Psychiatry,
+        Public_Health,
+        Pulmonary_Medicine,
+        Radiology,
+        Rheumatology,
+        Transplantation,
+        Urology
+    }
+}
