@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MedicalAppointmentWebApp.Data.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,20 +14,20 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("name")]
         [StringLength(50)]
-        public string Name { get; set; }
-        [Column("surname")]
+        public string? Name { get; set; }
+        [Column("Lastname")]
         [StringLength(50)]
-        public string Surname { get; set; }
+        public string? Lastname { get; set; }
         
         [Required]
         [Column("email")]
         [StringLength(254)]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
         
         [Required]
         [Column("amka")]
         [StringLength(11)]
-        public required string Amka { get; set; }
+        public string? Amka { get; set; }
 
         [Column("gender")]
         [Range(0, 2)]
@@ -34,7 +35,7 @@ namespace MedicalAppointmentWebApp.Models
 
         [Required]
         [Column("phone")]
-        public required int Phone { get; set; }
+        public string? Phone { get; set; }
 
         [Column("birth_date")]
         [DataType(DataType.Date)]
@@ -44,13 +45,24 @@ namespace MedicalAppointmentWebApp.Models
 
         [Required]
         [Column("password")]
-        public required string Password { get; set; }
+        public string? Password { get; set; }
 
         [Required]
         [Column("registration_date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DisplayName("Registration Date")]
-        public required DateTime registrationDate {  get; set; }
+        public DateTime RegistrationDate {  get; set; }
+
+        [Required]
+        [Column("role")]
+        public UserRole Role { get; set; }
+
+        public virtual DoctorDetails? DoctorDetails { get; set; }
+
+        [Column("refresh_token")]
+        public string? RefreshToken { get; set; }
+        [Column("refresh_token_expiry_time")]
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }

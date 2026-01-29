@@ -5,8 +5,17 @@ using System.Runtime.InteropServices;
 
 namespace MedicalAppointmentWebApp.Models
 {
-    public class Doctor : User
+    public class DoctorDetails
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid DoctorId { get; set; }
+
+        [ForeignKey("User")]
+        public Guid UserId { get; set; }
+        [Required]
+        public virtual User User { get; set; }
+
         [Column("image")]
         public string? ImageUrl {  get; set; }
 
@@ -14,7 +23,7 @@ namespace MedicalAppointmentWebApp.Models
         [StringLength(500)]
         public string? Bio { get; set; }
 
-        [Column("speciality")]
+        [Column("specialty")]
         public Specialty Specialty { get; set; }
     }
 }

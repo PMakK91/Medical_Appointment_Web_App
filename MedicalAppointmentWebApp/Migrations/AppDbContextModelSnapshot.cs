@@ -22,6 +22,36 @@ namespace MedicalAppointmentWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.DoctorDetails", b =>
+                {
+                    b.Property<Guid>("DoctorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("bio");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("image");
+
+                    b.Property<int>("Specialty")
+                        .HasColumnType("int")
+                        .HasColumnName("specialty");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("DoctorId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("DoctorDetails");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -49,8 +79,12 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("int")
                         .HasColumnName("gender");
 
+                    b.Property<string>("Lastname")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Lastname");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("name");
@@ -60,66 +94,46 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int")
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("phone");
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("surname");
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("refresh_token");
 
-                    b.Property<DateTime>("registrationDate")
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("refresh_token_expiry_time");
+
+                    b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("registration_date");
 
-                    b.Property<string>("role")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                    b.Property<int>("Role")
+                        .HasColumnType("int")
+                        .HasColumnName("role");
 
                     b.HasKey("Id");
 
-                    b.ToTable("users", (string)null);
-
-                    b.HasDiscriminator<string>("role").HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.DoctorDetails", b =>
                 {
-                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", "User")
+                        .WithOne("DoctorDetails")
+                        .HasForeignKey("MedicalAppointmentWebApp.Models.DoctorDetails", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasDiscriminator().HasValue("admin");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
-                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
-
-                    b.Property<string>("Bio")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .HasColumnName("bio");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("image");
-
-                    b.Property<int>("Specialty")
-                        .HasColumnType("int")
-                        .HasColumnName("speciality");
-
-                    b.HasDiscriminator().HasValue("doctor");
-                });
-
-            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
-                {
-                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
-
-                    b.HasDiscriminator().HasValue("atient");
+                    b.Navigation("DoctorDetails");
                 });
 #pragma warning restore 612, 618
         }
