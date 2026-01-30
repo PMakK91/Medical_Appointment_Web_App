@@ -12,7 +12,7 @@ namespace MedicalAppointmentWebApp.Controllers
     {
         public async Task<IActionResult> PendingRegistrationFormsAsync()
         {
-            IEnumerable<DoctorRegistrationForm> registrationForms = await adminService.GetPendingRegistrations();
+            IEnumerable<Doctor> registrationForms = await adminService.GetPendingRegistrations();
             return View(registrationForms);
         }
     }

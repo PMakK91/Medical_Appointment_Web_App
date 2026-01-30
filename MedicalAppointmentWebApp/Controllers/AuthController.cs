@@ -24,13 +24,13 @@ namespace MedicalAppointmentWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> DoctorRegister(DoctorRegisterFormRequest request)
         {
-            DoctorRegistrationForm? form = await authService.DoctorRegisterAsync(request);
-            if (form == null)
+            Doctor? doctor = await authService.DoctorRegisterAsync(request);
+            if (doctor == null)
             {
                 return BadRequest("Email or AMKA already submitted for review...");
             }
 
-            return Ok(form);
+            return Ok(doctor);
         }
 
         public IActionResult Login()

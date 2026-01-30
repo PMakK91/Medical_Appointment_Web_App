@@ -1,23 +1,18 @@
 ﻿using MedicalAppointmentWebApp.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
 
 namespace MedicalAppointmentWebApp.Models
 {
-    public class DoctorDetails
+    public class Doctor: User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid DoctorId { get; set; }
-
-        [ForeignKey("User")]
-        public Guid UserId { get; set; }
-        [Required]
-        public virtual User User { get; set; }
+        public Doctor()
+        {
+            Role = UserRole.Doctor;
+        }
 
         [Column("image")]
-        public string? ImageUrl {  get; set; }
+        public string? ImageUrl { get; set; }
 
         [Column("bio")]
         [StringLength(500)]
@@ -25,5 +20,8 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("specialty")]
         public Specialty Specialty { get; set; }
+
+        [Column("registration_status")]
+        public RegistrationFormStatus RegistrationStatus { get; set; }
     }
 }

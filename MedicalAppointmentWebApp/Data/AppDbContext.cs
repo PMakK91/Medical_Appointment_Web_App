@@ -8,21 +8,18 @@ namespace MedicalAppointmentWebApp.Data
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options) { }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<DoctorDetails> DoctorDetails { get; set; }
-
-        public DbSet<DoctorRegistrationForm> DoctorRegistrationForms { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+        public DbSet<Admin> Admins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.DoctorDetails)
-                .WithOne(d => d.User)
-                .HasForeignKey<DoctorDetails>(d => d.UserId)
-                .IsRequired();
-
-            modelBuilder.Entity<DoctorRegistrationForm>().ToTable("DoctorRegistrationForms");
+            modelBuilder.Entity<User>().ToTable("users");
+            modelBuilder.Entity<Doctor>().ToTable("doctors");
+            modelBuilder.Entity<Patient>().ToTable("patients");
+            modelBuilder.Entity<Admin>().ToTable("admins");
         }
     }
 }

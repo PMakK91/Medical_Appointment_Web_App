@@ -41,7 +41,7 @@ namespace MedicalAppointmentWebApp.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Birth Date")]
-        public DateOnly BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
 
         [Required]
         [Column("password")]
@@ -58,7 +58,7 @@ namespace MedicalAppointmentWebApp.Models
         [Column("role")]
         public UserRole Role { get; set; }
 
-        public virtual DoctorDetails? DoctorDetails { get; set; }
+        //public virtual DoctorDetails? DoctorDetails { get; set; }
 
         [Column("refresh_token")]
         public string? RefreshToken { get; set; }

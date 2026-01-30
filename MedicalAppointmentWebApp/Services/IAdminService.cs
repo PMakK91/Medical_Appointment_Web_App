@@ -4,6 +4,6 @@ namespace MedicalAppointmentWebApp.Services
 {
     public interface IAdminService
     {
-        Task<IEnumerable<DoctorRegistrationForm>> GetPendingRegistrations();
+        Task<IEnumerable<Doctor>> GetPendingRegistrations();
     }
 }

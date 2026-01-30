@@ -17,62 +17,62 @@ namespace MedicalAppointmentWebApp.Services
         private static long TOKEN_EXPIRATION_TIME = 86400; // seconds
         private static long REFRESH_TOKEN_EXPIRATION_TIME = 604800; // seconds
 
-        public async Task<DoctorRegistrationForm?> DoctorRegisterAsync(DoctorRegisterFormRequest request)
+        public async Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request)
         {
-            if (await _context.DoctorRegistrationForms.AnyAsync(f => f.Email.Equals(request.Email) || f.Amka.Equals(request.Amka)))
+            if (await _context.Doctors.AnyAsync(f => f.Email.Equals(request.Email) || f.Amka.Equals(request.Amka)))
             {
                 return null;
             }
 
-            DoctorRegistrationForm form = new DoctorRegistrationForm();
-            string hashedPassword = new PasswordHasher<DoctorRegistrationForm>().HashPassword(form, request.Password);
+            Doctor doctor = new Doctor();
+            string hashedPassword = new PasswordHasher<Doctor>().HashPassword(doctor, request.Password);
 
-            form.Email = request.Email;
-            form.Password = hashedPassword;
+            doctor.Email = request.Email;
+            doctor.Password = hashedPassword;
 
-            form.Name = request.Name;
-            form.Lastname = request.LastName;
-            form.Amka = request.Amka;
-            form.Phone = request.Phone;
-            form.Gender = request.Gender;
-            form.BirthDate = request.BirthDate;
-            form.RegistrationDate = DateTime.UtcNow;
-            form.Specialty = request.Specialty;
-            form.Status = RegistrationFormStatus.Pending;
+            doctor.Name = request.Name;
+            doctor.Lastname = request.LastName;
+            doctor.Amka = request.Amka;
+            doctor.Phone = request.Phone;
+            doctor.Gender = request.Gender;
+            doctor.BirthDate = request.BirthDate;
+            doctor.RegistrationDate = DateTime.UtcNow;
+            doctor.Specialty = request.Specialty;
+            doctor.RegistrationStatus = RegistrationFormStatus.Pending;
 
-            _context.DoctorRegistrationForms.Add(form);
+            _context.Doctors.Add(doctor);
             await _context.SaveChangesAsync();
 
-            return form;
+            return doctor;
         }
 
-        public async Task<User?> RegisterAsync(RegisterRequest request)
+        public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email.Equals(request.Email)))
+            if (await _context.Patients.AnyAsync(u => u.Email.Equals(request.Email)))
             {
                 return null;
             }
 
-            User user = new();
+            Patient patient = new();
 
-            string hashedPassword = new PasswordHasher<User>().HashPassword(user, request.Password);
+            string hashedPassword = new PasswordHasher<Patient>().HashPassword(patient, request.Password);
 
-            user.Email = request.Email;
-            user.Password = hashedPassword;
+            patient.Email = request.Email;
+            patient.Password = hashedPassword;
 
-            user.Name = request.Name;
-            user.Lastname = request.LastName;
-            user.Amka = request.Amka;
-            user.Phone = request.Phone;
-            user.Gender = request.Gender;
-            user.BirthDate = DateOnly.MinValue;
-            user.RegistrationDate = DateTime.Now;
-            user.Role = (UserRole)request.Role;
+            patient.Name = request.Name;
+            patient.Lastname = request.LastName;
+            patient.Amka = request.Amka;
+            patient.Phone = request.Phone;
+            patient.Gender = request.Gender;
+            patient.BirthDate = DateOnly.MinValue;
+            patient.RegistrationDate = DateTime.Now;
+            patient.Role = (UserRole)request.Role;
 
-            _context.Users.Add(user);
+            _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
-            return user;
+            return patient;
         }
 
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)
