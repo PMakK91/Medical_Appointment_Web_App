@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Doctor>
+@{
+}
+
+<h2>Pending Registration Forms</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Email</th>
+            <th>Amka</th>
+            <th>Specialty</th>
+            <th>Name</th>
+            <th>Last Name</th>
+        </tr>
+    </thead>
+    <tbody>
+    @{
+        var index = 1;
+    }
+    @foreach (var form in Model)
+    {
+        <tr>
+            <td>@index</td>
+            <td>@form.Email</td>
+            <td>@form.Amka</td>
+            <td>@form.Specialty.ToString()</td>
+            <td>@form.Name</td>
+            <td>@form.Lastname</td>
+        </tr>
+
+        ++index;
+    }
+    </tbody>
+</table>

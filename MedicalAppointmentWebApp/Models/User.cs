@@ -1,27 +1,68 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MedicalAppointmentWebApp.Data.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MedicalAppointmentWebApp.Models
 {
     public class User
     {
+        [Key]
+        [Column("id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        
-        public string Name { get; set; }
-        public string Surname { get; set; }
+
+        [Column("name")]
+        [StringLength(100)]
+        public string? Name { get; set; }
+        [Column("Lastname")]
+        [StringLength(100)]
+        public string? Lastname { get; set; }
         
         [Required]
-        public string Email { get; set; }
+        [Column("email")]
+        [StringLength(254)]
+        public string? Email { get; set; }
         
         [Required]
-        public string Amka { get; set; }
-        
+        [Column("amka")]
+        [StringLength(11)]
+        public string? Amka { get; set; }
+
+        [Column("gender")]
+        [Range(0, 2)]
         public int Gender { get; set; }
 
         [Required]
-        public int Phone { get; set; }
-        
-        public DateOnly BirthDate { get; set; }
-        
-        private string password;
+        [Column("phone")]
+        public string? Phone { get; set; }
+
+        [Column("birth_date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Birth Date")]
+        public DateOnly? BirthDate { get; set; }
+
+        [Required]
+        [Column("password")]
+        public string? Password { get; set; }
+
+        [Required]
+        [Column("registration_date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayName("Registration Date")]
+        public DateTime RegistrationDate {  get; set; }
+
+        [Required]
+        [Column("role")]
+        public UserRole Role { get; set; }
+
+        //public virtual DoctorDetails? DoctorDetails { get; set; }
+
+        [Column("refresh_token")]
+        public string? RefreshToken { get; set; }
+        [Column("refresh_token_expiry_time")]
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }
