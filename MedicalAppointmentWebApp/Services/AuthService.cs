@@ -19,7 +19,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request)
         {
-            if (await _context.Doctors.AnyAsync(f => f.Email.Equals(request.Email) || f.Amka.Equals(request.Amka)))
+            if (await _context.Users.AnyAsync(f => f.Email.Equals(request.Email) || f.Amka.Equals(request.Amka)))
             {
                 return null;
             }
@@ -48,31 +48,56 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Patients.AnyAsync(u => u.Email.Equals(request.Email)))
+            if (await _context.Users.AnyAsync(u => u.Email.Equals(request.Email)))
             {
                 return null;
             }
 
-            Patient patient = new();
+            Patient? patient = new();
 
             string hashedPassword = new PasswordHasher<Patient>().HashPassword(patient, request.Password);
-
-            patient.Email = request.Email;
             patient.Password = hashedPassword;
 
-            patient.Name = request.Name;
-            patient.Lastname = request.LastName;
-            patient.Amka = request.Amka;
-            patient.Phone = request.Phone;
-            patient.Gender = request.Gender;
-            patient.BirthDate = DateOnly.MinValue;
-            patient.RegistrationDate = DateTime.Now;
-            patient.Role = (UserRole)request.Role;
+            patient = AssignValues(patient, request) as Patient;
 
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
             return patient;
+        }
+
+        public async Task<Admin?> AdminRegisterAsync(RegisterRequest request)
+        {
+            if (await _context.Users.AnyAsync(u => u.Email.Equals(request.Email)))
+            {
+                return null;
+            }
+
+            Admin? admin = new Admin();
+            
+            string hashedPassword = new PasswordHasher<Admin>().HashPassword(admin, request.Password);
+            admin.Password = hashedPassword;
+
+            admin = AssignValues(admin, request) as Admin;
+
+            _context.Admins.Add(admin);
+            await _context.SaveChangesAsync();
+
+            return admin;
+        }
+
+        private User AssignValues(User user, RegisterRequest request)
+        {
+            user.Email = request.Email;
+            user.Name = request.Name;
+            user.Lastname = request.LastName;
+            user.Amka = request.Amka;
+            user.Phone = request.Phone;
+            user.Gender = request.Gender;
+            user.BirthDate = request.BirthDate;
+            user.RegistrationDate = DateTime.Now;
+
+            return user;
         }
 
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)

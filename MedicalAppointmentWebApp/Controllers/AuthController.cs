@@ -15,6 +15,17 @@ namespace MedicalAppointmentWebApp.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> PatientRegister(RegisterRequest request)
+        {
+            Patient? patient = await authService.PatientRegisterAsync(request);
+            if (patient == null)
+            {
+                return BadRequest("Email already in use...");
+            }
+
+            return Ok(patient);
+        }
 
         public IActionResult DoctorRegister()
         {
