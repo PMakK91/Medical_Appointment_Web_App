@@ -52,6 +52,70 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.ToTable("DoctorDetails");
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.DoctorRegistrationForm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Amka")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)")
+                        .HasColumnName("amka");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)")
+                        .HasColumnName("email");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("Lastname")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Lastname");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("password");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("phone");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("registration_date");
+
+                    b.Property<int?>("Specialty")
+                        .HasColumnType("int")
+                        .HasColumnName("specialty");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DoctorRegistrationForms", (string)null);
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -80,13 +144,13 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("gender");
 
                     b.Property<string>("Lastname")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("Lastname");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
                     b.Property<string>("Password")

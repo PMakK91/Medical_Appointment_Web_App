@@ -12,12 +12,34 @@ namespace MedicalAppointmentWebApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DoctorRegistrationForms",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Lastname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
+                    amka = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    gender = table.Column<int>(type: "int", nullable: false),
+                    phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: true),
+                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    registration_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    specialty = table.Column<int>(type: "int", nullable: true),
+                    status = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorRegistrationForms", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Lastname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Lastname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
                     amka = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     gender = table.Column<int>(type: "int", nullable: false),
@@ -67,6 +89,9 @@ namespace MedicalAppointmentWebApp.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DoctorDetails");
+
+            migrationBuilder.DropTable(
+                name: "DoctorRegistrationForms");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -10,6 +10,8 @@ namespace MedicalAppointmentWebApp.Data
         public DbSet<User> Users { get; set; }
         public DbSet<DoctorDetails> DoctorDetails { get; set; }
 
+        public DbSet<DoctorRegistrationForm> DoctorRegistrationForms { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -19,6 +21,8 @@ namespace MedicalAppointmentWebApp.Data
                 .WithOne(d => d.User)
                 .HasForeignKey<DoctorDetails>(d => d.UserId)
                 .IsRequired();
+
+            modelBuilder.Entity<DoctorRegistrationForm>().ToTable("DoctorRegistrationForms");
         }
     }
 }

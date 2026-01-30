@@ -13,10 +13,10 @@ namespace MedicalAppointmentWebApp.Models
         public Guid Id { get; set; }
 
         [Column("name")]
-        [StringLength(50)]
+        [StringLength(100)]
         public string? Name { get; set; }
         [Column("Lastname")]
-        [StringLength(50)]
+        [StringLength(100)]
         public string? Lastname { get; set; }
         
         [Required]
