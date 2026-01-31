@@ -13,6 +13,8 @@
             <th>Specialty</th>
             <th>Name</th>
             <th>Last Name</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +30,8 @@
             <td>@form.Specialty.ToString()</td>
             <td>@form.Name</td>
             <td>@form.Lastname</td>
+            <td><a class="link-underline-success" asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@form.Id">Accept</a></td>
+            <td><a class="link-underline-danger" asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@form.Id">Reject</a></td>
         </tr>
 
         ++index;
