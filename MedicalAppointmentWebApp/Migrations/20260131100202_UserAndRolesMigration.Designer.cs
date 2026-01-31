@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppointmentWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260130191756_UserAndRolesMigration")]
+    [Migration("20260131100202_UserAndRolesMigration")]
     partial class UserAndRolesMigration
     {
         /// <inheritdoc />
@@ -33,7 +33,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Amka")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)")
                         .HasColumnName("amka");
@@ -48,19 +47,19 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("nvarchar(254)")
                         .HasColumnName("email");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("first_name");
+
                     b.Property<int>("Gender")
                         .HasColumnType("int")
                         .HasColumnName("gender");
 
-                    b.Property<string>("Lastname")
+                    b.Property<string>("LastName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Lastname");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("name");
+                        .HasColumnName("last_name");
 
                     b.Property<string>("Password")
                         .IsRequired()

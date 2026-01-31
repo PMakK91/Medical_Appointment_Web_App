@@ -28,8 +28,8 @@
             <td>@form.Email</td>
             <td>@form.Amka</td>
             <td>@form.Specialty.ToString()</td>
-            <td>@form.Name</td>
-            <td>@form.Lastname</td>
+            <td>@form.FirstName</td>
+            <td>@form.LastName</td>
             <td><a class="link-underline-success" asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@form.Id">Accept</a></td>
             <td><a class="link-underline-danger" asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@form.Id">Reject</a></td>
         </tr>

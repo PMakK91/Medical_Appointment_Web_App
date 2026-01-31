@@ -16,10 +16,10 @@ namespace MedicalAppointmentWebApp.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Lastname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    first_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    last_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
-                    amka = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    amka = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
                     gender = table.Column<int>(type: "int", nullable: false),
                     phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: true),

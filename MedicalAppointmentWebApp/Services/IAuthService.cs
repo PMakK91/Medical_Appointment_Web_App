@@ -5,7 +5,7 @@ namespace MedicalAppointmentWebApp.Services
 {
     public interface IAuthService
     {
-        Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request);
+        Task<Doctor?> DoctorRegisterAsync(RegisterRequest request);
         Task<Patient?> PatientRegisterAsync(RegisterRequest request);
         Task<User?> LogoutAsync(string refreshToken);
         Task<AuthResponse?> LoginAsync(AuthRequest request);
