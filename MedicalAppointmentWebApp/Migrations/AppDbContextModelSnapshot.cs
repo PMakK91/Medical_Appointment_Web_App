@@ -26,36 +26,135 @@ namespace MedicalAppointmentWebApp.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
 
                     b.Property<string>("Amka")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)")
+                        .HasColumnName("amka");
 
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)")
+                        .HasColumnName("email");
 
                     b.Property<int>("Gender")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("Lastname")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Lastname");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Surname")
+                    b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("password");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("refresh_token_expiry_time");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("registration_date");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int")
+                        .HasColumnName("role");
 
                     b.HasKey("Id");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.ToTable("admins", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("bio");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("image");
+
+                    b.Property<int>("RegistrationStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("registration_status");
+
+                    b.Property<int>("Specialty")
+                        .HasColumnType("int")
+                        .HasColumnName("specialty");
+
+                    b.ToTable("doctors", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
+                {
+                    b.HasBaseType("MedicalAppointmentWebApp.Models.User");
+
+                    b.ToTable("patients", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("MedicalAppointmentWebApp.Models.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("MedicalAppointmentWebApp.Models.Doctor", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("MedicalAppointmentWebApp.Models.Patient", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
