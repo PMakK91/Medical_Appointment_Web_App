@@ -22,15 +22,11 @@ namespace MedicalAppointmentWebApp.Controllers
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
-                return BadRequest("Email already in use...");
+                ModelState.AddModelError("", "Email already in use...");
+                return View("Register");
             }
 
-            return Ok(patient);
-        }
-
-        public IActionResult DoctorRegister()
-        {
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -39,10 +35,11 @@ namespace MedicalAppointmentWebApp.Controllers
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
             {
-                return BadRequest("Email or AMKA already submitted for review...");
+                ModelState.AddModelError("", "Email or AMKA already submitted for review...");
+                return View("Register");
             }
 
-            return Ok(doctor);
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Login()
@@ -56,7 +53,8 @@ namespace MedicalAppointmentWebApp.Controllers
             AuthResponse? response = await authService.LoginAsync(request);
             if (response is null)
             {
-                return BadRequest("Wrong email or password.");
+                ModelState.AddModelError("", "Wrong email or password");
+                return View();
             }
 
             Response.Cookies.Append("access_token", response.AccessToken, new CookieOptions

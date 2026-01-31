@@ -25,6 +25,7 @@
 
             <!-- form errors -->
             <div class="form-error mt-3 d-none"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         </form>
 
         <div class="login-footer mt-5">
