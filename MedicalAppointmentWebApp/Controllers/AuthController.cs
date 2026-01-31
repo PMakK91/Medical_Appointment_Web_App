@@ -3,6 +3,7 @@ using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
 using MedicalAppointmentWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -74,6 +75,28 @@ namespace MedicalAppointmentWebApp.Controllers
             });
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            string? refreshToken = Request.Cookies["refresh_token"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return BadRequest("No refresh token provided");
+
+            User? user = await authService.LogoutAsync(refreshToken);
+
+            if (user is null)
+            {
+                return BadRequest("Refresh Token not found.");
+            }
+
+            Response.Cookies.Delete("access_token");
+            Response.Cookies.Delete("refresh_token");
+
+            return RedirectToAction("Login", "Auth");
         }
     }
 }
