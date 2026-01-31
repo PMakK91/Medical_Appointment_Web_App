@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+<div class="login-page d-flex align-items-center">
+    <div class="login-container mx-auto">
+        <h1 class="login-title mb-2">Σύνδεση</h1>
+        <p class="login-subtitle mb-5">Συμπληρώστε τα στοιχεία σας για να <br /> εισέλθετε στον λογαριασμό σας</p>
+
+        <form method="post" class="w-100">
+            <div class="mb-3">
+                <label class="form-label login-label" for="email">Email:</label>
+                <input id="email" type="email" name="Email" class="form-control login-input" aria-label="Email" autocomplete="email" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label login-label" for="password">Κωδικός:</label>
+                <input id="password" type="password" name="Password" class="form-control login-input" aria-label="Password" autocomplete="password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 login-btn">
+                Σύνδεση
+            </button>
+
+            <!-- form errors -->
+            <div class="form-error mt-3 d-none"></div>
+        </form>
+
+        <div class="login-footer mt-5">
+            <p class="mb-1">Πρώτη φορά στο app;</p>
+            <a href="#" class="login-link">Κάντε εγγραφή</a>
+        </div>
+    </div>
+</div>

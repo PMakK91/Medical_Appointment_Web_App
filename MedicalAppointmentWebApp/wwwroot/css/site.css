@@ -29,3 +29,288 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+
+
+/********** CUSTOM CSS ***********/
+body {
+    font-family: 'Geologica', sans-serif;
+    background: #F6F6F6;
+}
+
+
+/********** Login Page ***********/
+
+.login-page, .register-page {
+    min-height: 100vh;
+    padding: 16px;
+}
+
+.login-container, .register-container {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.login-title,.register-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.login-subtitle {
+    color: #676767;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.login-label, .register-label {
+    display: block;
+    text-align: left;
+    font-weight: 400;
+    margin-bottom: 8px;
+    font-size: 14px;
+    padding-left: 16px;
+}
+
+.login-label-description, .register-label-description {
+    color: #676767;
+    font-size: 12px;
+    font-weight: 100;
+    text-align: left;
+    padding-left: 16px;
+    margin-bottom: 8px;
+}
+
+
+.login-input , .register-input{
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    background: #EAEAEA;
+    padding: 0 16px;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 100;
+}
+
+    .login-input:focus, .register-input:focus {
+        background: #eeeeee;
+        box-shadow: 0 0 0 0.2rem #4ea7e721;
+    }
+
+.login-btn, .register-btn {
+    height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    background: #4EA7E7; 
+    border-color: #4EA7E7;
+    font-weight: 400;
+}
+
+    .login-btn:hover,
+    .login-btn:focus, .register-btn:hover,
+    .register-btn:focus {
+        background: #4096d9;
+        border-color: #4096d9;
+    }
+
+.form-error {
+    color: #e74c3c;
+    font-size: 12px;
+    text-align: center;
+}
+
+.login-footer p, .register-footer p, .register-info {
+    color: #676767;
+    font-size: 16px;
+    font-weight: 100;
+}
+
+.login-link, .register-link {
+    color: #4EA7E7;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+    .login-link:hover, .register-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /******* Register Tabs **********/
+
+
+.register-tabs {
+    display: flex;
+    max-width: 420px;
+    margin: 0 auto 24px;
+
+}
+
+.register-tab {
+    background:transparent;
+    flex: 1;
+    border: 0;
+    border-bottom: 3px solid #CECECE;
+    padding-bottom: 14px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #CECECE;
+    cursor: pointer;
+}
+
+    /* active tab */
+    .register-tab.active {
+        color: #4EA7E7;
+        font-weight: 500;
+        border-bottom-color: #4EA7E7; 
+    }
+
+
+/********* Select ************/
+
+
+/* === MAIN "SELECT" BUTTON (να μοιάζει με input) === */
+.register-select {
+    height: 48px;
+    border-radius: 12px;
+    background: #EAEAEA;
+    border: none;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 100;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+}
+
+    /* Bootstrap caret */
+    .register-select.dropdown-toggle::after {
+        margin-left: auto;
+    }
+
+    /* hover/focus same as your inputs */
+    .register-select:hover {
+        background: #eeeeee;
+    }
+
+    .register-select:focus,
+    .register-select:active,
+    .register-select:focus-visible {
+        background: #eeeeee;
+        box-shadow: 0 0 0 0.2rem rgba(78,167,231,.20);
+        outline: none;
+    }
+
+    /* όταν είναι ανοιχτό */
+    .register-select.show,
+    .btn.show.register-select {
+        background: #eeeeee;
+        box-shadow: 0 0 0 0.2rem rgba(78,167,231,.12);
+    }
+
+/* placeholder style (όταν δεν έχει επιλεγεί κάτι) */
+#specializationSelectedText.placeholder {
+    color: #8a8a8a;
+}
+
+
+/* === DROPDOWN MENU (ίδιο look με το δικό σου) === */
+#specializationMenu.dropdown-menu {
+    border-radius: 12px;
+    padding: 10px;
+    border: none;
+    background: #eeeeee;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
+
+/* search input μέσα στο dropdown να ταιριάζει */
+#specializationSearch {
+    height: 44px; /* λίγο πιο μικρό από field */
+    border-radius: 12px;
+    border: none;
+    background: #EAEAEA;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 100;
+    box-shadow: none;
+}
+
+    #specializationSearch:focus {
+        background: #eeeeee;
+        box-shadow: 0 0 0 0.2rem rgba(78,167,231,.15);
+        outline: none;
+    }
+
+/* list scrolling */
+#specializationList {
+    max-height: 264px;
+    overflow-y: auto;
+    padding: 4px 0 0 0;
+    margin: 0;
+}
+
+    /* options same as yours */
+    #specializationList .dropdown-item {
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 200;
+        width: 96%;
+        margin: 2px auto;
+        border-radius: 7px;
+        background: transparent;
+    }
+
+        /* hover / active same */
+        #specializationList .dropdown-item:hover,
+        #specializationList .dropdown-item.active {
+            background-color: #4EA7E7;
+            color: #fff;
+        }
+
+/* "no results" */
+#specializationNoResults {
+    font-size: 13px;
+    font-weight: 200;
+    color: #8a8a8a;
+}
+
+/********** PASSWORD FIELD *********/
+
+
+.password-wrapper {
+    position: relative;
+}
+
+    .password-wrapper .register-input {
+        padding-right: 44px;
+    }
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.eye-icon {
+    color: #cecece;
+}
+
+.password-toggle:hover .eye-icon {
+    color: #4EA7E7;
+}
+
+.d-none {
+    display: none;
+}
