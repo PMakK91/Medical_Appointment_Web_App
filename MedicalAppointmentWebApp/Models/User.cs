@@ -12,19 +12,18 @@ namespace MedicalAppointmentWebApp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Column("name")]
+        [Column("first_name")]
         [StringLength(100)]
-        public string? Name { get; set; }
-        [Column("Lastname")]
+        public string? FirstName { get; set; }
+        [Column("last_name")]
         [StringLength(100)]
-        public string? Lastname { get; set; }
+        public string? LastName { get; set; }
         
         [Required]
         [Column("email")]
         [StringLength(254)]
         public string? Email { get; set; }
         
-        [Required]
         [Column("amka")]
         [StringLength(11)]
         public string? Amka { get; set; }

@@ -17,9 +17,9 @@ namespace MedicalAppointmentWebApp.Services
         private static long TOKEN_EXPIRATION_TIME = 86400; // seconds = 24 hours
         private static long REFRESH_TOKEN_EXPIRATION_TIME = 28800; // seconds = 8 hours
 
-        public async Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request)
+        public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(f => f.Email.Equals(request.Email) || f.Amka.Equals(request.Amka)))
+            if (await _context.Users.AnyAsync(f => f.Email.Equals(request.Email) /*|| f.Amka.Equals(request.Amka)*/))
             {
                 return null;
             }
@@ -30,14 +30,14 @@ namespace MedicalAppointmentWebApp.Services
             doctor.Email = request.Email;
             doctor.Password = hashedPassword;
 
-            doctor.Name = request.Name;
-            doctor.Lastname = request.LastName;
+            doctor.FirstName = request.FirstName;
+            doctor.LastName = request.LastName;
             doctor.Amka = request.Amka;
             doctor.Phone = request.Phone;
             doctor.Gender = request.Gender;
             doctor.BirthDate = request.BirthDate;
             doctor.RegistrationDate = DateTime.UtcNow;
-            doctor.Specialty = request.Specialty;
+            doctor.Specialty = (Specialty)request.Specialty;
             doctor.RegistrationStatus = RegistrationFormStatus.Pending;
 
             _context.Doctors.Add(doctor);
@@ -89,8 +89,8 @@ namespace MedicalAppointmentWebApp.Services
         private User AssignValues(User user, RegisterRequest request)
         {
             user.Email = request.Email;
-            user.Name = request.Name;
-            user.Lastname = request.LastName;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
             user.Amka = request.Amka;
             user.Phone = request.Phone;
             user.Gender = request.Gender;

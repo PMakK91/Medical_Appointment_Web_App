@@ -34,7 +34,7 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DoctorRegister(DoctorRegisterFormRequest request)
+        public async Task<IActionResult> DoctorRegister(RegisterRequest request)
         {
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
