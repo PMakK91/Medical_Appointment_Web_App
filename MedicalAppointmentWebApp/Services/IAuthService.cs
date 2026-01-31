@@ -7,6 +7,7 @@ namespace MedicalAppointmentWebApp.Services
     {
         Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request);
         Task<Patient?> PatientRegisterAsync(RegisterRequest request);
+        Task<User?> LogoutAsync(string refreshToken);
         Task<AuthResponse?> LoginAsync(AuthRequest request);
         Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
     }

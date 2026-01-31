@@ -14,8 +14,8 @@ namespace MedicalAppointmentWebApp.Services
 {
     public class AuthService(AppDbContext _context, IConfiguration _configuration) : IAuthService
     {
-        private static long TOKEN_EXPIRATION_TIME = 86400; // seconds
-        private static long REFRESH_TOKEN_EXPIRATION_TIME = 604800; // seconds
+        private static long TOKEN_EXPIRATION_TIME = 86400; // seconds = 24 hours
+        private static long REFRESH_TOKEN_EXPIRATION_TIME = 28800; // seconds = 8 hours
 
         public async Task<Doctor?> DoctorRegisterAsync(DoctorRegisterFormRequest request)
         {
@@ -96,6 +96,22 @@ namespace MedicalAppointmentWebApp.Services
             user.Gender = request.Gender;
             user.BirthDate = request.BirthDate;
             user.RegistrationDate = DateTime.Now;
+
+            return user;
+        }
+
+        public async Task<User?> LogoutAsync(string? refreshToken)
+        {
+            User? user = _context.Users.FirstOrDefault(u => u.RefreshToken.Equals(refreshToken));
+
+            if (user is null)
+            {
+                return null;    
+            }
+            
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = null;
+            await _context.SaveChangesAsync();
 
             return user;
         }
