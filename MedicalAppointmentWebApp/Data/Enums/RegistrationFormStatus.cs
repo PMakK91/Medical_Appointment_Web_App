@@ -4,6 +4,6 @@
     {
         Pending = 0,
         Accepted = 1,
-        Regected = 2
+        Rejected = 2
     }
 }
