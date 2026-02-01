@@ -21,7 +21,7 @@ namespace MedicalAppointmentWebApp.Migrations
                     email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
                     amka = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: true),
                     gender = table.Column<int>(type: "int", nullable: false),
-                    phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     registration_date = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -130,6 +130,11 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
             }
 
+            if (user is Doctor && ((Doctor)user).RegistrationStatus != RegistrationFormStatus.Accepted)
+            {
+                return null;
+            }
+
             return await CreateTokenResponse(user);
         }
 

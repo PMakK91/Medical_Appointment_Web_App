@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointmentWebApp.Controllers
 {
+    [Route("[controller]/[action]")]
     public class UserController : Controller
     {
         public IActionResult Index()

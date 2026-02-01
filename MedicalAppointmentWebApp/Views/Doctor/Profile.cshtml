@@ -1,0 +1,19 @@
+﻿@model Doctor
+
+<h2>@Model.FirstName @Model.LastName</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Specialty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Email</td>
+            <td>@Html.DisplayFor(m => m.Specialty)</td>
+        </tr>
+    </tbody>
+</table>
+

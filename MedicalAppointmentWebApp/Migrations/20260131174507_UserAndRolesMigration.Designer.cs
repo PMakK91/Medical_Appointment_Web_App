@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppointmentWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260131100202_UserAndRolesMigration")]
+    [Migration("20260131174507_UserAndRolesMigration")]
     partial class UserAndRolesMigration
     {
         /// <inheritdoc />
@@ -67,7 +67,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("phone");
 
