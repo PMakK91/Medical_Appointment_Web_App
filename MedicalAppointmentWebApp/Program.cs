@@ -44,6 +44,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
 
 builder.Services
     .AddControllersWithViews()
