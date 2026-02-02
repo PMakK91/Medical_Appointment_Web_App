@@ -1,10 +1,11 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 
 namespace MedicalAppointmentWebApp.Services
 {
     public interface IAdminService
     {
-        Task<IEnumerable<Doctor>> GetPendingRegistrations();
+        Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page, int pageSize);
         Task<Doctor?> AcceptRegistrationAsync(Guid id);
         Task<Doctor?> RejectRegistrationAsync(Guid id);
     }
