@@ -1,4 +1,9 @@
-﻿@model IEnumerable<Doctor>
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
+
+@{
+    ViewBag.Title = "Doctors";
+    Layout = "_Layout";
+}
 
 <style type="text/css">
     .doctor-profile:hover {
@@ -8,6 +13,15 @@
 
 <h2>Doctors</h2>
 
+<!-- Search Form -->
+<nav class="navbar navbar-light bg-light">
+    <form method="get" action="@Url.Action(action: "Index", controller: "Doctor")" class="form-inline">
+        <input type="text" name="term" value="@Model.Term" placeholder="Search" class="form-control col-xs-1" />
+        <button type="submit" class="btn btn-outline-primary col-xs-2">Search</button>
+    </form>
+</nav>
+
+<!-- Doctors -->
 <table class="table">
     <thead>
         <tr>
@@ -17,10 +31,7 @@
         </tr>
     </thead>
     <tbody>
-        @{
-            var index = 1;
-        }
-        @foreach (var doctor in Model)
+        @foreach (var doctor in Model.Doctors)
         {
             <tr class="doctor-profile"
                 onclick ="location.href = '@Url.Action(action: "Profile",controller:"Doctor", new { doctor_id = doctor.Id })'">
@@ -28,8 +39,34 @@
                 <td>@doctor.LastName</td>
                 <td>@doctor.Specialty.ToString()</td>
             </tr>
-
-            ++index;
         }
     </tbody>
 </table>
+
+<!-- Pagination Controls -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = Model.Term, page = Model.CurrentPage - 1, pageSize = Model.PageSize })" class="page-link">Previous</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = Model.Term, page = i, pageSize = Model.PageSize })" class="page-link @(i == Model.CurrentPage ? "active" : "")">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = Model.Term, page = Model.CurrentPage + 1, pageSize = Model.PageSize })" class="page-link">Next</a>
+            </li>
+        }
+    </ul>
+</nav>

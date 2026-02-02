@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,10 +8,10 @@ namespace MedicalAppointmentWebApp.Controllers
 {
     public class DoctorController(IDoctorService doctorService) : Controller
     {
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term, int page = 1, int pageSize = 10)
         {
-            IEnumerable<Doctor> doctors = await doctorService.GetAllActiveDoctors();
-            return View(doctors);
+            DoctorSearchViewModel model = await doctorService.SearchAllActiveDoctors(term, page, pageSize);
+            return View(model);
         }
 
         public async Task<IActionResult> Profile(Guid doctor_id)
