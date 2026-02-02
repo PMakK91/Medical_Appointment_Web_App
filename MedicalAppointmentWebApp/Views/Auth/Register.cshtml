@@ -96,6 +96,7 @@
             </button>
 
             <div class="form-error mt-3 d-none" id="patientFormError"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         </form>
 
         <!-- ===================== DOCTOR FORM ===================== -->
@@ -236,6 +237,7 @@
             </p>
 
             <div class="form-error mt-3 d-none" id="doctorFormError"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         </form>
 
         <div class="register-footer mt-5">

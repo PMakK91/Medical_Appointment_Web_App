@@ -1,5 +1,6 @@
 ﻿using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace MedicalAppointmentWebApp.Controllers
     [Route("[controller]/[action]")]
     public class AdminController(IAdminService adminService) : Controller
     {
-        public async Task<IActionResult> PendingRegistrationFormsAsync()
+        public async Task<IActionResult> PendingRegistrationFormsAsync(string term, int page = 1, int pageSize = 10)
         {
-            IEnumerable<Doctor> registrationForms = await adminService.GetPendingRegistrations();
+            DoctorSearchViewModel registrationForms = await adminService.GetPendingRegistrations(term, page, pageSize);
             return View(registrationForms);
         }
 

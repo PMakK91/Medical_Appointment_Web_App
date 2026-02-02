@@ -19,7 +19,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(f => f.Email.Equals(request.Email) /*|| f.Amka.Equals(request.Amka)*/))
+            if (await _context.Users.AnyAsync(f => (f.Email != null && f.Email.Equals(request.Email)) /*|| f.Amka.Equals(request.Amka)*/))
             {
                 return null;
             }
@@ -48,7 +48,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email.Equals(request.Email)))
+            if (await _context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
             {
                 return null;
             }
@@ -60,6 +60,8 @@ namespace MedicalAppointmentWebApp.Services
 
             patient = AssignValues(patient, request) as Patient;
 
+            if (patient is null) return null;
+
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
@@ -68,7 +70,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Admin?> AdminRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email.Equals(request.Email)))
+            if (await _context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
             {
                 return null;
             }
@@ -79,6 +81,8 @@ namespace MedicalAppointmentWebApp.Services
             admin.Password = hashedPassword;
 
             admin = AssignValues(admin, request) as Admin;
+
+            if (admin is null) return null;
 
             _context.Admins.Add(admin);
             await _context.SaveChangesAsync();
@@ -102,7 +106,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<User?> LogoutAsync(string? refreshToken)
         {
-            User? user = _context.Users.FirstOrDefault(u => u.RefreshToken.Equals(refreshToken));
+            User? user = _context.Users.FirstOrDefault(u => u.RefreshToken != null && u.RefreshToken.Equals(refreshToken));
 
             if (user is null)
             {
@@ -118,7 +122,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(request.Email));
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email.Equals(request.Email));
             if (user is null)
             {
                 return null;
@@ -126,6 +130,11 @@ namespace MedicalAppointmentWebApp.Services
 
             if (new PasswordHasher<User>().VerifyHashedPassword(user, user.Password, request.Password)
                 == PasswordVerificationResult.Failed)
+            {
+                return null;
+            }
+
+            if (user is Doctor && ((Doctor)user).RegistrationStatus != RegistrationFormStatus.Accepted)
             {
                 return null;
             }

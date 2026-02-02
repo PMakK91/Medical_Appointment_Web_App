@@ -32,7 +32,6 @@ namespace MedicalAppointmentWebApp.Models
         [Range(0, 2)]
         public int Gender { get; set; }
 
-        [Required]
         [Column("phone")]
         public string? Phone { get; set; }
 

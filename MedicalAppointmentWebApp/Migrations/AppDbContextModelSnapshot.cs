@@ -64,7 +64,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("phone");
 
