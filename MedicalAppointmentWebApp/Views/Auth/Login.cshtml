@@ -3,12 +3,12 @@
     ViewData["Title"] = "Login";
     Layout = "_LayoutNoNavBar";
 }
-<div class="login-page d-flex align-items-center">
-    <div class="login-container mx-auto">
-        <h1 class="login-title mb-2">Σύνδεση</h1>
-        <p class="login-subtitle mb-5">Συμπληρώστε τα στοιχεία σας για να <br /> εισέλθετε στον λογαριασμό σας</p>
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Σύνδεση</h1>
+        <p class="subtitle mb-5">Συμπληρώστε τα στοιχεία σας για να <br /> εισέλθετε στον λογαριασμό σας</p>
 
-        <form method="post" asp-controller="Auth" asp-action="Login" class="w-100">
+        <form method="post" asp-controller="Auth" asp-action="Login" class="login-form">
             <div class="mb-3">
                 <label class="form-label login-label" for="email">Email:</label>
                 <input id="email" type="email" asp-for="Email" class="form-control login-input" aria-label="Email" autocomplete="email" required />

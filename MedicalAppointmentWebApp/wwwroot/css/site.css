@@ -41,26 +41,27 @@ body {
 
 /********** Login Page ***********/
 
-.login-page, .register-page {
+.wrapper {
     min-height: 100vh;
     padding: 16px;
-}
-
-.login-container, .register-container {
-    width: 100%;
-    max-width: 420px;
     text-align: center;
 }
 
-.login-title,.register-title {
+
+.title {
     font-size: 24px;
     font-weight: 600;
 }
 
-.login-subtitle {
+.subtitle {
     color: #676767;
     font-size: 16px;
     font-weight: 300;
+}
+
+.login-form, .register-form{
+    max-width: 420px;
+    margin: 0 auto;
 }
 
 .login-label, .register-label {
@@ -98,18 +99,19 @@ body {
         box-shadow: 0 0 0 0.2rem #4ea7e721;
     }
 
-.login-btn, .register-btn {
+.primary-btn {
     height: 48px;
     border-radius: 12px;
     font-size: 16px;
     background: #4EA7E7; 
     border-color: #4EA7E7;
     font-weight: 400;
+    max-width: 420px;
+    display:block;
 }
 
-    .login-btn:hover,
-    .login-btn:focus, .register-btn:hover,
-    .register-btn:focus {
+    .primary-btn:hover,
+    .primary-focus {
         background: #4096d9;
         border-color: #4096d9;
     }
@@ -314,3 +316,54 @@ body {
 .d-none {
     display: none;
 }
+
+
+
+/****** REGISTRATION INFO PAGE *****/
+
+
+.fc-blue {
+    color: #4EA7E7;
+}
+
+
+.fc-black {
+    color: #8a8a8a;
+}
+fw-100 {
+    font-weight: 100;
+}
+
+.fs-16 {
+   
+    font-size: 16px; 
+}
+
+
+.registration-info {
+    max-width: 420px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 23px 100px -26px #00000000;
+}
+
+
+    .registration-info .row {
+        border-bottom: 1px solid #0000000f;
+        padding: 5px;
+    
+}
+    .registration-info .info-title {
+        text-align: right;
+        font-size: 16px;
+        font-weight: 100;
+        color: #cecece;
+    }
+
+    .registration-info .info-value {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 100;
+        color: #8a8a8a;
+    }

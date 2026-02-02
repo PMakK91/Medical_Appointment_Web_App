@@ -37,5 +37,17 @@ namespace MedicalAppointmentWebApp.Services
 
             return doctor;
         }
+
+        public async Task<Doctor?> ViewRegistrationAsync(Guid id)
+        {
+            Doctor? doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+
+            if (doctor is null)
+            {
+                return null;
+            }
+
+            return doctor;
+        }
     }
 }

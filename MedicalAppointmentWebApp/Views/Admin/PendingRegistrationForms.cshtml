@@ -2,6 +2,7 @@
 @{
 }
 
+<!---
 <h2>Pending Registration Forms</h2>
 
 <table class="table">
@@ -18,6 +19,8 @@
         </tr>
     </thead>
     <tbody>
+
+    
     @{
         var index = 1;
     }
@@ -36,5 +39,44 @@
 
         ++index;
     }
+    
     </tbody>
 </table>
+
+--->
+
+
+
+@{
+    ViewData["Title"] = "Pending Doctor Registrations";
+    Layout = "_LayoutNoNavBar";
+}
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Εκκρεμείς Αιτήσεις</h1>
+        <p class="subtitle mb-5">Αιτήσεις ιατρών προς εξέταση</p>
+
+
+
+
+        <ul class="admin-registrations-list list-unstyled">
+             
+            @foreach (var doctor in Model)
+            {
+            <li>
+                <span class="registration-id">@doctor.Id</span>
+                <div class="registration-status"></div>
+                <span class="registration-name-surname">@doctor.FirstName @doctor.LastName</span>
+                    <span class="registration-date">@doctor.RegistrationDate</span>
+                    <a asp-controller="Admin" asp-action="RegistrationInfoPage" asp-route-id="@doctor.Id" class="registration-link">Λεπτομέρειες</a>
+
+            </li>
+
+            }
+
+
+        </ul>
+
+
+    </div>
+</div>

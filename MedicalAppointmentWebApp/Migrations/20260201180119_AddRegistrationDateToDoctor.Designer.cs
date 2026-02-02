@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppointmentWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260131100202_UserAndRolesMigration")]
-    partial class UserAndRolesMigration
+    [Migration("20260201180119_AddRegistrationDateToDoctor")]
+    partial class AddRegistrationDateToDoctor
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

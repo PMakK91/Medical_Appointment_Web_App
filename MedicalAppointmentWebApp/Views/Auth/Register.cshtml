@@ -5,10 +5,10 @@
     Layout = "_LayoutNoNavBar";
 }
 
-<div class="register-page d-flex align-items-center">
-    <div class="register-container mx-auto">
-        <h1 class="register-title mb-2">Εγγραφή</h1>
-        <p class="register-subtitle mb-5"></p>
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Εγγραφή</h1>
+        <p class="subtitle mb-5"></p>
 
         <div class="register-tabs" role="tablist" aria-label="Επιλογή ρόλου">
             <button type="button" class="register-tab active" role="tab" aria-selected="true">
@@ -20,7 +20,7 @@
         </div>
 
         <!-- ===================== PATIENT FORM ===================== -->
-        <form asp-controller="Auth" asp-action="PatientRegister" id="register-form-patient" method="post" class="w-100">
+        <form asp-controller="Auth" asp-action="PatientRegister" id="register-form-patient" method="post" class="register-form">
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNamePatient">Όνομα:</label>
                 <input asp-for="FirstName" id="firstNamePatient" type="text"
@@ -91,7 +91,7 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary w-100 register-btn">
+            <button type="submit" class="btn btn-primary w-100 primary-btn">
                 Εγγραφή ως ασθενής
             </button>
 
@@ -99,7 +99,7 @@
         </form>
 
         <!-- ===================== DOCTOR FORM ===================== -->
-        <form asp-controller="Auth" asp-action="DoctorRegister" id="register-form-doctor" method="post" class="w-100 d-none">
+        <form asp-controller="Auth" asp-action="DoctorRegister" id="register-form-doctor" method="post" class="register-form d-none">
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNameDoctor">Όνομα:</label>
                 <input asp-for="FirstName" id="firstNameDoctor" type="text"
@@ -227,7 +227,7 @@
             </div>
 
 
-            <button type="submit" class="btn btn-primary w-100 register-btn">
+            <button type="submit" class="btn btn-primary w-100 primary-btn">
                 Αίτηση εγγραφής ως ιατρός
             </button>
 

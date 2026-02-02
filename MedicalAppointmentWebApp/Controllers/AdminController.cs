@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointmentWebApp.Controllers
 {
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    //[Authorize(Roles = nameof(UserRole.Admin))]
+    [AllowAnonymous]
     [Route("[controller]/[action]")]
     public class AdminController(IAdminService adminService) : Controller
     {
@@ -38,6 +39,19 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             return RedirectToAction("PendingRegistrationForms", "Admin");
+        }
+
+        public async Task<IActionResult> RegistrationInfoPageAsync(Guid id)
+        { 
+
+            Doctor? doctor = await adminService.ViewRegistrationAsync(id);
+
+            if (doctor is null)
+            {
+                return BadRequest("Doctor not found");
+            }
+
+            return View(doctor);
         }
     }
 }

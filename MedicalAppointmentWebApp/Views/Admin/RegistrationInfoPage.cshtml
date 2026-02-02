@@ -1,0 +1,61 @@
+﻿@model MedicalAppointmentWebApp.Models.Doctor
+
+
+
+@{
+    ViewData["Title"] = "Λεπτομέρειες Αίτησης";
+    Layout = "_LayoutNoNavBar";
+}
+
+
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+
+        <p class="fs-14 fw-100 fc-black">@Model.RegistrationDate</p>
+        <h1 class="title mb-2 fc-blue">#@Model.Id</h1>
+        <p class="subtitle mb-5">Πληροφορίες Αίτησης</p>
+
+<div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 info-title">Όνομα</div> <div class="info-value col-6">@Model.FirstName</div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 info-title">Επώνυμο</div> <div class="info-value col-6">@Model.LastName</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 info-title">Ειδικότητα</div> <div class="info-value col-6">@Model.Specialty.ToString()</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 info-title">ΑΜΚΑ</div> <div class="info-value col-6">@Model.Amka</div>
+            </div>
+
+
+            <div class="row">
+    <div class="col-6 info-title">Αριθμός Αδείας</div> <div class="info-value col-6">TODO</div>
+</div>
+
+
+            <div class="row">
+                <div class="col-6 info-title">Ημ/νία Γέννησης</div> <div class="info-value col-6">@Model.BirthDate</div>
+            </div>
+
+
+
+        
+    </div>
+
+
+
+        <button class="mx-auto btn btn-primary w-100 primary-btn mt-5" asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Id">Αποδοχή</button>
+        <button class="mx-auto btn btn-primary w-100 primary-btn mt-1" asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Id">Απόρριψη</button>
+
+
+    </div>
+</div>
