@@ -39,6 +39,67 @@ body {
 }
 
 
+.bg-blue {
+    background: #4EA7E7;
+    background-color: #4EA7E7 !important;
+}
+
+
+.fc-blue {
+    color: #4EA7E7;
+}
+
+.fc-grey {
+    color: #8a8a8a;
+}
+
+.fc-black {
+    color: #1B1B1B;
+}
+
+
+
+.fw-100 {
+    font-weight: 100;
+}
+
+.fw-200 {
+    font-weight: 200;
+}
+
+.fw-300 {
+    font-weight: 300;
+}
+
+.fw-400 {
+    font-weight: 400;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.fs-12 {
+    font-size: 12px;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
+
+.fs-18 {
+    font-size: 18px;
+}
+
+
 /********** Login Page ***********/
 
 .wrapper {
@@ -83,7 +144,7 @@ body {
 }
 
 
-.login-input , .register-input{
+.login-input, .register-input, .search-input {
     height: 48px;
     border-radius: 12px;
     border: none;
@@ -94,7 +155,7 @@ body {
     font-weight: 100;
 }
 
-    .login-input:focus, .register-input:focus {
+    .login-input:focus, .register-input:focus, .search-input:focus {
         background: #eeeeee;
         box-shadow: 0 0 0 0.2rem #4ea7e721;
     }
@@ -108,12 +169,14 @@ body {
     font-weight: 400;
     max-width: 420px;
     display:block;
+    color: #fff;
 }
 
     .primary-btn:hover,
     .primary-focus {
         background: #4096d9;
         border-color: #4096d9;
+        color: #fff;
     }
 
 .form-error {
@@ -322,48 +385,66 @@ body {
 /****** REGISTRATION INFO PAGE *****/
 
 
-.fc-blue {
-    color: #4EA7E7;
-}
-
-
-.fc-black {
-    color: #8a8a8a;
-}
-fw-100 {
-    font-weight: 100;
-}
-
-.fs-16 {
-   
-    font-size: 16px; 
-}
-
 
 .registration-info {
     max-width: 420px;
     background: #fff;
     border-radius: 12px;
-    padding: 24px;
+    padding: 16px;
     box-shadow: 0 23px 100px -26px #00000000;
 }
 
 
-    .registration-info .row {
-        border-bottom: 1px solid #0000000f;
-        padding: 5px;
-    
-}
-    .registration-info .info-title {
-        text-align: right;
-        font-size: 16px;
-        font-weight: 100;
-        color: #cecece;
+    .registration-info .row{
+    padding: 10px 0px;
+    width: 95%;
+    margin: 0 auto;
     }
 
-    .registration-info .info-value {
-        text-align: left;
-        font-size: 16px;
-        font-weight: 100;
-        color: #8a8a8a;
+    .registration-info .row:not(:last-child) {
+        border-bottom: 1px solid #00000014;
+    }
+   
+   
+
+
+    /*********** REGISTRATION LIST PAGE *************/
+
+ul.admin-registrations-list{
+    max-width: 420px;
+}
+.admin-registrations-list li {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 23px 100px -26px #00000000;
+}
+
+
+.admin-registrations-list .status-circle {
+    width: 14px;
+    height: 14px;
+    background: #ffb27b;
+    border-radius: 100%;
+
+}
+
+.search-form {
+    max-width: 420px;
+}
+
+
+
+/******* PAGINATION ******/
+.pagination {
+    max-width: 420px;
+}
+
+    .pagination .active > .page-link, .page-link.active {
+        border-radius: 5px !important;
+    }
+
+
+    .pagination .page-link:not(.active):hover {
+        color: #4EA7E7;
     }
