@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointmentWebApp.Controllers
 {
-    //[Authorize(Roles = nameof(UserRole.Admin))]
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     [Route("[controller]/[action]")]
     public class AdminController(IAdminService adminService) : Controller
     {
