@@ -55,7 +55,7 @@
                         @if (User.Identity != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingRegistrationForms">Pending</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Pending</a>
                             </li>
                         }
                     </ul>
