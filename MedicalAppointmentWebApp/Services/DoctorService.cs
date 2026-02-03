@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Data;
+using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,8 @@ namespace MedicalAppointmentWebApp.Services
                 query = query.Where(d =>
                 (d.FirstName != null && d.FirstName.Contains(term)) ||
                 (d.LastName != null && d.LastName.Contains(term)) ||
-                (d.Email != null && d.Email.Contains(term)));
+                (d.Email != null && d.Email.Contains(term)) ||
+                (((Specialty)d.Specialty).ToString().Contains(term)));
             }
 
             int totalItems = await query.CountAsync();

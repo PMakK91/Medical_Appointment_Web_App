@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AdminService(AppDbContext _context, IConfiguration _configuration): IAdminService
+    public class AdminService(AppDbContext _context): IAdminService
     {
         public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
         {
@@ -18,7 +18,8 @@ namespace MedicalAppointmentWebApp.Services
                 query = query.Where(d =>
                 (d.FirstName != null && d.FirstName.Contains(term)) ||
                 (d.LastName != null && d.LastName.Contains(term)) ||
-                (d.Email != null && d.Email.Contains(term)));
+                (d.Email != null && d.Email.Contains(term)) ||
+                (((Specialty)d.Specialty).ToString().Contains(term)));
             }
 
             int totalItems = await query.CountAsync();
