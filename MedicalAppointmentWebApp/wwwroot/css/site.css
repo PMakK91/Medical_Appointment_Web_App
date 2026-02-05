@@ -167,15 +167,17 @@ body {
         }
 
     .primary-btn {
-        height: 48px;
-        border-radius: 12px;
-        font-size: 16px;
-        background: #4EA7E7;
-        border-color: #4EA7E7;
-        font-weight: 400;
-        max-width: 420px;
-        display: block;
-        color: #fff;
+  height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    background: #4EA7E7;
+    border-color: #4EA7E7;
+    font-weight: 400;
+    max-width: 420px;
+    display: flex;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
     }
 
         .primary-btn:hover,
@@ -234,7 +236,7 @@ body {
             border-bottom-color: #4EA7E7;
         }
     /********* Select ************/
-    /* === MAIN "SELECT" BUTTON (να μοιάζει με input) === */
+    /* === MAIN "SELECT" BUTTON (Γ­Γ΅ Γ¬Γ―Γ©ΓΓ¦Γ¥Γ© Γ¬Γ¥ input) === */
     .register-select {
         height: 48px;
         border-radius: 12px;
@@ -266,17 +268,17 @@ body {
             box-shadow: 0 0 0 0.2rem rgba(78,167,231,.20);
             outline: none;
         }
-        /* όταν είναι ανοιχτό */
+        /* ΓΌΓ΄Γ΅Γ­ Γ¥ΓΓ­Γ΅Γ© Γ΅Γ­Γ―Γ©Γ·Γ΄ΓΌ */
         .register-select.show,
         .btn.show.register-select {
             background: #eeeeee;
             box-shadow: 0 0 0 0.2rem rgba(78,167,231,.12);
         }
-    /* placeholder style (όταν δεν έχει επιλεγεί κάτι) */
+    /* placeholder style (ΓΌΓ΄Γ΅Γ­ Γ¤Γ¥Γ­ ΓΓ·Γ¥Γ© Γ¥Γ°Γ©Γ«Γ¥Γ£Γ¥Γ ΓªΓΓ΄Γ©) */
     #specializationSelectedText.placeholder {
         color: #8a8a8a;
     }
-    /* === DROPDOWN MENU (ίδιο look με το δικό σου) === */
+    /* === DROPDOWN MENU (ΓΓ¤Γ©Γ― look Γ¬Γ¥ Γ΄Γ― Γ¤Γ©ΓªΓΌ Γ³Γ―Γµ) === */
     #specializationMenu.dropdown-menu {
         border-radius: 12px;
         padding: 10px;
@@ -284,9 +286,9 @@ body {
         background: #eeeeee;
         box-shadow: 0 8px 24px rgba(0,0,0,.12);
     }
-    /* search input μέσα στο dropdown να ταιριάζει */
+    /* search input Γ¬ΓΓ³Γ΅ Γ³Γ΄Γ― dropdown Γ­Γ΅ Γ΄Γ΅Γ©Γ±Γ©ΓΓ¦Γ¥Γ© */
     #specializationSearch {
-        height: 44px; /* λίγο πιο μικρό από field */
+        height: 44px; /* Γ«ΓΓ£Γ― Γ°Γ©Γ― Γ¬Γ©ΓªΓ±ΓΌ Γ΅Γ°ΓΌ field */
         border-radius: 12px;
         border: none;
         background: #EAEAEA;
