@@ -66,25 +66,28 @@
         
     </div>
 
+<form asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Id">
 
-
-        <button class="mx-auto btn btn-primary w-100 primary-btn mt-5" asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Id">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
-                <path d="M20 6 L9 17 L4 12"></path>
-            </svg>
-            Αποδοχή
-        </button>
-        <button class="mx-auto btn btn-primary w-100 primary-btn mt-1" asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Id">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
-                <path d="M18 6 L6 18"></path>
-                <path d="M6 6 L18 18"></path>
-            </svg>
-            Απόρριψη
-        </button>
+    <button class="mx-auto btn btn-primary w-100 primary-btn mt-5" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+            <path d="M20 6 L9 17 L4 12"></path>
+        </svg>
+        Αποδοχή
+    </button>
+</form>
+<form asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Id">
+    <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+            <path d="M18 6 L6 18"></path>
+            <path d="M6 6 L18 18"></path>
+        </svg>
+        Απόρριψη
+    </button>
+</form>
 
 
     </div>
