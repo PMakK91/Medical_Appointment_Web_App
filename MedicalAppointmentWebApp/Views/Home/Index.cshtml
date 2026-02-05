@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
+
+@{
+    ViewData["Title"] = "Αρχική Σελίδα";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="wrapper d-flex">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Αναζήτηση Ιατρού</h1>
+        <p class="subtitle mb-5">Πληκτρολογίστε όνομα ιατρού ή ειδικότητα</p>
+
+        <form method="get" action="@Url.Action(action: "Index", controller: "Doctor")" class="mx-auto mb-5 search-form">
+
+            <input type="text" name="term" value="" aria-label="Αναζήτηση" class="form-control search-input" required />
+
+            <button type="submit" class="btn primary-btn btn-primary w-100 mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M20 20 L16.5 16.5"></path>
+                </svg>
+                Αναζήτηση
+            </button>
+
+        </form>
+    </div>
 </div>

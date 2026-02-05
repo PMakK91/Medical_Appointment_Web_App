@@ -1,0 +1,91 @@
+﻿@model MedicalAppointmentWebApp.Models.Doctor
+
+
+
+@{
+    ViewData["Title"] = "Λεπτομέρειες Αίτησης";
+    Layout = "_Layout";
+}
+
+
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+
+        <p class="fs-14 fw-100 fc-black">@Model.RegistrationDate</p>
+        <h1 class="title mb-2 fc-blue">#@Model.Id</h1>
+        <p class="subtitle mb-5">Πληροφορίες Αίτησης</p>
+
+<div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Όνομα</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.FirstName</div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Επώνυμο</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.LastName</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Specialty.ToString()</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">ΑΜΚΑ</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Amka</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Αριθμός Αδείας</div> <div class="text-start fc-black fs-16 fw-100 col-6">TODO</div>
+</div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ημ/νία Γέννησης</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.BirthDate</div>
+            </div>
+         
+
+
+        </div>
+
+            <div class="registration-info mx-auto mt-2">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Email</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Email</div>
+                </div>
+                <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Τηλέφωνο</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Phone</div>
+                </div>
+
+            
+
+
+
+        
+    </div>
+
+
+
+        <button class="mx-auto btn btn-primary w-100 primary-btn mt-5" asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Id">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                <path d="M20 6 L9 17 L4 12"></path>
+            </svg>
+            Αποδοχή
+        </button>
+        <button class="mx-auto btn btn-primary w-100 primary-btn mt-1" asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Id">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                <path d="M18 6 L6 18"></path>
+                <path d="M6 6 L18 18"></path>
+            </svg>
+            Απόρριψη
+        </button>
+
+
+    </div>
+</div>

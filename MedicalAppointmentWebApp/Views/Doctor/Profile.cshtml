@@ -1,19 +1,19 @@
 ﻿@model Doctor
 
-<h2>@Model.FirstName @Model.LastName</h2>
+@{
+    ViewData["Title"] = Model.FirstName + " " + Model.LastName;
+    Layout = "_Layout";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Specialty</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@Model.Email</td>
-            <td>@Html.DisplayFor(m => m.Specialty)</td>
-        </tr>
-    </tbody>
-</table>
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">@Model.FirstName @Model.LastName</h1>
+        <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
+
+
+
+
+
+    </div>
+</div>
 

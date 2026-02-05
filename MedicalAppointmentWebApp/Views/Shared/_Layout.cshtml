@@ -27,34 +27,39 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Doctor" asp-action="Index">Doctors</a>
+                            <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = "", page = 1, pageSize = 10 })" class="nav-link text-dark">Doctors</a>
                         </li>
+                        -->
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <form method="post" asp-action="Logout" asp-controller="Auth">
-                                    <button class="nav-link text-dark" type="submit">Logout</button>
+                                    <button class="nav-link text-dark" type="submit">Αποσύνδεση</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Σύνδεση</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Register">Εγγραφή</a>
                             </li>
                         }
 
                         @if (User.Identity != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingRegistrationForms">Pending</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Pending</a>
                             </li>
                         }
                     </ul>
@@ -68,9 +73,10 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - MedicalAppointmentWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer py-4 bg-white">
+        <div class=" text-center">
+            <p class="fc-black fs-14 fw-100 mb-1"> &copy; 2026 - MedicalAppointmentWebApp</p>
+            <a class="fc-blue fs-14 text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Απόρρητο</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
