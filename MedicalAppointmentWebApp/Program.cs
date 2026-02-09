@@ -1,4 +1,5 @@
 using MedicalAppointmentWebApp.Data;
+using MedicalAppointmentWebApp.Repositories;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -42,9 +43,12 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddAuthorization();
 
+// Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 
 builder.Services
     .AddControllersWithViews()

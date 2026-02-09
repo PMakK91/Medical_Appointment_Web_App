@@ -1,4 +1,7 @@
-﻿namespace MedicalAppointmentWebApp.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+
+namespace MedicalAppointmentWebApp.Models.ViewModels
 {
     public class DoctorSearchViewModel
     {
@@ -12,5 +15,14 @@
 
         public int TotalPages =>
             (int) Math.Ceiling((double)TotalItems / PageSize);
+
+        public string GetDisplayName(Doctor doctor)
+        {
+            return doctor.Specialty.GetType()
+            .GetMember(doctor.Specialty.ToString())
+            .FirstOrDefault()?
+            .GetCustomAttribute<DisplayAttribute>()?
+            .GetName() ?? doctor.Specialty.ToString();
+        }
     }
 }

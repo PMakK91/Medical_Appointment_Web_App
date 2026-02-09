@@ -12,14 +12,14 @@ using System.Text;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AuthService(AppDbContext _context, IConfiguration _configuration) : IAuthService
+    public class AuthService(AppDbContext context, IConfiguration configuration) : IAuthService
     {
         private static long TOKEN_EXPIRATION_TIME = 86400; // seconds = 24 hours
         private static long REFRESH_TOKEN_EXPIRATION_TIME = 28800; // seconds = 8 hours
 
         public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(f => (f.Email != null && f.Email.Equals(request.Email)) /*|| f.Amka.Equals(request.Amka)*/))
+            if (await context.Users.AnyAsync(f => (f.Email != null && f.Email.Equals(request.Email)) /*|| f.Amka.Equals(request.Amka)*/))
             {
                 return null;
             }
@@ -37,18 +37,18 @@ namespace MedicalAppointmentWebApp.Services
             doctor.Gender = request.Gender;
             doctor.BirthDate = request.BirthDate;
             doctor.RegistrationDate = DateTime.UtcNow;
-            doctor.Specialty = (Specialty)request.Specialty;
+            doctor.Specialty = (Specialty)request.Specialty!;
             doctor.RegistrationStatus = RegistrationFormStatus.Pending;
 
-            _context.Doctors.Add(doctor);
-            await _context.SaveChangesAsync();
+            context.Doctors.Add(doctor);
+            await context.SaveChangesAsync();
 
             return doctor;
         }
 
         public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
+            if (await context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
             {
                 return null;
             }
@@ -62,15 +62,15 @@ namespace MedicalAppointmentWebApp.Services
 
             if (patient is null) return null;
 
-            _context.Patients.Add(patient);
-            await _context.SaveChangesAsync();
+            context.Patients.Add(patient);
+            await context.SaveChangesAsync();
 
             return patient;
         }
 
         public async Task<Admin?> AdminRegisterAsync(RegisterRequest request)
         {
-            if (await _context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
+            if (await context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
             {
                 return null;
             }
@@ -84,8 +84,8 @@ namespace MedicalAppointmentWebApp.Services
 
             if (admin is null) return null;
 
-            _context.Admins.Add(admin);
-            await _context.SaveChangesAsync();
+            context.Admins.Add(admin);
+            await context.SaveChangesAsync();
 
             return admin;
         }
@@ -106,7 +106,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<User?> LogoutAsync(string? refreshToken)
         {
-            User? user = _context.Users.FirstOrDefault(u => u.RefreshToken != null && u.RefreshToken.Equals(refreshToken));
+            User? user = context.Users.FirstOrDefault(u => u.RefreshToken != null && u.RefreshToken.Equals(refreshToken));
 
             if (user is null)
             {
@@ -115,20 +115,20 @@ namespace MedicalAppointmentWebApp.Services
             
             user.RefreshToken = null;
             user.RefreshTokenExpiryTime = null;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return user;
         }
 
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email.Equals(request.Email));
+            User? user = await context.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email.Equals(request.Email));
             if (user is null)
             {
                 return null;
             }
 
-            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.Password, request.Password)
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.Password!, request.Password)
                 == PasswordVerificationResult.Failed)
             {
                 return null;
@@ -164,7 +164,7 @@ namespace MedicalAppointmentWebApp.Services
 
         private async Task<User?> ValidateRefreshToken(Guid userId, string refreshToken)
         {
-            User? user = await _context.Users.FindAsync(userId);
+            User? user = await context.Users.FindAsync(userId);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow) 
             {
                 return null;
@@ -184,7 +184,7 @@ namespace MedicalAppointmentWebApp.Services
             string refreshToken = GenerateRefreshToken();
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(REFRESH_TOKEN_EXPIRATION_TIME);
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return refreshToken;
         }
 
@@ -192,19 +192,19 @@ namespace MedicalAppointmentWebApp.Services
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Email, user.Email!),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration.GetValue<string>("SecretKey")!));
+                Encoding.UTF8.GetBytes(configuration.GetValue<string>("SecretKey")!));
 
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             JwtSecurityToken tokenDescriptor = new JwtSecurityToken(
-                issuer: _configuration.GetValue<string>("Issuer"),
-                audience: _configuration.GetValue<string>("Audience"),
+                issuer: configuration.GetValue<string>("Issuer"),
+                audience: configuration.GetValue<string>("Audience"),
                 claims: claims,
                 expires: DateTime.UtcNow.AddSeconds(TOKEN_EXPIRATION_TIME),
                 signingCredentials: creds

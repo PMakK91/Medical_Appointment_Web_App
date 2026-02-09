@@ -1,4 +1,5 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
+﻿@using System.Reflection
+@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
 
 @{
     ViewBag.Title = "Ιατροί";
@@ -43,7 +44,7 @@
                         </div>
                         <div class="col-9 text-start">
                             <p class="fc-black fs-16 fw-400 mb-0">@doctor.FirstName @doctor.LastName</p>
-                            <p class="fc-grey fs-16 fw-100">@doctor.Specialty.ToString()</p>
+                            <p class="fc-grey fs-16 fw-100">@Model.GetDisplayName(doctor)</p>
                         </div>
                     </div>
 
