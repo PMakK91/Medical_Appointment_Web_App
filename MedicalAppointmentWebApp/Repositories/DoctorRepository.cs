@@ -23,9 +23,19 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.Where(d => d.RegistrationStatus.Equals(RegistrationFormStatus.Accepted)).ToListAsync();
         }
 
+        public void InsertDoctor(Doctor doctor)
+        {
+            context.Doctors.Add(doctor);
+        }
+
         public async Task<Doctor?> GetDoctorByIDAsync(Guid doctorId)
         {
             return await context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
+        }
+
+        public async Task<Doctor?> GetDoctorByEmailAsync(string email)
+        {
+            return await context.Doctors.FirstOrDefaultAsync(d => d.Email!.Equals(email));
         }
 
         public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, int page, int pageSize)
@@ -61,6 +71,15 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToListAsync();
 
             return (Doctors: doctors, TotalCount: totalCount);
+        }
+
+        public void Save()
+        {
+            context.SaveChanges();
+        }
+        public async Task SaveAsync()
+        {
+            await context.SaveChangesAsync();
         }
 
 

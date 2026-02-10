@@ -2,6 +2,7 @@
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
+using MedicalAppointmentWebApp.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,14 +13,19 @@ using System.Text;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AuthService(AppDbContext context, IConfiguration configuration) : IAuthService
+    public class AuthService(
+        IConfiguration configuration, 
+        IDoctorRepository doctorRepository, 
+        IUserRepository userRepository,
+        IPatientRepository patientRepository,
+        IAdminRepository adminRepository) : IAuthService
     {
         private static long TOKEN_EXPIRATION_TIME = 86400; // seconds = 24 hours
         private static long REFRESH_TOKEN_EXPIRATION_TIME = 28800; // seconds = 8 hours
 
         public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
-            if (await context.Users.AnyAsync(f => (f.Email != null && f.Email.Equals(request.Email)) /*|| f.Amka.Equals(request.Amka)*/))
+            if (await userRepository.AnyUserWithEmailAsync(request.Email))
             {
                 return null;
             }
@@ -40,15 +46,15 @@ namespace MedicalAppointmentWebApp.Services
             doctor.Specialty = (Specialty)request.Specialty!;
             doctor.RegistrationStatus = RegistrationFormStatus.Pending;
 
-            context.Doctors.Add(doctor);
-            await context.SaveChangesAsync();
+            doctorRepository.InsertDoctor(doctor);
+            await doctorRepository.SaveAsync();
 
             return doctor;
         }
 
         public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
+            if (await userRepository.AnyUserWithEmailAsync(request.Email))
             {
                 return null;
             }
@@ -62,15 +68,15 @@ namespace MedicalAppointmentWebApp.Services
 
             if (patient is null) return null;
 
-            context.Patients.Add(patient);
-            await context.SaveChangesAsync();
+            patientRepository.InsertPatient(patient);
+            await patientRepository.SaveAsync();
 
             return patient;
         }
 
         public async Task<Admin?> AdminRegisterAsync(RegisterRequest request)
         {
-            if (await context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(request.Email)))
+            if (await userRepository.AnyUserWithEmailAsync(request.Email))
             {
                 return null;
             }
@@ -84,8 +90,8 @@ namespace MedicalAppointmentWebApp.Services
 
             if (admin is null) return null;
 
-            context.Admins.Add(admin);
-            await context.SaveChangesAsync();
+            adminRepository.InsertAdmin(admin);
+            await adminRepository.SaveAsync();
 
             return admin;
         }
@@ -106,7 +112,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<User?> LogoutAsync(string? refreshToken)
         {
-            User? user = context.Users.FirstOrDefault(u => u.RefreshToken != null && u.RefreshToken.Equals(refreshToken));
+            User? user = userRepository.GetUserByRefreshToken(refreshToken);
 
             if (user is null)
             {
@@ -115,14 +121,14 @@ namespace MedicalAppointmentWebApp.Services
             
             user.RefreshToken = null;
             user.RefreshTokenExpiryTime = null;
-            await context.SaveChangesAsync();
+            await userRepository.SaveAsync();
 
             return user;
         }
 
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)
         {
-            User? user = await context.Users.FirstOrDefaultAsync(u => u.Email != null && u.Email.Equals(request.Email));
+            User? user = await userRepository.GetUserByEmailAsync(request.Email);
             if (user is null)
             {
                 return null;
@@ -164,7 +170,7 @@ namespace MedicalAppointmentWebApp.Services
 
         private async Task<User?> ValidateRefreshToken(Guid userId, string refreshToken)
         {
-            User? user = await context.Users.FindAsync(userId);
+            User? user = await userRepository.FindUserByIdAsync(userId);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow) 
             {
                 return null;
@@ -184,7 +190,7 @@ namespace MedicalAppointmentWebApp.Services
             string refreshToken = GenerateRefreshToken();
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(REFRESH_TOKEN_EXPIRATION_TIME);
-            await context.SaveChangesAsync();
+            await userRepository.SaveAsync();
             return refreshToken;
         }
 

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AdminService(AppDbContext context, IDoctorRepository doctorRepository) : IAdminService
+    public class AdminService(IDoctorRepository doctorRepository) : IAdminService
     {
         public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
         {
@@ -43,7 +43,7 @@ namespace MedicalAppointmentWebApp.Services
             }
 
             doctor.RegistrationStatus = status;
-            await context.SaveChangesAsync();
+            await doctorRepository.SaveAsync();
 
             return doctor;
         }
