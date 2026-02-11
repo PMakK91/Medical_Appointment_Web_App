@@ -14,6 +14,8 @@ namespace MedicalAppointmentWebApp.Data
 
         public DbSet<Practice> Practices { get; set; }
 
+        public DbSet<Appointment> Appointments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -23,10 +25,29 @@ namespace MedicalAppointmentWebApp.Data
             modelBuilder.Entity<Patient>().ToTable("patients");
             modelBuilder.Entity<Admin>().ToTable("admins");
 
-            modelBuilder.Entity<Practice>().ToTable("practices")
+            modelBuilder.Entity<Practice>()
+                .ToTable("practices")
                 .HasOne(d => d.Doctor)
                 .WithMany(p => p.Practices)
-                .HasForeignKey(d => d.DoctorId);
+                .HasForeignKey(d => d.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>().ToTable("appointments");
+            modelBuilder.Entity<Appointment>()
+                .HasOne(d => d.Doctor)
+                .WithMany(a => a.Appointments)
+                .HasForeignKey(d => d.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Appointment>()
+                .HasOne(p => p.Patient)
+                .WithMany(a => a.Appointments)
+                .HasForeignKey(p => p.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Appointment>()
+                .HasOne(p => p.Practice)
+                .WithMany(a => a.Appointments)
+                .HasForeignKey(p => p.PracticeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

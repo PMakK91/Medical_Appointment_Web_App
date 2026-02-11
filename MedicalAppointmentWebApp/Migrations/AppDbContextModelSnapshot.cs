@@ -22,6 +22,44 @@ namespace MedicalAppointmentWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("patient_id");
+
+                    b.Property<Guid>("PracticeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("practice_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("Status");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("PracticeId");
+
+                    b.ToTable("appointments", (string)null);
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -178,12 +216,39 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.ToTable("patients", (string)null);
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Appointment", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
+                        .WithMany("Appointments")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicalAppointmentWebApp.Models.Patient", "Patient")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicalAppointmentWebApp.Models.Practice", "Practice")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PracticeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Practice");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
                 {
                     b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
                         .WithMany("Practices")
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Doctor");
@@ -216,9 +281,21 @@ namespace MedicalAppointmentWebApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("Practices");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
+                {
+                    b.Navigation("Appointments");
                 });
 #pragma warning restore 612, 618
         }

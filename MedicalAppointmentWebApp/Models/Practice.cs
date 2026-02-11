@@ -43,5 +43,7 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }
+
+        public virtual ICollection<Appointment>? Appointments { get; set; }
     }
 }
