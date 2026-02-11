@@ -22,6 +22,56 @@ namespace MedicalAppointmentWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AppointmentDuration")
+                        .HasColumnType("int")
+                        .HasColumnName("appointment_duration");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("city");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("postal_code");
+
+                    b.Property<int>("RegistrationStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("registration_status");
+
+                    b.Property<DateTime>("ShiftEndTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("shift_end_time");
+
+                    b.Property<DateTime>("ShiftStartTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("shift_start_time");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("street");
+
+                    b.Property<int>("StreetNum")
+                        .HasColumnType("int")
+                        .HasColumnName("street_number");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("practices", (string)null);
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -128,6 +178,17 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.ToTable("patients", (string)null);
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
+                        .WithMany("Practices")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
                 {
                     b.HasOne("MedicalAppointmentWebApp.Models.User", null)
@@ -153,6 +214,11 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasForeignKey("MedicalAppointmentWebApp.Models.Patient", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+                {
+                    b.Navigation("Practices");
                 });
 #pragma warning restore 612, 618
         }

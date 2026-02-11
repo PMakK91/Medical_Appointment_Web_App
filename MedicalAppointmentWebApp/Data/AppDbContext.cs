@@ -12,6 +12,8 @@ namespace MedicalAppointmentWebApp.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Admin> Admins { get; set; }
 
+        public DbSet<Practice> Practices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -20,6 +22,11 @@ namespace MedicalAppointmentWebApp.Data
             modelBuilder.Entity<Doctor>().ToTable("doctors");
             modelBuilder.Entity<Patient>().ToTable("patients");
             modelBuilder.Entity<Admin>().ToTable("admins");
+
+            modelBuilder.Entity<Practice>().ToTable("practices")
+                .HasOne(d => d.Doctor)
+                .WithMany(p => p.Practices)
+                .HasForeignKey(d => d.DoctorId);
         }
     }
 }

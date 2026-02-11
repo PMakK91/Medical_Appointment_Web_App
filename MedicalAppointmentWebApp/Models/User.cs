@@ -56,8 +56,6 @@ namespace MedicalAppointmentWebApp.Models
         [Column("role")]
         public UserRole Role { get; set; }
 
-        //public virtual DoctorDetails? DoctorDetails { get; set; }
-
         [Column("refresh_token")]
         public string? RefreshToken { get; set; }
         [Column("refresh_token_expiry_time")]
