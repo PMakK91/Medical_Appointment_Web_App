@@ -24,11 +24,23 @@ namespace MedicalAppointmentWebApp.Migrations
                     patient_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     doctor_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    AdminId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DoctorId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_appointments", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_appointments_admins_AdminId",
+                        column: x => x.AdminId,
+                        principalTable: "admins",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_appointments_doctors_DoctorId1",
+                        column: x => x.DoctorId1,
+                        principalTable: "doctors",
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_appointments_doctors_doctor_id",
                         column: x => x.doctor_id,
@@ -50,9 +62,19 @@ namespace MedicalAppointmentWebApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_appointments_AdminId",
+                table: "appointments",
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_appointments_doctor_id",
                 table: "appointments",
                 column: "doctor_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_appointments_DoctorId1",
+                table: "appointments",
+                column: "DoctorId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_appointments_patient_id",

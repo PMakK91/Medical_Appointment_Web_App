@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AdminService(IDoctorRepository doctorRepository) : IAdminService
+    public class AdminService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository) : IAdminService
     {
         public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
         {
@@ -58,6 +58,20 @@ namespace MedicalAppointmentWebApp.Services
             }
 
             return doctor;
+        }
+
+        public async Task<PracticeSearchViewModel> SearchPendingPractices(string term, int page = 1, int pageSize = 10)
+        {
+            (IEnumerable<Practice>, int) practicesAndCount = await practiceRepository.SearchPendingAsync(term, page, pageSize);
+
+            return new PracticeSearchViewModel
+            {
+                Practices = practicesAndCount.Item1,
+                Term = term,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = practicesAndCount.Item2
+            };
         }
     }
 }

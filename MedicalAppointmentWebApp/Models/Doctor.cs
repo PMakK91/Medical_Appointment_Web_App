@@ -26,6 +26,6 @@ namespace MedicalAppointmentWebApp.Models
 
         public virtual ICollection<Practice>? Practices { get; set; }
 
-        public virtual ICollection<Appointment>? Appointments { get; set; }
+        public virtual ICollection<Appointment>? MedicalAppointments { get; set; }
     }
 }

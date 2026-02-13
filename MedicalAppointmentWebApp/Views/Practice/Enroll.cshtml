@@ -1,0 +1,76 @@
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.PracticeEnrollRequest
+@{
+    ViewData["Title"] = "Εγγραφή Γραφείου";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Σύνδεση</h1>
+        <p class="subtitle mb-5">Συμπληρώστε τα στοιχεία σας για να <br /> εισέλθετε στον λογαριασμό σας</p>
+
+        <form method="post" asp-controller="Practice" asp-action="Enroll" class="login-form">
+            <div class="mb-3">
+                <label class="form-label register-label" for="city">Πόλη:</label>
+                <input asp-for="City" id="city" type="text"
+                       class="form-control register-input" aria-label="Πόλη"
+                       autocomplete="city" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="street">Οδός:</label>
+                <input asp-for="Street" id="street" type="text"
+                       class="form-control register-input" aria-label="Οδός"
+                       autocomplete="street" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="streetNum">Αριθμός:</label>
+                <input asp-for="StreetNum" id="streetNum" type="text"
+                       class="form-control register-input" aria-label="Αριθμός"
+                       autocomplete="street-number" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="postalCode">Τ.Κ.:</label>
+                <input asp-for="PostalCode" id="postalCode" type="text"
+                       class="form-control register-input" aria-label="Τ.Κ."
+                       autocomplete="postal-code" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="shiftStartTime">Ώρα Έναρξης Εργασίας:</label>
+                <input asp-for="ShiftStartTime" id="shiftStartTime" type="time"
+                       class="form-control" aria-label="Ώρα Έναρξης Εργασίας"
+                       autocomplete="shift-start-time" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="shiftEndTime">Ώρα Λήξης Εργασίας:</label>
+                <input asp-for="ShiftEndTime" id="shiftEndTime" type="time"
+                       class="form-control" aria-label="Ώρα Λήξης Εργασίας"
+                       autocomplete="shift-end-time" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="appointmentDuration">Διάρκεια Ραντεβού (Λεπτά):</label>
+                <input asp-for="AppointmentDuration" id="appointmentDuration" type="number"
+                       class="form-control register-input" aria-label="Διάρκεια Ραντεβού"
+                       autocomplete="appointment-duration" required />
+            </div>
+
+            <button type="submit" class="btn primary-btn w-100 login-btn">
+                Αίτηση εγγραφής γραφείου
+            </button>
+
+            <p class="register-info mt-3 mb-5">
+                Θα ενημερωθείτε για την εξέληξη του αιτήματος μέσω email μόλις ελεγχθεί από το σύστημα
+            </p>
+
+            <!-- form errors -->
+            <div class="form-error mt-3 d-none"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </form>
+
+    </div>
+</div>

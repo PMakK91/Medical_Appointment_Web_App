@@ -53,5 +53,11 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return View(doctor);
         }
+
+        public async Task<IActionResult> PendingPracticesAsync(string term, int page = 1, int pageSize = 10)
+        {
+            PracticeSearchViewModel practiceSearchViewModel = await adminService.SearchPendingPractices(term, page, pageSize);
+            return View(practiceSearchViewModel);
+        }
     }
 }

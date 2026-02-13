@@ -9,5 +9,6 @@ namespace MedicalAppointmentWebApp.Services
         Task<Doctor?> AcceptRegistrationAsync(Guid id);
         Task<Doctor?> RejectRegistrationAsync(Guid id);
         Task<Doctor?> ViewRegistrationAsync(Guid id);
+        Task<PracticeSearchViewModel> SearchPendingPractices(string term, int page = 1, int pageSize = 10);
     }
 }
