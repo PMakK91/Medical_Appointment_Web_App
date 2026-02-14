@@ -3,6 +3,7 @@ using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointmentWebApp.Controllers
@@ -54,10 +55,41 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(doctor);
         }
 
+
         public async Task<IActionResult> PendingPracticesAsync(string term, int page = 1, int pageSize = 10)
         {
             PracticeSearchViewModel practiceSearchViewModel = await adminService.SearchPendingPractices(term, page, pageSize);
             return View(practiceSearchViewModel);
+        }
+        
+        public async Task<IActionResult> AcceptPracticeAsync(Guid id)
+        {
+            Practice? practice = await adminService.AcceptPracticeAsync(id);
+            if (practice is null)
+            {
+                return BadRequest("Practice not found");
+            }
+            return RedirectToAction("PendingPractices", "Admin");
+        }
+
+        public async Task<IActionResult> RejectPracticeAsync(Guid id)
+        {
+            Practice? practice = await adminService.RejectPracticeAsync(id);
+            if (practice is null)
+            {
+                return BadRequest("Practice not found");
+            }
+            return RedirectToAction("PendingPractices", "Admin");
+        }
+
+        public async Task<IActionResult> PracticeInfoPageAsync(Guid id)
+        {
+            Practice? practice = await adminService.ViewPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return BadRequest("Practice not found");
+            }
+            return View(practice);
         }
     }
 }

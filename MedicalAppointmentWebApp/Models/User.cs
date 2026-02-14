@@ -61,6 +61,6 @@ namespace MedicalAppointmentWebApp.Models
         [Column("refresh_token_expiry_time")]
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        public virtual ICollection<Appointment>? Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

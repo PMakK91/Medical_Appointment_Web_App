@@ -1,0 +1,94 @@
+﻿@model MedicalAppointmentWebApp.Models.Practice
+
+
+
+@{
+    ViewData["Title"] = "Λεπτομέρειες Αίτησης";
+    Layout = "_Layout";
+}
+
+
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+
+        @* <p class="fs-14 fw-100 fc-black">@Model.RegistrationDate</p> *@
+        <h1 class="title mb-2 fc-blue">#@Model.Id</h1>
+        <p class="subtitle mb-5">Πληροφορίες Αίτησης</p>
+
+        <div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Πόλη</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.City</div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Οδός</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Street</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Αριθμός</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.StreetNum.ToString()</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Τ.Κ.</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.PostalCode</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ωράριο</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.ShiftStartTime.ToString("HH:mm") - @Model.ShiftEndTime.ToString("HH:mm")</div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Διάρκεια ραντεβού</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.AppointmentDuration</div>
+            </div>
+
+
+
+        </div>
+
+        <div class="registration-info mx-auto mt-2">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Αιτούμενος Γιατρός</div> <div class="text-start fc-black fs-16 fw-100 col-6">#@Model.DoctorId</div>
+            </div>
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Doctor?.FirstName @Model.Doctor?.LastName</div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+        <form asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Id">
+
+            <button class="mx-auto btn btn-primary w-100 primary-btn mt-5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                    <path d="M20 6 L9 17 L4 12"></path>
+                </svg>
+                Αποδοχή
+            </button>
+        </form>
+        <form asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Id">
+            <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                    <path d="M18 6 L6 18"></path>
+                    <path d="M6 6 L18 18"></path>
+                </svg>
+                Απόρριψη
+            </button>
+        </form>
+
+
+    </div>
+</div>

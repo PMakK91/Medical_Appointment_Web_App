@@ -73,5 +73,39 @@ namespace MedicalAppointmentWebApp.Services
                 TotalItems = practicesAndCount.Item2
             };
         }
+
+        public async Task<Practice?> AcceptPracticeAsync(Guid id)
+        {
+            return await ReviewPracticeAsync(id, RegistrationFormStatus.Accepted);
+        }
+
+        public async Task<Practice?> RejectPracticeAsync(Guid id)
+        {
+            return await ReviewPracticeAsync(id, RegistrationFormStatus.Rejected);
+        }
+
+        private async Task<Practice?> ReviewPracticeAsync(Guid id, RegistrationFormStatus status)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+
+            practice.RegistrationStatus = status;
+            await practiceRepository.SaveAsync();
+
+            return practice;
+        }
+
+        public async Task<Practice?> ViewPracticeByIdAsync(Guid id)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+            return practice;
+        }
     }
 }

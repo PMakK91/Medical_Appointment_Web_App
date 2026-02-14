@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppointmentWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260213073106_AppointmentMigration")]
+    [Migration("20260214061950_AppointmentMigration")]
     partial class AppointmentMigration
     {
         /// <inheritdoc />

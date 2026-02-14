@@ -8,16 +8,30 @@ namespace MedicalAppointmentWebApp.Repositories
 {
     public class PracticeRepository(AppDbContext context) : IPracticeRepository, IDisposable
     {
+        public async Task<Practice?> GetPracticeByIdAsync(Guid id)
+        {
+            Practice? practice = await context.Practices.Include(p => p.Doctor).FirstOrDefaultAsync(p => p.Id == id);
+            if (practice is null)
+            {
+                return null;
+            }
+            return practice;
+        }
+
         public async Task<(IEnumerable<Practice> Practices, int TotalCount)> SearchAllWithDoctorIdAsync(Guid doctorId, string term, int page = 1, int pageSize = 10)
         {
-            IQueryable<Practice> query = context.Practices.Where(p => p.DoctorId == doctorId);
+            IQueryable<Practice> query = context.Practices
+                .Where(p => p.DoctorId == doctorId)
+                .Include(p => p.Doctor);
 
             return await SearchAsync(query, term, page, pageSize);
         }
 
         public async Task<(IEnumerable<Practice> Practices, int TotalCount)> SearchPendingAsync(string term, int page = 1, int pageSize = 10)
         {
-            IQueryable<Practice> query = context.Practices.Where(p => p.RegistrationStatus == Data.Enums.RegistrationFormStatus.Pending);
+            IQueryable<Practice> query = context.Practices
+                .Where(p => p.RegistrationStatus == Data.Enums.RegistrationFormStatus.Pending)
+                .Include(p => p.Doctor);
 
             return await SearchAsync(query, term, page, pageSize);
         }
@@ -37,7 +51,6 @@ namespace MedicalAppointmentWebApp.Repositories
             int totalCount = await query.CountAsync();
 
             IEnumerable<Practice> practices = await query
-                .AsNoTracking()
                 .OrderBy(d => d.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
