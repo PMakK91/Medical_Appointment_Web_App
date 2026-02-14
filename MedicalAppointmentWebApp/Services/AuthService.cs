@@ -218,5 +218,20 @@ namespace MedicalAppointmentWebApp.Services
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
+
+        public string? AmkaCheck(string amka)
+        {
+            if (amka.Length != 11)
+            {
+                return "Το ΑΜΚΑ πρέπει να έχει 11 αριθμούς";
+            }
+
+            if (!amka.All(char.IsDigit))
+            {
+                return "Το ΑΜΚΑ μπορεί να αποτελείται μόνο από αριθμούς";
+            }
+
+            return null;
+        }
     }
 }

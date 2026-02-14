@@ -19,6 +19,13 @@ namespace MedicalAppointmentWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> PatientRegister(RegisterRequest request)
         {
+            string? amkaCheck = authService.AmkaCheck(request.Amka);
+            if (amkaCheck != null)
+            {
+                ModelState.AddModelError("", amkaCheck);
+                return View("Register");
+            }
+
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
@@ -32,6 +39,13 @@ namespace MedicalAppointmentWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> DoctorRegister(RegisterRequest request)
         {
+            string? amkaCheck = authService.AmkaCheck(request.Amka);
+            if (amkaCheck != null)
+            {
+                ModelState.AddModelError("", amkaCheck);
+                return View("Register");
+            }
+
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
             {

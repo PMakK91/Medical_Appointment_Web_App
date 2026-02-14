@@ -45,6 +45,8 @@
                 <label class="form-label register-label" for="amkaPatient">ΑΜΚΑ:</label>
                 <input asp-for="Amka" id="amkaPatient" type="text"
                        class="form-control register-input" aria-label="Αμκα"
+                       pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 αριθμούς"
                       required />
             </div>
 
@@ -177,7 +179,9 @@
                 <label class="form-label register-label" for="amkaDoctor">ΑΜΚΑ:</label>
                 <input asp-for="Amka" id="amkaDoctor" type="text"
                        class="form-control register-input" aria-label="Αμκα"
-                        required />
+                       pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 αριθμούς"
+                       required />
             </div>
             <div class="mb-3">
                 <label class="form-label register-label mb-0" for="phoneDoctor">Κινητό Τηλέφωνο:</label>
