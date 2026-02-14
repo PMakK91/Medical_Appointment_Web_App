@@ -21,6 +21,9 @@ namespace MedicalAppointmentWebApp.Models
         [Column("specialty")]
         public Specialty Specialty { get; set; }
 
+        [Column("license_number")]
+        public string? LicenseNumber { get; set; }
+
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }
 

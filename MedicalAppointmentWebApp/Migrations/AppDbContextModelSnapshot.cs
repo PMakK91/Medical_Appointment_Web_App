@@ -208,6 +208,10 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("image");
 
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("license_number");
+
                     b.Property<int>("RegistrationStatus")
                         .HasColumnType("int")
                         .HasColumnName("registration_status");

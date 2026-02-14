@@ -12,5 +12,6 @@ namespace MedicalAppointmentWebApp.Services
         Task<AuthResponse?> LoginAsync(AuthRequest request);
         Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
         string? AmkaCheck(string amka);
+        string? PhoneCheck(string phone);
     }
 }

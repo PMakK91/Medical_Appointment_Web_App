@@ -44,6 +44,7 @@ namespace MedicalAppointmentWebApp.Services
             doctor.BirthDate = request.BirthDate;
             doctor.RegistrationDate = DateTime.UtcNow;
             doctor.Specialty = (Specialty)request.Specialty!;
+            doctor.LicenseNumber = request.LicenseNumber;
             doctor.RegistrationStatus = RegistrationFormStatus.Pending;
 
             doctorRepository.InsertDoctor(doctor);
@@ -229,6 +230,21 @@ namespace MedicalAppointmentWebApp.Services
             if (!amka.All(char.IsDigit))
             {
                 return "Το ΑΜΚΑ μπορεί να αποτελείται μόνο από αριθμούς";
+            }
+
+            return null;
+        }
+
+        public string? PhoneCheck(string phone)
+        {
+            if (phone.Length != 10)
+            {
+                return "Το τηλέφωνο απαιτείται να έχει 10 ψηφία";
+            }
+
+            if (!phone.All(char.IsDigit))
+            {
+                return "Το τηλέφωνο μπορεί να αποτελείται μόνο από αριθμούς";
             }
 
             return null;

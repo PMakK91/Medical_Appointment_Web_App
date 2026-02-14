@@ -39,7 +39,9 @@
                 <label class="form-label register-label" for="phonePatient">Κινητό Τηλέφωνο:</label>
                 <input asp-for="Phone" id="phonePatient" type="tel"
                        class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
-                       autocomplete="tel" inputmode="tel" required />
+                       autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" minlength="10" maxlength="10"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 αριθμούς"
+                       required />
             </div>
             <div class="mb-3">
                 <label class="form-label register-label" for="amkaPatient">ΑΜΚΑ:</label>
@@ -171,7 +173,7 @@
 
             <div class="mb-3">
                 <label class="form-label register-label" for="licenseNumberDoctor">Αριθμός Ιατρικού Μητρώου:</label>
-                <input id="licenseNumberDoctor" type="text" name="LisenceNumber"
+                <input asp-for="LicenseNumber" id="licenseNumberDoctor" type="text"
                        class="form-control register-input" aria-label="Αριθμός Ιατρικού Μητρώου"
                        required />
             </div>

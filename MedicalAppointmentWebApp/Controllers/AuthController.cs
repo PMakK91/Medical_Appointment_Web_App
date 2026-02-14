@@ -26,6 +26,13 @@ namespace MedicalAppointmentWebApp.Controllers
                 return View("Register");
             }
 
+            string? phoneCheck = authService.PhoneCheck(request.Phone);
+            if (phoneCheck != null)
+            {
+                ModelState.AddModelError("", phoneCheck);
+                return View("Register");
+            }
+
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
@@ -43,6 +50,13 @@ namespace MedicalAppointmentWebApp.Controllers
             if (amkaCheck != null)
             {
                 ModelState.AddModelError("", amkaCheck);
+                return View("Register");
+            }
+
+            string? phoneCheck = authService.PhoneCheck(request.Phone);
+            if (phoneCheck != null)
+            {
+                ModelState.AddModelError("", phoneCheck);
                 return View("Register");
             }
 

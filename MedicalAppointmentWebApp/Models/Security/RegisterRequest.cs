@@ -15,5 +15,6 @@ namespace MedicalAppointmentWebApp.Models.Security
 
         public string? ConfirmPassword { get; set; }
         public Specialty? Specialty { get; set; }
+        public string? LicenseNumber { get; set; }
     }
 }
