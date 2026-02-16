@@ -17,3 +17,81 @@
     </div>
 </div>
 
+
+<!-- Sorry αν πείραξα κάτι που δεν έπρεπε-->
+<div>
+    <h3>Practices</h3>
+</div>
+@if (Model.Practices != null && Model.Practices.Any())
+{
+    bool firstTab = true;
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="practiceTabs" role="tablist">
+        @foreach (var practice in Model.Practices)
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(firstTab ? "active" : "")"
+                        data-bs-toggle="tab"
+                        data-bs-target="#tab-@practice.Id"
+                        type="button"
+                        role="tab"
+                        data-id="@practice.Id">
+                    @practice.Street @practice.StreetNum, @practice.City, @practice.PostalCode
+                </button>
+            </li>
+
+            firstTab = false;
+        }
+    </ul>
+
+    firstTab = true;
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3">
+        @foreach (var practice in Model.Practices)
+        {
+            <div class="tab-pane fade @(firstTab ? "show active" : "")"
+                 id="tab-@practice.Id"
+                 role="tabpanel">
+
+                <div class="loading">Loading...</div>
+
+            </div>
+
+            firstTab = false;
+        }
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            function loadTab(practiceId) {
+                var tabPane = $("#tab-" + practiceId);
+
+                // Only load once
+                if (tabPane.data("loaded")) return;
+
+                tabPane.load('@Url.Action("AvailableTimeSlots", "Practice")?Id=' + practiceId, function () {
+                    tabPane.data("loaded", true);
+                });
+            }
+
+            // Load first tab on page load
+            var firstId = $(".nav-link.active").data("id");
+            loadTab(firstId);
+
+            // Bind tab switch event correctly
+            var tabTriggerEl = document.querySelectorAll('#practiceTabs button[data-bs-toggle="tab"]');
+            tabTriggerEl.forEach(function (el) {
+                el.addEventListener('shown.bs.tab', function (e) {
+                    var practiceId = e.target.getAttribute('data-id');
+                    loadTab(practiceId);
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <p>No practices found.</p>
+}

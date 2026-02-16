@@ -20,6 +20,7 @@ namespace MedicalAppointmentWebApp.Services
             practice.City = practiceEnrollRequest.City;
             practice.Street = practiceEnrollRequest.Street;
             practice.StreetNum = practiceEnrollRequest.StreetNum;
+            practice.PostalCode= practiceEnrollRequest.PostalCode;
             practice.ShiftStartTime = practiceEnrollRequest.ShiftStartTime;
             practice.ShiftEndTime = practiceEnrollRequest.ShiftEndTime;
             practice.AppointmentDuration = practiceEnrollRequest.AppointmentDuration;
@@ -44,6 +45,16 @@ namespace MedicalAppointmentWebApp.Services
                 PageSize = pageSize,
                 TotalItems = practicesAndCount.Item2
             };
+        }
+
+        public async Task<Practice?> GetPracticeByIdAsync(Guid id)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+            return practice;
         }
     }
 }

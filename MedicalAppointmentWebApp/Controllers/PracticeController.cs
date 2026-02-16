@@ -50,5 +50,15 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return RedirectToAction(controllerName: "Home", actionName: "Index");
         }
+
+        public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id)
+        {
+            Practice? practice = await practiceService.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return BadRequest("Practice was not found.");
+            }
+            return PartialView("_AvailableTimeSlots", practice);
+        }
     }
 }

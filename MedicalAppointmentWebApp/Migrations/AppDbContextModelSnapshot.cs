@@ -29,15 +29,9 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("AdminId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("doctor_id");
-
-                    b.Property<Guid?>("DoctorId1")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier")
@@ -57,11 +51,7 @@ namespace MedicalAppointmentWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("DoctorId1");
 
                     b.HasIndex("PatientId");
 
@@ -232,21 +222,13 @@ namespace MedicalAppointmentWebApp.Migrations
 
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Appointment", b =>
                 {
-                    b.HasOne("MedicalAppointmentWebApp.Models.Admin", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
-                        .WithMany("Appointments")
+                        .WithMany("MedicalAppointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MedicalAppointmentWebApp.Models.Doctor", null)
-                        .WithMany("MedicalAppointments")
-                        .HasForeignKey("DoctorId1");
-
-                    b.HasOne("MedicalAppointmentWebApp.Models.Patient", "Patient")
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -308,23 +290,16 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Navigation("Appointments");
                 });
 
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("MedicalAppointments");
 
                     b.Navigation("Practices");
-                });
-
-            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Patient", b =>
-                {
-                    b.Navigation("Appointments");
                 });
 #pragma warning restore 612, 618
         }

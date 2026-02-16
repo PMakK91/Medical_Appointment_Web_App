@@ -34,14 +34,14 @@ namespace MedicalAppointmentWebApp.Data
 
             modelBuilder.Entity<Appointment>().ToTable("appointments");
             modelBuilder.Entity<Appointment>()
-                .HasOne(d => d.Doctor)
-                .WithMany(a => a.Appointments)
-                .HasForeignKey(d => d.DoctorId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Appointment>()
                 .HasOne(p => p.Patient)
                 .WithMany(a => a.Appointments)
                 .HasForeignKey(p => p.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Appointment>()
+                .HasOne(d => d.Doctor)
+                .WithMany(a => a.MedicalAppointments)
+                .HasForeignKey(d => d.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Appointment>()
                 .HasOne(p => p.Practice)

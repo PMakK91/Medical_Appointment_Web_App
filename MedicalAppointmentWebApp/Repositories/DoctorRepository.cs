@@ -30,7 +30,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
         public async Task<Doctor?> GetDoctorByIDAsync(Guid doctorId)
         {
-            return await context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
+            return await context.Doctors.Include(d => d.Practices).FirstOrDefaultAsync(d => d.Id == doctorId);
         }
 
         public async Task<Doctor?> GetDoctorByEmailAsync(string email)

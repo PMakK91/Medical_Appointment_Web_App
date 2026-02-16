@@ -20,7 +20,7 @@ namespace MedicalAppointmentWebApp.Models
         [Column("patient_id")]
         public Guid PatientId { get; set; }
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; } = null!;
+        public virtual User Patient { get; set; } = null!;
 
         [Column("doctor_id")]
         public Guid DoctorId { get; set; }
