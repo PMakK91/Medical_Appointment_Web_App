@@ -51,14 +51,14 @@ namespace MedicalAppointmentWebApp.Controllers
             return RedirectToAction(controllerName: "Home", actionName: "Index");
         }
 
-        public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id)
+        public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id, DateTime? weekStart)
         {
-            Practice? practice = await practiceService.GetPracticeByIdAsync(id);
-            if (practice is null)
+            WeekScheduleViewModel weekScheduleViewModel = await practiceService.GetPracticeByIdAsync(id, weekStart);
+            if (weekScheduleViewModel is null)
             {
                 return BadRequest("Practice was not found.");
             }
-            return PartialView("_AvailableTimeSlots", practice);
+            return PartialView("_AvailableTimeSlots", weekScheduleViewModel);
         }
     }
 }

@@ -56,5 +56,62 @@ namespace MedicalAppointmentWebApp.Services
             }
             return practice;
         }
+
+        public async Task<WeekScheduleViewModel> GetPracticeByIdAsync(Guid id, DateTime? weekStart)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+
+            if (!weekStart.HasValue)
+            {
+                weekStart = DateTime.Now;
+            }
+
+            return BuildWeekSchedule(practice, StartOfWeek((DateTime)weekStart));
+        }
+
+        private WeekScheduleViewModel BuildWeekSchedule(Practice practice, DateTime weekStart)
+        {
+            List<TimeSlotViewModel> slots = new List<TimeSlotViewModel>();
+
+            for (int day = 0; day < 7; day++)
+            {
+                DateTime currentDay = weekStart.AddDays(day);
+                DateTime dayStart = currentDay.Date + practice.ShiftStartTime.TimeOfDay;
+                DateTime dayEnd = currentDay.Date + practice.ShiftEndTime.TimeOfDay;
+
+                while (dayStart < dayEnd)
+                {
+                    slots.Add(new TimeSlotViewModel
+                    {
+                        Start = dayStart,
+                        End = dayStart.AddMinutes(practice.AppointmentDuration),
+                        IsBooked = false // TODO get from DB
+                    });
+
+                    dayStart = dayStart.AddMinutes(practice.AppointmentDuration);
+                }
+            }
+
+            return new WeekScheduleViewModel
+            {
+                Practice = practice,
+                WeekStartDate = weekStart,
+                Slots = slots
+            };
+        }
+
+        private DateTime StartOfWeek(DateTime dateTime)
+        {
+            int difference = dateTime.DayOfWeek - DayOfWeek.Monday;
+            if (difference < 0)
+            {
+                difference += 7;
+            }
+            return dateTime.AddDays(-1 * difference).Date;
+        }
     }
 }
