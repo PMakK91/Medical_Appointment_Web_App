@@ -6,6 +6,7 @@ namespace MedicalAppointmentWebApp.Services
 {
     public class PracticeService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository) : IPracticeService
     {
+
         public async Task<Practice?> EnrollPracticeAsync(Guid doctorId, PracticeEnrollRequest practiceEnrollRequest)
         {
             Doctor? doctor = await doctorRepository.GetDoctorByIDAsync(doctorId);

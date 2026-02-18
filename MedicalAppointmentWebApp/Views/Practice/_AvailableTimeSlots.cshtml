@@ -45,7 +45,12 @@
 
                             <td class="slot @(slot?.IsBooked == true ? "bg-danger" : "bg-success")"
                                 data-time="@slot?.Start.ToString("o")">
-                                @(slot?.IsBooked == true ? "Booked" : "Available")
+                                <a href="@Url.Action(action: "VerifyAppointment", controller: "Appointment", new MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel { 
+                                    PracticeId = Model.Practice.Id,
+                                    Time = slot.Start})">
+
+                                    @(slot?.IsBooked == true ? "Booked" : "Available")
+                                </a>
                             </td>
                         }
                     </tr>

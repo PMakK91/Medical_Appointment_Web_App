@@ -35,13 +35,13 @@ namespace MedicalAppointmentWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EnrollAsync(PracticeEnrollRequest practiceEnrollRequest)
         {
-            string? user_id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (user_id is null)
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
             {
                 return RedirectToAction(controllerName: "Auth", actionName: "Login");
             }
 
-            Practice? practice = await practiceService.EnrollPracticeAsync(Guid.Parse(user_id), practiceEnrollRequest);
+            Practice? practice = await practiceService.EnrollPracticeAsync(Guid.Parse(userId), practiceEnrollRequest);
             if (practice is null)
             {
                 //return BadRequest("Practice failed to be created");

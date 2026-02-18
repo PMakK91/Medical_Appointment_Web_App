@@ -38,23 +38,30 @@
                             <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = "", page = 1, pageSize = 10 })" class="nav-link text-dark">Doctors</a>
                         </li>
                         -->
+                        @if (User.Identity != null && (User.IsInRole("Doctor") || User.IsInRole("Patient")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Index">Τα Ραντεβού Μου</a>
+                            </li>
+                        }
+
                         @if (User.Identity != null && User.IsInRole("Doctor"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="MyPractices">My Practices</a>
+                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="MyPractices">Τα Γραφεία Μου</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Enroll Practice</a>
+                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Εγγραφή Γραφείου</a>
                             </li>
                         }
 
                         @if (User.Identity != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Pending Doctors</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις Ιατρών</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingPractices", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Pending Practices</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingPractices", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις Γραφείων</a>
                             </li>
                         }
 
