@@ -11,6 +11,18 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Appointments.Include(a => a.Practice).Include(a => a.Doctor).Where(a => a.PatientId == patientId).ToListAsync();
         }
 
+        public async Task<Appointment?> GetAppointmentByTimeAsync(DateTime time, Guid practiceId)
+        {
+            return await context.Appointments.FirstOrDefaultAsync(a => a.Time == time && a.PracticeId == practiceId);
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAllByPracticeAndTimeFrameAsync(DateTime startTime, DateTime endTime, Guid practiceId)
+        {
+            return await context.Appointments
+                .Where(a => a.PracticeId == practiceId && a.Time > startTime && a.Time < endTime)
+                .ToListAsync();
+        }
+
         public void InsertAppointment(Appointment appointment)
         {
             context.Appointments.Add(appointment);

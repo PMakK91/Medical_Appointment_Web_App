@@ -4,7 +4,7 @@ using MedicalAppointmentWebApp.Repositories;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class PracticeService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository) : IPracticeService
+    public class PracticeService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IAppointmentRepository appointmentRepository) : IPracticeService
     {
 
         public async Task<Practice?> EnrollPracticeAsync(Guid doctorId, PracticeEnrollRequest practiceEnrollRequest)
@@ -71,12 +71,14 @@ namespace MedicalAppointmentWebApp.Services
                 weekStart = DateTime.Now;
             }
 
-            return BuildWeekSchedule(practice, StartOfWeek((DateTime)weekStart));
+            return await BuildWeekScheduleAsync(practice, StartOfWeek((DateTime)weekStart));
         }
 
-        private WeekScheduleViewModel BuildWeekSchedule(Practice practice, DateTime weekStart)
+        private async Task<WeekScheduleViewModel> BuildWeekScheduleAsync(Practice practice, DateTime weekStart)
         {
             List<TimeSlotViewModel> slots = new List<TimeSlotViewModel>();
+
+            IEnumerable<Appointment> appointments = await appointmentRepository.GetAllByPracticeAndTimeFrameAsync(weekStart, weekStart.AddDays(7), practice.Id);
 
             for (int day = 0; day < 7; day++)
             {
@@ -86,12 +88,17 @@ namespace MedicalAppointmentWebApp.Services
 
                 while (dayStart < dayEnd)
                 {
-                    slots.Add(new TimeSlotViewModel
+                    TimeSlotViewModel slot = new TimeSlotViewModel
                     {
                         Start = dayStart,
                         End = dayStart.AddMinutes(practice.AppointmentDuration),
-                        IsBooked = false // TODO get from DB
-                    });
+                        IsBooked = false
+                    };
+
+                    Appointment? appointment = appointments.FirstOrDefault(a => a.Time == dayStart);
+                    if (appointment != null) slot.IsBooked = true;
+
+                    slots.Add(slot);
 
                     dayStart = dayStart.AddMinutes(practice.AppointmentDuration);
                 }
