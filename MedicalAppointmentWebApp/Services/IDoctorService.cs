@@ -7,5 +7,7 @@ namespace MedicalAppointmentWebApp.Services
     {
         Task<DoctorSearchViewModel> SearchAllActiveDoctors(string term, int page = 1, int pageSize = 10);
         Task<Doctor?> GetDoctorById(Guid id);
+
+        Task<string?> UpdateDoctorInfo(Guid doctorId, EditDoctorProfileViewModel request);
     }
 }

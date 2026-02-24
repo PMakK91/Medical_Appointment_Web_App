@@ -47,11 +47,14 @@
 
                         @if (User.Identity != null && User.IsInRole("Doctor"))
                         {
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Practice" asp-action="MyPractices">Τα Γραφεία Μου</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Εγγραφή Γραφείου</a>
+                            </li> *@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Doctor" asp-action="EditProfile">Το Προφίλ Μου</a>
                             </li>
                         }
 
