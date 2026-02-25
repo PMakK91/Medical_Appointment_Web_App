@@ -40,7 +40,17 @@
 
                     <div class="row">
                         <div class="col-3">
-                            <img class="rounded-circle object-fit-cover doctor-image" style="width:64px; height:64px;" src="/img/doctros/profile-photos/@doctor.ImageUrl" />
+                            @if (@doctor?.ImageUrl is null)
+                            {
+                                <img class="rounded-circle object-fit-cover doctor-image"
+                                     style="width:64px; height:64px;"
+                                     src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg?s=612x612&w=0&k=20&c=BpR0FVaEa5F24GIw7K8nMWiiGmbb8qmhfkpXcp1dhQg="
+                                     alt="Profile">
+                            }
+                            else
+                            {
+                                <img class="rounded-circle object-fit-cover doctor-image" style="width:64px; height:64px;" src="/Images/@doctor.ImageUrl" />
+                            }
                         </div>
                         <div class="col-9 text-start">
                             <p class="fc-black fs-16 fw-400 mb-0">@doctor.FirstName @doctor.LastName</p>
