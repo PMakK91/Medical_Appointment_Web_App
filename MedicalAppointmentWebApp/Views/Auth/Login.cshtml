@@ -14,7 +14,7 @@
                 <input id="email" type="email" asp-for="Email" class="form-control login-input" aria-label="Email" autocomplete="email" required />
             </div>
 
-            <div class="mb-3">
+            <div class="">
                 <label class="form-label login-label" for="password">Κωδικός:</label>
 
 
@@ -55,13 +55,16 @@
 
             </div>
 
+            <a class="px-3 d-block mt-2 mb-4 fc-grey fs-14 fw-100 text-decoration-none text-start" asp-area="" asp-controller="Auth" asp-action="" aria-label="forgot-password">Ξέχασα τον κωδικό μου</a>
+    
             <button type="submit" class="btn primary-btn w-100 login-btn">
                 Σύνδεση
             </button>
 
             <!-- form errors -->
-            <div class="form-error mt-3 d-none"></div>
+            <div class="form-error mt-3 d-none">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
         </form>
 
         <div class="login-footer mt-5">

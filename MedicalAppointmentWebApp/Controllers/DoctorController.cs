@@ -70,5 +70,19 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return RedirectToAction(controllerName: "Home", actionName: "Index");
         }
+
+        public IActionResult Calendar()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
+        }
+
+        public IActionResult Offices()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
+        }
     }
 }
