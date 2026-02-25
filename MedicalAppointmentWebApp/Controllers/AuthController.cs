@@ -96,5 +96,11 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return RedirectToAction("Login", "Auth");
         }
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
     }
-}
+  
+    }
+

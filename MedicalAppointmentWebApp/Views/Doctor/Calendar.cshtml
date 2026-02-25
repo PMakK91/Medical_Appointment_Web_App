@@ -1,0 +1,111 @@
+﻿@model Doctor
+
+
+@{
+    var selectedDate = new DateTime(2026, 2, 12);
+
+    var offices = new[]
+    {
+        new {
+            OfficeId = 1,
+            OfficeName = "Μαρούσι",
+
+            OfficeAddress = "Παπαναστασίου 30, Μαρούσι",
+            Days = new[]
+            {
+                new { Date = new DateTime(2026, 2, 10), DayName = "Τρίτη",    Slots = new[] { "20:00", "20:30" } },
+                new { Date = new DateTime(2026, 2, 11), DayName = "Τετάρτη",  Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 12), DayName = "Πέμπτη",   Slots = new[] { "09:00","09:30","10:00","10:30","11:00","11:30" } },
+                new { Date = new DateTime(2026, 2, 13), DayName = "Παρασκευή",Slots = new[] { "09:00","09:30","10:00","10:30","11:00","11:30" } },
+                new { Date = new DateTime(2026, 2, 14), DayName = "Σάββατο",  Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 15), DayName = "Κυριακή",  Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 16), DayName = "Δευτέρα",  Slots = new[] { "09:00","09:30","10:00","10:30","11:00","11:30" } },
+            }
+        },
+        new {
+            OfficeId = 2,
+            OfficeName = "Γλυφάδα",
+            OfficeAddress = "Καραμανλή 87, Γλυφάδα",
+            Days = new[]
+            {
+                new { Date = new DateTime(2026, 2, 10), DayName = "Τρίτη",    Slots = new[] { "18:00", "18:30" } },
+                new { Date = new DateTime(2026, 2, 11), DayName = "Τετάρτη",  Slots = new[] { "19:00" } },
+                new { Date = new DateTime(2026, 2, 12), DayName = "Πέμπτη",   Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 13), DayName = "Παρασκευή",Slots = new[] { "12:00","12:30" } },
+                new { Date = new DateTime(2026, 2, 14), DayName = "Σάββατο",  Slots = new[] { "10:00" } },
+                new { Date = new DateTime(2026, 2, 15), DayName = "Κυριακή",  Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 16), DayName = "Δευτέρα",  Slots = Array.Empty<string>() },
+            }
+        },
+
+        new {
+            OfficeId = 3,
+            OfficeName = "Αχαρνές",
+            OfficeAddress = "Φιλής 33, Αχαρνές",
+            Days = new[]
+            {
+                new { Date = new DateTime(2026, 2, 10), DayName = "Τρίτη",    Slots = new[] { "18:00", "18:30" } },
+                new { Date = new DateTime(2026, 2, 11), DayName = "Τετάρτη",  Slots = new[] { "19:00" } },
+                new { Date = new DateTime(2026, 2, 12), DayName = "Πέμπτη",   Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 13), DayName = "Παρασκευή",Slots = new[] { "12:00","12:30" } },
+                new { Date = new DateTime(2026, 2, 14), DayName = "Σάββατο",  Slots = new[] { "10:00" } },
+                new { Date = new DateTime(2026, 2, 15), DayName = "Κυριακή",  Slots = Array.Empty<string>() },
+                new { Date = new DateTime(2026, 2, 16), DayName = "Δευτέρα",  Slots = Array.Empty<string>() },
+            }
+        }
+    };
+}
+
+
+
+
+@{
+    ViewData["Title"] = "Ημερολόγιο";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Ημερολόγιο</h1>
+        <p class="subtitle mb-5"></p>
+
+        <div class="office-tabs mt-5">
+           
+
+            @for (int i = 0; i < offices.Length; i++)
+            {
+                var o = offices[i];
+                <button type="button"
+                        class="office-tab @(i == 0 ? "active" : "")"
+                        data-office-id="@o.OfficeId"
+                        onclick="showOffice(@o.OfficeId)">
+                    @o.OfficeName
+                </button>
+            }
+
+
+        </div>
+
+
+        @foreach (var office in offices)
+        {
+            <div class="office-panel"
+                 id="office-@office.OfficeId"
+                 style="display:@(office.Equals(offices[0]) ? "block" : "none")">
+
+                <section class="calendarContainer" data-office-id="@office.OfficeId">
+                    <div class="horizontal-nav">
+                        <div class="calendar-heading">
+                        </div>
+                        <div class="nav-buttons-container"></div>
+                    </div>
+
+                    <div class="calendarInnerContainer"></div>
+                </section>
+            </div>
+        }
+
+
+    </div>
+</div>
+

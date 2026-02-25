@@ -2,6 +2,7 @@
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MedicalAppointmentWebApp.Controllers
@@ -22,6 +23,29 @@ namespace MedicalAppointmentWebApp.Controllers
                 return BadRequest("Doctor not found.");
             }
             return View(doctor);
+        }
+        public async Task<IActionResult> EditProfile(Guid doctor_id)
+        {
+            Doctor? doctor = await doctorService.GetDoctorById(doctor_id);
+            if (doctor is null)
+            {
+                return BadRequest("Doctor not found.");
+            }
+            return View(doctor);
+        }
+
+        public IActionResult Calendar()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
+        }
+
+        public IActionResult Offices()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
         }
     }
 }

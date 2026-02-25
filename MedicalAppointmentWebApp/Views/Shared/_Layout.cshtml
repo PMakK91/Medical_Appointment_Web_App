@@ -62,6 +62,16 @@
                                 <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Pending</a>
                             </li>
                         }
+
+                        @if (User.Identity != null && User.IsInRole("Doctor"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"  href="@Url.Action("Calendar", "Doctor")">Ημερολόγιο</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Offices", "Doctor")">Ιατρεία</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
