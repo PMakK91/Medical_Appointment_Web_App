@@ -845,14 +845,21 @@ margin-bottom: 24px;
 
 /******ADD OFFICE *******/
 .r {
-    display: flex;
     gap: 16px;
     margin: 32px auto;
     flex-wrap: wrap;
-    align-items: center;
     background: #fff;
     padding: 22px;
     border-radius: 12px;
+}
+
+.r1, .r2 {
+    display: flex;
+    justify-content: space-between;
+}
+.r2 {
+    border-top: 1px solid #eaeaea;
+    margin-top: 20px;
 }
 
 #hours .day {
@@ -871,7 +878,9 @@ margin-bottom: 24px;
 .ranges {
     display: flex;
     flex-direction: column;
-    gap: 10px
+    gap: 10px;
+    margin-bottom: 16px;
+    margin-top: 20px;
 }
 
 .range {
@@ -898,7 +907,7 @@ margin-bottom: 24px;
     border: 0;
     border-radius: 10px;
     background: #eaeaea;
-
+    font-size: 14px;
 }
 
 .toggle {

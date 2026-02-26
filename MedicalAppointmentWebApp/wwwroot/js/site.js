@@ -852,17 +852,19 @@ $(function () {
     function renderHours() {
         $("#hours").html(vm.days.map(d => `
       <div class="r" data-day="${d.day}">
+      <div class="r1">
         <div class="day">${d.day}</div>
-
+       
         <div class="state">
           <button type="button" class="toggle ${d.open ? "on" : ""}" data-act="toggle"></button>
           <div>${d.open ? "Ανοιχτά" : "Κλειστά"}</div>
         </div>
-
+        </div>
+        <div class="r2">
         <div class="ranges">
           ${d.open ? d.intervals.map((it, i) => `
             <div class="range" data-i="${i}">
-              ${timeSelect(it.start)} — ${timeSelect(it.end)}
+              ${timeSelect(it.start)} - ${timeSelect(it.end)}
               ${i > 0 ? `<button type="button" class="link" data-act="remove">Αφαίρεση</button>` : ``}
             </div>
           `).join("") : ``}
@@ -872,6 +874,7 @@ ${(d.open && d.intervals.length < 2)
                 ? `<button type="button" class="link" data-act="add">Προσθήκη</button>`
                 : ``
 }      </div>
+</div>
     `).join(""));
     }
 
