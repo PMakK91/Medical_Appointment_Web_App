@@ -55,22 +55,23 @@
             </div>
             <div class="mb-3">
                 <label class="office-label">Διάρκεια Ραντεβού (λεπτά)</label>
-                <input class="form-control office-input" asp-for="Duration" inputmode="numeric"
-                       oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                <input class="form-control office-input" asp-for="Duration" type="text"
+                       oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,2)"
                        required>
             </div>
 
             <div class="mb-3">
                 <label class="office-label">Τηλέφωνο</label>
-                <input class="form-control office-input" asp-for="Phone" inputmode="numeric"
+                <input class="form-control office-input" asp-for="Phone" type="text"
+                       oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
                        required>
             </div>
 
 
             <div class="mb-3">
 
-                <label class="office-label" for="PlaceId">Διεύθυνση:</label>
-                <gmp-place-autocomplete class="form-control office-input" id="Address"></gmp-place-autocomplete>
+                <label class="office-label" for="PlaceId">Διεύθυνση</label>
+                <gmp-place-autocomplete id="Address"></gmp-place-autocomplete>
 
                 <input type="hidden" asp-for="PlaceId" id="placeId" name="PlaceId" />
                 <input type="hidden" id="formattedAddress" name="FormattedAddress" />
@@ -88,7 +89,7 @@
                 <div class="day-div">
                     <div class="day-name">Δευτέρα</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -104,7 +105,7 @@
                 <div class="day-div">
                     <div class="day-name">Τρίτη</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -120,7 +121,7 @@
                 <div class="day-div">
                     <div class="day-name">Τετάρτη</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -137,7 +138,7 @@
                 <div class="day-div">
                     <div class="day-name">Πέμπτη</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -154,7 +155,7 @@
                 <div class="day-div">
                     <div class="day-name">Παρασκευή</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -171,7 +172,7 @@
                 <div class="day-div">
                     <div class="day-name">Σάββατο</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -188,7 +189,7 @@
                 <div class="day-div">
                     <div class="day-name">Κυριακή</div>
                     <div class="state">
-                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <button type="button" class="toggle off" data-act="toggle"></button>
                         <div class="status-text">Κλειστά</div>
                     </div>
                     <div class="ranges">
@@ -206,22 +207,10 @@
 
             </div>
 
-
-
-
-
-
-
-
-            <!-- Hidden JSON fields -->
-            <input type="hidden" name="WeeklyHoursJson" id="WeeklyHoursJson">
-            <input type="hidden" name="ClosedDatesJson" id="ClosedDatesJson">
-
-            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
-                <button type="submit" class="btn primary-btn">
+                <button type="submit" class="btn w-100 primary-btn mt-4 mb-5">
                     Αποθήκευση
                 </button>
-            </div>
+         
 
 
             <div class="form-error mt-3 d-none" id="patientFormError"></div>
@@ -230,4 +219,3 @@
 
     </div>
 </div>
-
