@@ -790,158 +790,74 @@ function getLayoutMode() {
 
 
 
-/****** ADD OFFICE HOURS ******/
+/****** ADD OFFICE HOURS ********/
 
+// Fill Options with hours
+$(".daySelect").each(function () {
+
+    var $select = $(this);
+
+    $select.append('<option value=""></option>');
+
+    for (var hour = 0; hour < 24; hour++) {
+
+        var h = hour.toString().padStart(2, '0');
+
+        $select.append('<option value="' + h + ':00">' + h + ':00</option>');
+        $select.append('<option value="' + h + ':30">' + h + ':30</option>');
+    }
+
+});
+
+// Default toggle κλειστά
+$(".day-div").each(function () {
+    const $d = $(this);
+
+    $d.find(".toggle")
+        .removeClass("on")
+        .addClass("off");
+
+    $d.find(".ranges").hide();
+
+    $d.find(".daySelect")
+        .prop("disabled", true)
+        .val("");
+
+    $d.find(".status-text").text("Κλειστά");
+});
+
+// Toggle ανοιχτά/κλειστά
 $(function () {
 
-    
-    const DAYS = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"];
-    // 15 λεπτα
-    const TIMES = [];
-    for (let h = 0; h < 24; h++) {
-        for (let m = 0; m < 60; m += 15) {
-            const hour12 = h % 12 === 0 ? 12 : h % 12;
-            const ampm = h < 12 ? "AM" : "PM";
-            const mm = String(m).padStart(2, "0");
-            TIMES.push(`${hour12}:${mm} ${ampm}`);
+    $(".day-div").each(function () {
+        const $day = $(this);
+        $day.find(".ranges").hide();
+        $day.find(".daySelect").prop("disabled", true);
+    });
+
+    $(".toggle").on("click", function () {
+
+        const $toggle = $(this);
+        const $dayDiv = $toggle.closest(".day-div");
+        const $ranges = $dayDiv.find(".ranges");
+        const $statusText = $dayDiv.find(".status-text");
+        const $selects = $dayDiv.find(".daySelect");
+
+        if ($toggle.hasClass("off")) {
+            $toggle.removeClass("off").addClass("on");
+            $statusText.text("Ανοιχτά");
+
+            $ranges.stop(true, true).slideDown(200);
+            $selects.prop("disabled", false);
+
+        } else {
+            $toggle.removeClass("on").addClass("off");
+            $statusText.text("Κλειστά");
+
+            $ranges.stop(true, true).slideUp(200);
+            $selects.prop("disabled", true).val("");
         }
-    }
 
-    const vm = {
-        days: DAYS.map(d => ({ day: d, open: false, intervals: [] })),
-        closedDates: [],
-
-        getDay(day) { return this.days.find(x => x.day === day); },
-
-        toggleDay(day) {
-            const d = this.getDay(day);
-            d.open = !d.open;
-            if (!d.open) d.intervals = [];
-            if (d.open && d.intervals.length === 0) d.intervals.push({ start: "", end: "" });
-        },
-
-        addInterval(day) {
-            const d = this.getDay(day);
-            if (d.open && d.intervals.length < 2) d.intervals.push({ start: "", end: "" });
-        },
-
-        removeInterval(day, idx) {
-            const d = this.getDay(day);
-            d.intervals.splice(idx, 1);
-        },
-
-        addClosedDate(iso) {
-            if (!iso) return;
-            if (!this.closedDates.includes(iso)) this.closedDates.push(iso);
-            this.closedDates.sort();
-        },
-
-        removeClosedDate(iso) {
-            this.closedDates = this.closedDates.filter(x => x !== iso);
-        }
-    };
-
-
-    function timeSelect(val) {
-        return `<select class="t">
-      <option value="">-</option>
-      ${TIMES.map(t => `<option value="${t}" ${t === val ? "selected" : ""}>${t}</option>`).join("")}
-    </select>`;
-    }
-
-    function renderHours() {
-        $("#hours").html(vm.days.map(d => `
-      <div class="r" data-day="${d.day}">
-      <div class="r1">
-        <div class="day">${d.day}</div>
-       
-        <div class="state">
-          <button type="button" class="toggle ${d.open ? "on" : ""}" data-act="toggle"></button>
-          <div>${d.open ? "Ανοιχτά" : "Κλειστά"}</div>
-        </div>
-        </div>
-        <div class="r2">
-        <div class="ranges">
-          ${d.open ? d.intervals.map((it, i) => `
-            <div class="range" data-i="${i}">
-              ${timeSelect(it.start)} - ${timeSelect(it.end)}
-              ${i > 0 ? `<button type="button" class="link" data-act="remove">Αφαίρεση</button>` : ``}
-            </div>
-          `).join("") : ``}
-        </div>
-
-${(d.open && d.intervals.length < 2)
-                ? `<button type="button" class="link" data-act="add">Προσθήκη</button>`
-                : ``
-}      </div>
-</div>
-    `).join(""));
-    }
-
-    function renderClosedDates() {
-        $("#closedDatesList").html(vm.closedDates.map(d => `
-      <span class="chip" data-date="${d}">
-        ${d}
-        <button type="button" title="remove">×</button>
-      </span>
-    `).join(""));
-    }
-
-    function renderAll() { renderHours(); renderClosedDates(); }
-
-    // ---- Events (delegation) ----
-    $("#hours")
-        .on("click", "[data-act='toggle']", function () {
-            const day = $(this).closest(".r").data("day");
-            vm.toggleDay(day);
-            renderHours();
-        })
-        .on("click", "[data-act='add']", function () {
-            const day = $(this).closest(".r").data("day");
-            vm.addInterval(day);
-            renderHours();
-        })
-        .on("click", "[data-act='remove']", function () {
-            const $row = $(this).closest(".r");
-            const day = $row.data("day");
-            const idx = Number($(this).closest(".range").data("i"));
-            vm.removeInterval(day, idx);
-            renderHours();
-        })
-        .on("change", ".range select.t", function () {
-            const $range = $(this).closest(".range");
-            const day = $(this).closest(".r").data("day");
-            const idx = Number($range.data("i"));
-            const $sels = $range.find("select.t");
-            const d = vm.getDay(day);
-            d.intervals[idx].start = $sels.eq(0).val();
-            d.intervals[idx].end = $sels.eq(1).val();
-        });
-
-    $("#addClosedDate").on("click", function () {
-        vm.addClosedDate($("#closedDate").val()); // ISO yyyy-mm-dd
-        $("#closedDate").val("");
-        renderClosedDates();
     });
 
-    $("#closedDatesList").on("click", ".chip button", function () {
-        const iso = $(this).closest(".chip").data("date");
-        vm.removeClosedDate(iso);
-        renderClosedDates();
-    });
-
-    // ---- On submit: fill hidden JSON ----
-    $("#officeForm").on("submit", function () {
-        // WeeklyHours payload: uses day names; you can convert to int DayOfWeek server-side if you prefer
-        const weekly = vm.days.map(d => ({
-            day: d.day,
-            open: d.open,
-            intervals: d.intervals.map(i => ({ start: i.start, end: i.end }))
-        }));
-
-        $("#WeeklyHoursJson").val(JSON.stringify(weekly));
-        $("#ClosedDatesJson").val(JSON.stringify(vm.closedDates));
-    });
-
-    renderAll();
 });

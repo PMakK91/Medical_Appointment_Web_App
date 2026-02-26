@@ -844,29 +844,24 @@ margin-bottom: 24px;
 
 
 /******ADD OFFICE *******/
-.r {
+.office-hours .day-div {
+    display: flex;
     gap: 16px;
-    margin: 32px auto;
+    margin: 24px auto;
     flex-wrap: wrap;
     background: #fff;
-    padding: 22px;
+    padding: 23px 20px;
     border-radius: 12px;
-}
-
-.r1, .r2 {
-    display: flex;
     justify-content: space-between;
 }
-.r2 {
-    border-top: 1px solid #eaeaea;
-    margin-top: 20px;
-}
 
-#hours .day {
+
+
+.office-hours .day-name {
     font-weight: 600;
     display: flex;
     align-items: center;
-    width: 133px;
+    width: 70px;
 }
 
 .state {
@@ -877,10 +872,13 @@ margin-bottom: 24px;
 
 .ranges {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
-    margin-bottom: 16px;
-    margin-top: 20px;
+    align-items: center;
+    border-top: 1px solid #eaeaea;
+    padding-top: 20px;
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .range {
@@ -889,20 +887,7 @@ margin-bottom: 24px;
     gap: 10px
 }
 
-.link {
-    border: 0;
-    background: transparent;
-    color: #4ea7e7;
-    font-weight: 700;
-    cursor: pointer
-}
-
-    .link:disabled {
-        opacity: .35;
-        cursor: not-allowed
-    }
-
-#hours select {
+.ranges select {
     padding: 8px 10px;
     border: 0;
     border-radius: 10px;

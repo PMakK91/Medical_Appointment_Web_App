@@ -1,4 +1,4 @@
-﻿
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.AddOfficeVm
 @{
     ViewData["Title"] = "Προσθήκη Ιατρείου";
     Layout = "_Layout";
@@ -42,7 +42,7 @@
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
 
-    
+
         <h1 class="title mb-2">Προσθήκη Ιατρείου</h1>
         <p class="subtitle mb-5"></p>
 
@@ -50,52 +50,179 @@
         <form id="officeForm" class="office-form" method="post">
 
             <div class="mb-3">
-                        <label class="office-label">Ονομασία</label>
-                <input class="form-control office-input" name="Name" required>
-                    </div>
+                <label class="office-label">Ονομασία</label>
+                <input asp-for="Name" class="form-control office-input" required>
+            </div>
             <div class="mb-3">
-                        <label class="office-label">Διάρκεια Ραντεβού (λεπτά)</label>
-                <input class="form-control office-input" name="Duration" inputmode="numeric"
-                               oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                               required>
-                    </div>
+                <label class="office-label">Διάρκεια Ραντεβού (λεπτά)</label>
+                <input class="form-control office-input" asp-for="Duration" inputmode="numeric"
+                       oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label class="office-label">Τηλέφωνο</label>
+                <input class="form-control office-input" asp-for="Phone" inputmode="numeric"
+                       required>
+            </div>
+
+
             <div class="mb-3">
 
-                        <label class="office-label" for="PlaceId">Διεύθυνση:</label>
+                <label class="office-label" for="PlaceId">Διεύθυνση:</label>
                 <gmp-place-autocomplete class="form-control office-input" id="Address"></gmp-place-autocomplete>
 
-                        <input type="hidden" id="placeId" name="PlaceId" />
-                        <input type="hidden" id="formattedAddress" name="FormattedAddress" />
-                        <input type="hidden" id="lat" name="Lat" />
-                        <input type="hidden" id="lng" name="Lng" />
+                <input type="hidden" asp-for="PlaceId" id="placeId" name="PlaceId" />
+                <input type="hidden" id="formattedAddress" name="FormattedAddress" />
+                <input type="hidden" id="lat" name="Lat" />
+                <input type="hidden" id="lng" name="Lng" />
 
 
+            </div>
+
+
+            <h3 class="fs-16 fw-400 fc-black mt-5">Ώρες Λειτουργίας</h3>
+
+            <div class="office-hours">
+
+                <div class="day-div">
+                    <div class="day-name">Δευτέρα</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
                     </div>
-              
-
-                <h3 class="fs-16 fw-400 fc-black mt-5">Ώρες Λειτουργίας</h3>
-                <div id="hours"></div>
-
-                <h3 style="margin:18px 0 8px">Εξαιρέσεις</h3>
-                <div>
-                    <input type="date" id="closedDate">
-                    <button type="button" id="addClosedDate"
-                           >
-                        Προσθήκη Εξαίρεσης
-                    </button>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="MondayStart" class="daySelect"> </select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="MondayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
                 </div>
-                <div id="closedDatesList"></div>
-
-                <!-- Hidden JSON fields -->
-                <input type="hidden" name="WeeklyHoursJson" id="WeeklyHoursJson">
-                <input type="hidden" name="ClosedDatesJson" id="ClosedDatesJson">
-
-                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
-                    <button type="submit" class="btn primary-btn">
-                        Αποθήκευση
-                    </button>
+                <div class="day-div">
+                    <div class="day-name">Τρίτη</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="TuesdayStart" class="daySelect"> </select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="TuesdayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
                 </div>
-            
+                <div class="day-div">
+                    <div class="day-name">Τετάρτη</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="WednesdayStart" class="daySelect"></select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="WednesdayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-div">
+                    <div class="day-name">Πέμπτη</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="ThursdayStart" class="daySelect"></select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="ThursdayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-div">
+                    <div class="day-name">Παρασκευή</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="FridayStart" class="daySelect"></select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="FridayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-div">
+                    <div class="day-name">Σάββατο</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="SaturdayStart" class="daySelect"></select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="SaturdayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="day-div">
+                    <div class="day-name">Κυριακή</div>
+                    <div class="state">
+                        <button type="button" class="toggle on" data-act="toggle"></button>
+                        <div class="status-text">Κλειστά</div>
+                    </div>
+                    <div class="ranges">
+                        <div class="range">
+                            <select asp-for="SundayStart" class="daySelect"></select>
+                        </div>
+                        -
+                        <div class="range">
+                            <select asp-for="SundayEnd" class="daySelect"></select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <!-- Hidden JSON fields -->
+            <input type="hidden" name="WeeklyHoursJson" id="WeeklyHoursJson">
+            <input type="hidden" name="ClosedDatesJson" id="ClosedDatesJson">
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+                <button type="submit" class="btn primary-btn">
+                    Αποθήκευση
+                </button>
+            </div>
+
 
             <div class="form-error mt-3 d-none" id="patientFormError"></div>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
