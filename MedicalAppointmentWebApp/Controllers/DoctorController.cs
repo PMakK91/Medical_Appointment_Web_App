@@ -47,5 +47,12 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return View();
         }
+
+        public IActionResult AddOffice()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
+        }
     }
 }
