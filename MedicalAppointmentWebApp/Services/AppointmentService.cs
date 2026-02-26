@@ -56,9 +56,14 @@ namespace MedicalAppointmentWebApp.Services
             return appointment;
         }
 
-        public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientId(Guid patientId)
+        public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {
             return await appointmentRepository.GetAppointmentsByPatientIdAsync(patientId);
+        }
+
+        public async Task<IEnumerable<AppointmentWithPatientInfoViewModel>> GetAppointmentsByDayAndPracticeIdAsync(DateTime date, Guid practiceId)
+        {
+            return await appointmentRepository.GetAppointmentsInfoByDayAndPracticeIdAsync(date, practiceId);
         }
     }
 }

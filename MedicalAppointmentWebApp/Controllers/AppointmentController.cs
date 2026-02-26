@@ -21,7 +21,7 @@ namespace MedicalAppointmentWebApp.Controllers
                 return RedirectToAction(controllerName: "Auth", actionName: "Login");
             }
 
-            IEnumerable<Appointment> appointments = await appointmentService.GetAppointmentsByPatientId(Guid.Parse(userId));
+            IEnumerable<Appointment> appointments = await appointmentService.GetAppointmentsByPatientIdAsync(Guid.Parse(userId));
 
             return View(appointments);
         }
@@ -55,6 +55,17 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             return RedirectToAction(controllerName: "Home", actionName: "Index");
+        }
+
+        public async Task<JsonResult> GetAppointmentsByDayAndPracticeIdAsync(string date, Guid practiceId)
+        {
+            if (date is null || date.IsWhiteSpace())
+                return Json("Date was not given");
+
+            DateTime parsedDate = DateTime.Parse(date);
+            IEnumerable<AppointmentWithPatientInfoViewModel> appointments = await appointmentService.GetAppointmentsByDayAndPracticeIdAsync(parsedDate, practiceId);
+
+            return Json(appointments);
         }
     }
 }

@@ -311,7 +311,6 @@ function generateDayView(calendarContainer, dateObj) {
     inner.appendChild(backMonthBtn);
     inner.appendChild(dayDiv);
 
-    // fetch (fake)
     fetchAppointmentsForDate(officeId, dateStr, dayDiv);
 }
 
@@ -325,7 +324,7 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
 
     const apptByTime = new Map();
     appointments.forEach(a => {
-        if (a && a.time) apptByTime.set(a.time, a);
+        if (a && a.time) apptByTime.set(a.time.split('T')[1].slice(0, 5), a);
     });
 
     const slotsContainer = document.createElement("div");
@@ -359,7 +358,7 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
 
                 const name = document.createElement("span");
                 name.classList.add("slot-name");
-                name.textContent = appt.user_name || "Appointment";
+                name.textContent = appt.patientFirstName + " " + appt.patientLastName || "Appointment";
                 slotDiv.appendChild(name);
 
                 slotDiv.style.cursor = "pointer";
@@ -405,7 +404,7 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
 /** ---------------------------
  *  MONTH VIEW
  *  --------------------------- */
-function generateMonthView(calendarContainer, dateObj) {
+async function generateMonthView(calendarContainer, dateObj) {
     const officeId = calendarContainer.dataset.officeId;
 
     const inner = calendarContainer.querySelector(".calendarInnerContainer");
@@ -509,7 +508,10 @@ function generateMonthView(calendarContainer, dateObj) {
         if (!closed) {
             const { duration, workingIntervals } = getOfficeScheduleConfig(officeId, dateStr);
 
-            const appts = generateFakeAppointments(officeId, dateStr, { duration, workingIntervals });
+            let appts;
+            await fetchAppointmentsForDay(officeId, dateStr).then(x => appts = x);
+            //const appts = generateFakeAppointments(officeId, dateStr, { duration, workingIntervals });
+
             const booked = appts.length;
 
             const totalSlots = calculateTotalSlots(duration, workingIntervals);
@@ -561,18 +563,31 @@ function generateMonthView(calendarContainer, dateObj) {
     inner.appendChild(grid);
 }
 
-/** ---------------------------
- *  FAKE DATA
- *  --------------------------- */
 function fetchAppointmentsForDate(officeId, dateStr, dayDiv) {
     const { duration, workingIntervals } = getOfficeScheduleConfig(officeId, dateStr);
 
-    const appointments = generateFakeAppointments(officeId, dateStr, {
-        duration,
-        workingIntervals
-    });
+    //const appointments = generateFakeAppointments(officeId, dateStr, {
+    //    duration,
+    //    workingIntervals
+    //});
 
-    displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
+    fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
+        .then(response => response.json())
+        .then(appointments => {
+            displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
+        });
+
+    //displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
+}
+
+async function fetchAppointmentsForDay(officeId, dateStr) {
+    let data = await fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
+        .then(response => response.json())
+        .then(appointments => {
+            return appointments;
+        });
+
+    return data;
 }
 
 function generateFakeAppointments(officeId, dateStr, options = {}) {

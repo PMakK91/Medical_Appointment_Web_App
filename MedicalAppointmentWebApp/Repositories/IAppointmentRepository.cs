@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 
 namespace MedicalAppointmentWebApp.Repositories
 {
@@ -7,6 +8,8 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId);
         Task<Appointment?> GetAppointmentByTimeAsync(DateTime time, Guid practiceId);
         Task<IEnumerable<Appointment>> GetAllByPracticeAndTimeFrameAsync(DateTime startTime, DateTime endTime, Guid practiceId);
+        Task<IEnumerable<Appointment>> GetAppointmentsByDayAndPracticeIdAsync(DateTime day, Guid practiceId);
+        Task<IEnumerable<AppointmentWithPatientInfoViewModel>> GetAppointmentsInfoByDayAndPracticeIdAsync(DateTime day, Guid practiceId);
 
         void InsertAppointment(Appointment appointment);
 

@@ -71,18 +71,38 @@ namespace MedicalAppointmentWebApp.Controllers
             return RedirectToAction(controllerName: "Home", actionName: "Index");
         }
 
-        public IActionResult Calendar()
+        public async Task<IActionResult> CalendarAsync()
         {
-            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
 
-            return View();
+            Doctor? doctor = await doctorService.GetDoctorById(Guid.Parse(userId));
+            if (doctor is null)
+            {
+                return View();
+            }
+
+            return View(doctor);
         }
 
-        public IActionResult Offices()
+        public async Task<IActionResult> OfficesAsync()
         {
-            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
 
-            return View();
+            Doctor? doctor = await doctorService.GetDoctorById(Guid.Parse(userId));
+            if (doctor is null)
+            {
+                return View();
+            }
+
+            return View(doctor);
         }
     }
 }

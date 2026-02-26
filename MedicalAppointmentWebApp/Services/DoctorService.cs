@@ -47,10 +47,6 @@ namespace MedicalAppointmentWebApp.Services
                 string? errorMessage = await UpdateImage(request.Image, doctor);
                 if (errorMessage != null) return errorMessage;
             }
-            else
-            {
-                return "No image send";
-            }
 
             if (request.Bio != null)
             {

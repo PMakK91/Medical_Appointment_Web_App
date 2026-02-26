@@ -71,8 +71,7 @@
 
         <div class="office-tabs mt-5">
            
-
-            @for (int i = 0; i < offices.Length; i++)
+            @* @for (int i = 0; i < offices.Length; i++)
             {
                 var o = offices[i];
                 <button type="button"
@@ -81,13 +80,24 @@
                         onclick="showOffice(@o.OfficeId)">
                     @o.OfficeName
                 </button>
+            } *@
+            @{
+                bool first = true;
             }
-
+            @foreach (var practice in Model.Practices)
+            {
+                <button type="button"
+                        class="office-tab @(first ? "active" : "")"
+                        data-office-id="@practice.Id"
+                        onclick="showOffice('@practice.Id')">
+                    @practice.City
+                </button>
+                first = false;
+            }
 
         </div>
 
-
-        @foreach (var office in offices)
+        @* @foreach (var office in offices)
         {
             <div class="office-panel"
                  id="office-@office.OfficeId"
@@ -103,8 +113,23 @@
                     <div class="calendarInnerContainer"></div>
                 </section>
             </div>
-        }
+        } *@
+        @foreach (var office in Model.Practices)
+        {
+            <div class="office-panel"
+                 id="office-@office.Id"
+                 style="display:@(office.Equals(Model.Practices.First()) ? "block" : "none")">
 
+                <section class="calendarContainer" data-office-id="@office.Id">
+                    <div class="horizontal-nav">
+                        <div class="calendar-heading"></div>
+                        <div class="nav-buttons-container"></div>
+                    </div>
+
+                    <div class="calendarInnerContainer"></div>
+                </section>
+            </div>
+        }
 
     </div>
 </div>

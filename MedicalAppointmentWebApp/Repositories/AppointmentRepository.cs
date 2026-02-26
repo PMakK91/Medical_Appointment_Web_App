@@ -1,5 +1,6 @@
 ﻿using MedicalAppointmentWebApp.Data;
 using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Repositories
@@ -20,6 +21,31 @@ namespace MedicalAppointmentWebApp.Repositories
         {
             return await context.Appointments
                 .Where(a => a.PracticeId == practiceId && a.Time > startTime && a.Time < endTime)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAppointmentsByDayAndPracticeIdAsync(DateTime day, Guid practiceId)
+        {
+            return await context.Appointments
+                .Include(a => a.Patient)
+                .Where(a => a.PracticeId == practiceId && a.Time.Date.Equals(day.Date))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AppointmentWithPatientInfoViewModel>> GetAppointmentsInfoByDayAndPracticeIdAsync(DateTime day, Guid practiceId)
+        {
+            return await context.Appointments.Select(a => new AppointmentWithPatientInfoViewModel
+                {
+                    Id = a.Id,
+                    DoctorId = a.DoctorId,
+                    PracticeId = a.PracticeId,
+                    Time = a.Time,
+                    Status = a.Status,
+                    PatientId = a.PatientId,
+                    PatientFirstName = a.Patient.FirstName,
+                    PatientLastName = a.Patient.LastName
+                })
+                .Where(a => a.PracticeId == practiceId && a.Time.Date.Equals(day.Date))
                 .ToListAsync();
         }
 
