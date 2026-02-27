@@ -49,6 +49,13 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Appointment>> GetAppointmentsInfoByMonthAndPracticeIdAsync(DateTime date, Guid practiceId)
+        {
+            return await context.Appointments
+                .Where(a => a.PracticeId == practiceId && a.Time.Month.Equals(date.Month) && a.Time.Year.Equals(date.Year))
+                .ToListAsync();
+        }
+
         public void InsertAppointment(Appointment appointment)
         {
             context.Appointments.Add(appointment);

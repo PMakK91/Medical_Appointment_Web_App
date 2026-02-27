@@ -67,5 +67,16 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return Json(appointments);
         }
+
+        public async Task<JsonResult> GetAppointmentsByMonthAndPracticeIdAsync(string date, Guid practiceId)
+        {
+            if (date is null || date.IsWhiteSpace())
+                return Json("Something went wrong.");
+
+            DateTime parsedDate = DateTime.Parse(date);
+            IEnumerable<Appointment> appointments = await appointmentService.GetAppointmentsByMonthAndPracticeIdAsync(parsedDate, practiceId);
+
+            return Json(appointments);
+        }
     }
 }

@@ -490,6 +490,10 @@ async function generateMonthView(calendarContainer, dateObj) {
         }
     }
 
+    let monthFirst = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    var appointments;
+    await fetchAppointmentsForMonth(officeId, monthFirst).then(x => appointments = x);
+
     for (let d = 1; d <= daysInMonth; d++) {
         const cell = document.createElement("div");
         cell.classList.add("month-cell");
@@ -508,8 +512,10 @@ async function generateMonthView(calendarContainer, dateObj) {
         if (!closed) {
             const { duration, workingIntervals } = getOfficeScheduleConfig(officeId, dateStr);
 
-            let appts;
-            await fetchAppointmentsForDay(officeId, dateStr).then(x => appts = x);
+            let appts = getAppointmentsByDay(appointments, year, month+1, d);
+            //console.log(appts);
+
+            //await fetchAppointmentsForDay(officeId, dateStr).then(x => appts = x);
             //const appts = generateFakeAppointments(officeId, dateStr, { duration, workingIntervals });
 
             const booked = appts.length;
@@ -581,13 +587,32 @@ function fetchAppointmentsForDate(officeId, dateStr, dayDiv) {
 }
 
 async function fetchAppointmentsForDay(officeId, dateStr) {
-    let data = await fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
+    return await fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
         .then(response => response.json())
         .then(appointments => {
             return appointments;
         });
+}
 
-    return data;
+async function fetchAppointmentsForMonth(officeId, dateStr) {
+    return await fetch('/Appointment/GetAppointmentsByMonthAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
+        .then(response => response.json())
+        .then(appointments => {
+            return appointments;
+        });
+}
+
+function getAppointmentsByDay(appointments, year, month, day) {
+    return appointments.filter(app => {
+        const [y, m, d] = app.time.slice(0, 10).split("-");
+
+        return (
+            Number(y) === Number(year) &&
+            Number(m) === Number(month) &&
+            Number(d) === Number(day)
+        );
+    }
+    );
 }
 
 function generateFakeAppointments(officeId, dateStr, options = {}) {
