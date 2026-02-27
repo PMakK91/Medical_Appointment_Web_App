@@ -1,16 +1,12 @@
 ﻿@model Doctor
 
 @{
-    ViewData["Title"] = Model.FirstName + " " + Model.LastName;
+    ViewData["Title"] = "Ιατρεία";
     Layout = "_Layout";
 }
 
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
-        <img class="doctor-profile-img" src="" alt="" />
-        <h1 class="title mb-2">@Model.FirstName @Model.LastName</h1>
-        <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
-        <p class="fc-black fs-16 fw-100">orem ipsum dolor sit amet, consectetur adipiscing elit. Donec et metus quis nulla mollis dictum at quis nisl. Donec dignissim sagittis iaculis. Fusce quis nulla tristique, congue nibh nec, scelerisque leo. Phasellus quis libero quis neque interdum lobortis et sed velit. Vivamus urna orci, pretium cursus mi sed, pretium iaculis nulla. Vestibulum nibh velit, placerat et tortor quis, viverra feugiat felis. Nunc nibh nulla, vulputate non pulvinar ut, fringilla et neque. Morbi quis tellus placerat velit luctus varius vitae a sapien. Aliquam in sodales velit. Integer ut eros elit. Ut turpis libero, rutrum at lorem eu, finibus auctor turpis. Morbi sit amet dui eros. Sed se</p>
 
 
         <button class="btn primary-btn d-flex justify-content-center align-items-center">

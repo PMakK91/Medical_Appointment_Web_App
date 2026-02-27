@@ -104,5 +104,12 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return View(doctor);
         }
+
+        public IActionResult AddOffice()
+        {
+            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return View();
+        }
     }
 }

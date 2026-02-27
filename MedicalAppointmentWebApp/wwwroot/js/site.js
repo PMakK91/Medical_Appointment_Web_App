@@ -827,3 +827,77 @@ function getLayoutMode() {
     if (w < 1024) return "tablet";
     return "desktop";
 }
+
+
+
+/****** ADD OFFICE HOURS ********/
+
+// Fill Options with hours
+$(".daySelect").each(function () {
+
+    var $select = $(this);
+
+    $select.append('<option value=""></option>');
+
+    for (var hour = 0; hour < 24; hour++) {
+
+        var h = hour.toString().padStart(2, '0');
+
+        $select.append('<option value="' + h + ':00">' + h + ':00</option>');
+        $select.append('<option value="' + h + ':30">' + h + ':30</option>');
+    }
+
+});
+
+// Default toggle κλειστά
+$(".day-div").each(function () {
+    const $d = $(this);
+
+    $d.find(".toggle")
+        .removeClass("on")
+        .addClass("off");
+
+    $d.find(".ranges").hide();
+
+    $d.find(".daySelect")
+        .prop("disabled", true)
+        .val("");
+
+    $d.find(".status-text").text("Κλειστά");
+});
+
+// Toggle ανοιχτά/κλειστά
+$(function () {
+
+    $(".day-div").each(function () {
+        const $day = $(this);
+        $day.find(".ranges").hide();
+        $day.find(".daySelect").prop("disabled", true);
+    });
+
+    $(".toggle").on("click", function () {
+
+        const $toggle = $(this);
+        const $dayDiv = $toggle.closest(".day-div");
+        const $ranges = $dayDiv.find(".ranges");
+        const $statusText = $dayDiv.find(".status-text");
+        const $selects = $dayDiv.find(".daySelect");
+
+        if ($toggle.hasClass("off")) {
+            $toggle.removeClass("off").addClass("on");
+            $statusText.text("Ανοιχτά");
+
+            $ranges.stop(true, true).slideDown(200);
+            $selects.prop("disabled", false);
+
+        } else {
+            $toggle.removeClass("on").addClass("off");
+            $statusText.text("Κλειστά");
+
+            $ranges.stop(true, true).slideUp(200);
+            $selects.prop("disabled", true).val("");
+        }
+
+    });
+
+});
