@@ -1,6 +1,6 @@
 ﻿@model MedicalAppointmentWebApp.Models.ViewModels.EditDoctorProfileViewModel
 @{
-    ViewData["Title"] = Model.Doctor?.FirstName + " " + Model.Doctor?.LastName;
+    ViewData["Title"] = "Επεξεργασία Προφίλ";
     Layout = "_Layout";
 }
 
@@ -18,11 +18,7 @@
         <p class="subtitle mb-5">@Html.DisplayFor(m => m.Doctor!.Specialty)</p>
         <p class="fc-black fs-16 fw-100">orem ipsum dolor sit amet, consectetur adipiscing elit. Donec et metus quis nulla mollis dictum at quis nisl. Donec dignissim sagittis iaculis. Fusce quis nulla tristique, congue nibh nec, scelerisque leo. Phasellus quis libero quis neque interdum lobortis et sed velit. Vivamus urna orci, pretium cursus mi sed, pretium iaculis nulla. Vestibulum nibh velit, placerat et tortor quis, viverra feugiat felis. Nunc nibh nulla, vulputate non pulvinar ut, fringilla et neque. Morbi quis tellus placerat velit luctus varius vitae a sapien. Aliquam in sodales velit. Integer ut eros elit. Ut turpis libero, rutrum at lorem eu, finibus auctor turpis. Morbi sit amet dui eros. Sed se</p>
 
-        <form method="get" asp-controller="Practice" asp-action="Enroll">
-            <button class="btn primary-btn d-flex justify-content-center align-items-center">
-                Προσθήκη ιατρείου
-            </button>
-        </form>
+       
         
         <form asp-controller="Doctor" asp-action="EditProfile" method="post" enctype="multipart/form-data">
             <div class="my-1">
@@ -69,64 +65,3 @@
         </form>
     </div>
 </div>
-
-
-
-<script>
-    const wrapper = document.querySelector(".image-wrapper");
-    const input = document.getElementById("imageInput");
-    const preview = document.getElementById("previewImage");
-
-    wrapper.addEventListener("click", () => input.click());
-
-    input.addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => preview.src = e.target.result;
-        reader.readAsDataURL(file);
-      }
-    });
-</script>
-
-
-
-<style>
-    .image-wrapper {
-        width: 100%;
-        max-width: 150px;
-        aspect-ratio: 1 / 1;
-        margin: auto;
-        position: relative;
-        cursor: pointer;
-    }
-
-        .image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 3px solid #dee2e6;
-        }
-
-    .overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: 0.3s;
-    }
-
-        .overlay svg {
-            width: 25%;
-            height: 25%;
-        }
-
-    .image-wrapper:hover .overlay {
-        opacity: 1;
-    }
-</style>

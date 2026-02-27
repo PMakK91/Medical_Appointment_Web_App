@@ -19,24 +19,74 @@ namespace MedicalAppointmentWebApp.Models
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; } = null!;
 
-        [Column("city")]
-        public string? City { get; set; }
+        [Column("name")]
+        public string? Name { get; set; }
+
+        [Column("duration")]
+        public int Duration { get; set; }
+
+        [Column("place_id")]
+        public int PlaceId { get; set; }
+
+        [Column("lon")]
+        public double Lon { get; set; }
+
+        [Column("lat")]
+        public double Lat { get; set; }
+
         [Column("street")]
         public string? Street { get; set; }
-        [Column("street_number")]
-        public int StreetNum { get; set; }
+
+        [Column("city")]
+        public string? City { get; set; }
+
         [Column("postal_code")]
         public string? PostalCode { get; set; }
 
-        [Column("shift_start_time")]
-        [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime ShiftStartTime { get; set; }
+        [Column("phone")]
+        public int? Phone { get; set; }
 
-        [Column("shift_end_time")]
-        [DataType(DataType.Time)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm}")]
-        public DateTime ShiftEndTime { get; set; }
+        [Column("monday_start", TypeName = "time")]
+        public TimeSpan? MondayStart { get; set; }
+
+        [Column("monday_end", TypeName = "time")]
+        public TimeSpan? MondayEnd { get; set; }
+
+        [Column("tuesday_start", TypeName = "time")]
+        public TimeSpan? TuesdayStart { get; set; }
+
+        [Column("tuesday_end", TypeName = "time")]
+        public TimeSpan? TuesdayEnd { get; set; }
+
+        [Column("wednesday_start", TypeName = "time")]
+        public TimeSpan? WednesdayStart { get; set; }
+
+        [Column("wednesday_end", TypeName = "time")]
+        public TimeSpan? WednesdayEnd { get; set; }
+
+        [Column("thursday_start", TypeName = "time")]
+        public TimeSpan? ThursdayStart { get; set; }
+
+        [Column("thursday_end", TypeName = "time")]
+        public TimeSpan? ThursdayEnd { get; set; }
+
+        [Column("friday_start", TypeName = "time")]
+        public TimeSpan? FridayStart { get; set; }
+
+        [Column("friday_end", TypeName = "time")]
+        public TimeSpan? FridayEnd { get; set; }
+
+        [Column("saturday_start", TypeName = "time")]
+        public TimeSpan? SaturdayStart { get; set; }
+
+        [Column("saturday_end", TypeName = "time")]
+        public TimeSpan? SaturdayEnd { get; set; }
+
+        [Column("sunday_start", TypeName = "time")]
+        public TimeSpan? SundayStart { get; set; }
+
+        [Column("sunday_end", TypeName = "time")]
+        public TimeSpan? SundayEnd { get; set; }
 
         [Column("appointment_duration")]
         public int AppointmentDuration { get; set; }

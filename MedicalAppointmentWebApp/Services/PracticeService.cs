@@ -18,13 +18,29 @@ namespace MedicalAppointmentWebApp.Services
             Practice practice = new Practice();
 
             practice.DoctorId = doctor.Id;
-            practice.City = practiceEnrollRequest.City;
+            practice.Name = practiceEnrollRequest.Name;
+            practice.Duration = practiceEnrollRequest.Duration;
+            practice.PlaceId = practiceEnrollRequest.PlaceId;
             practice.Street = practiceEnrollRequest.Street;
-            practice.StreetNum = practiceEnrollRequest.StreetNum;
-            practice.PostalCode= practiceEnrollRequest.PostalCode;
-            practice.ShiftStartTime = practiceEnrollRequest.ShiftStartTime;
-            practice.ShiftEndTime = practiceEnrollRequest.ShiftEndTime;
-            practice.AppointmentDuration = practiceEnrollRequest.AppointmentDuration;
+            practice.City = practiceEnrollRequest.City;
+            practice.Lon = practiceEnrollRequest.Lon;
+            practice.Lat = practiceEnrollRequest.Lat;
+            practice.PostalCode = practiceEnrollRequest.PostalCode;
+            practice.Phone= practiceEnrollRequest.Phone;
+            practice.MondayStart = practiceEnrollRequest.MondayStart;
+            practice.MondayEnd = practiceEnrollRequest.MondayEnd;
+            practice.TuesdayStart = practiceEnrollRequest.TuesdayStart;
+            practice.TuesdayEnd = practiceEnrollRequest.TuesdayEnd;
+            practice.WednesdayStart = practiceEnrollRequest.WednesdayStart;
+            practice.WednesdayEnd = practiceEnrollRequest.WednesdayEnd;
+            practice.ThursdayStart = practiceEnrollRequest.ThursdayStart;
+            practice.ThursdayEnd = practiceEnrollRequest.ThursdayEnd;
+            practice.FridayStart = practiceEnrollRequest.FridayStart;
+            practice.FridayEnd = practiceEnrollRequest.FridayEnd;
+            practice.SaturdayStart = practiceEnrollRequest.SaturdayStart;
+            practice.SaturdayEnd = practiceEnrollRequest.SaturdayEnd;
+            practice.SundayStart = practiceEnrollRequest.SundayStart;
+            practice.SundayEnd = practiceEnrollRequest.SundayEnd;
 
             practice.RegistrationStatus = Data.Enums.RegistrationFormStatus.Pending;
 
@@ -83,24 +99,56 @@ namespace MedicalAppointmentWebApp.Services
             for (int day = 0; day < 7; day++)
             {
                 DateTime currentDay = weekStart.AddDays(day);
-                DateTime dayStart = currentDay.Date + practice.ShiftStartTime.TimeOfDay;
-                DateTime dayEnd = currentDay.Date + practice.ShiftEndTime.TimeOfDay;
+
+                TimeSpan? shiftStart = day switch
+                {
+                    0 => practice.MondayStart,
+                    1 => practice.TuesdayStart,
+                    2 => practice.WednesdayStart,
+                    3 => practice.ThursdayStart,
+                    4 => practice.FridayStart,
+                    5 => practice.SaturdayStart,
+                    6 => practice.SundayStart,
+                    _ => null
+                };
+
+                TimeSpan? shiftEnd = day switch
+                {
+                    0 => practice.MondayEnd,
+                    1 => practice.TuesdayEnd,
+                    2 => practice.WednesdayEnd,
+                    3 => practice.ThursdayEnd,
+                    4 => practice.FridayEnd,
+                    5 => practice.SaturdayEnd,
+                    6 => practice.SundayEnd,
+                    _ => null
+                };
+
+                // If closed / not set, skip day
+                if (!shiftStart.HasValue || !shiftEnd.HasValue)
+                    continue;
+
+                DateTime dayStart = currentDay.Date + shiftStart.Value;
+                DateTime dayEnd = currentDay.Date + shiftEnd.Value;
 
                 while (dayStart < dayEnd)
                 {
+                    var slotEnd = dayStart.AddMinutes(practice.AppointmentDuration);
+
+                    // don’t create a slot that goes past the end of shift
+                    if (slotEnd > dayEnd)
+                        break;
+
                     TimeSlotViewModel slot = new TimeSlotViewModel
                     {
                         Start = dayStart,
-                        End = dayStart.AddMinutes(practice.AppointmentDuration),
-                        IsBooked = false
+                        End = slotEnd,
+                        IsBooked = appointments.Any(a => a.Time == dayStart)
                     };
-
-                    Appointment? appointment = appointments.FirstOrDefault(a => a.Time == dayStart);
-                    if (appointment != null) slot.IsBooked = true;
 
                     slots.Add(slot);
 
-                    dayStart = dayStart.AddMinutes(practice.AppointmentDuration);
+                    dayStart = slotEnd;
                 }
             }
 

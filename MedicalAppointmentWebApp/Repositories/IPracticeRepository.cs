@@ -9,6 +9,8 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<(IEnumerable<Practice> Practices, int TotalCount)> SearchAllWithDoctorIdAsync(Guid doctorId, string term, int page = 1, int pageSize = 10);
         void InsertPractice(Practice practice);
 
+        Task<List<Practice>> GetPracticesByDoctorIdAsync(Guid doctorId);
+
         void Save();
         Task SaveAsync();
     }

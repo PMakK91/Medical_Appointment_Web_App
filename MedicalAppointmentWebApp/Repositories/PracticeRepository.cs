@@ -60,6 +60,15 @@ namespace MedicalAppointmentWebApp.Repositories
         }
 
 
+        public async Task<List<Practice>> GetPracticesByDoctorIdAsync(Guid doctorId)
+        {
+            return await context.Practices
+                .Where(p => p.DoctorId == doctorId)
+                .ToListAsync();
+        }
+
+
+
         public void InsertPractice(Practice practice)
         {
             context.Practices.Add(practice);

@@ -9,5 +9,8 @@ namespace MedicalAppointmentWebApp.Services
         Task<Doctor?> GetDoctorById(Guid id);
 
         Task<string?> UpdateDoctorInfo(Guid doctorId, EditDoctorProfileViewModel request);
+
+        Task<List<Practice>> GetPracticesAsync(Guid doctorId);
+
     }
 }

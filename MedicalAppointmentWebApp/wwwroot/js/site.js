@@ -901,3 +901,22 @@ $(function () {
     });
 
 });
+
+
+/*******EDIT PROFILE *********/
+
+const wrapper = document.querySelector(".image-wrapper");
+const input = document.getElementById("imageInput");
+const preview = document.getElementById("previewImage");
+
+wrapper.addEventListener("click", () => input.click());
+
+input.addEventListener("change", function () {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => preview.src = e.target.result;
+        reader.readAsDataURL(file);
+    }
+});
+       

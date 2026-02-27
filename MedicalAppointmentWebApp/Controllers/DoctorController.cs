@@ -105,11 +105,27 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(doctor);
         }
 
-        public IActionResult AddOffice()
-        {
-            var doctorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            return View();
+        public async Task<IActionResult> Practices()
+        {
+            var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(idStr, out var doctorId))
+                return Unauthorized();
+
+            var doctor = await doctorService.GetDoctorById(doctorId);
+            if (doctor is null)
+                return Unauthorized();
+
+            var practices = await doctorService.GetPracticesAsync(doctorId);
+
+            var model = new MedicalAppointmentWebApp.Models.ViewModels.DoctorPractices
+            {
+                Doctor = doctor,
+                Practices = practices
+            };
+
+            return View(model);
         }
     }
 }

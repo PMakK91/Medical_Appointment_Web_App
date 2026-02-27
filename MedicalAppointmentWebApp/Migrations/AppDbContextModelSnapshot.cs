@@ -79,6 +79,46 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("doctor_id");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int")
+                        .HasColumnName("duration");
+
+                    b.Property<TimeSpan?>("FridayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("friday_end");
+
+                    b.Property<TimeSpan?>("FridayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("friday_start");
+
+                    b.Property<double>("Lat")
+                        .HasColumnType("float")
+                        .HasColumnName("lat");
+
+                    b.Property<double>("Lon")
+                        .HasColumnType("float")
+                        .HasColumnName("lon");
+
+                    b.Property<TimeSpan?>("MondayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("monday_end");
+
+                    b.Property<TimeSpan?>("MondayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("monday_start");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.Property<int?>("Phone")
+                        .HasColumnType("int")
+                        .HasColumnName("phone");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int")
+                        .HasColumnName("place_id");
+
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("postal_code");
@@ -87,21 +127,49 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("int")
                         .HasColumnName("registration_status");
 
-                    b.Property<DateTime>("ShiftEndTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("shift_end_time");
+                    b.Property<TimeSpan?>("SaturdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("saturday_end");
 
-                    b.Property<DateTime>("ShiftStartTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("shift_start_time");
+                    b.Property<TimeSpan?>("SaturdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("saturday_start");
 
                     b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("street");
 
-                    b.Property<int>("StreetNum")
-                        .HasColumnType("int")
-                        .HasColumnName("street_number");
+                    b.Property<TimeSpan?>("SundayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("sunday_end");
+
+                    b.Property<TimeSpan?>("SundayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("sunday_start");
+
+                    b.Property<TimeSpan?>("ThursdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("thursday_end");
+
+                    b.Property<TimeSpan?>("ThursdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("thursday_start");
+
+                    b.Property<TimeSpan?>("TuesdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("tuesday_end");
+
+                    b.Property<TimeSpan?>("TuesdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("tuesday_start");
+
+                    b.Property<TimeSpan?>("WednesdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("wednesday_end");
+
+                    b.Property<TimeSpan?>("WednesdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("wednesday_start");
 
                     b.HasKey("Id");
 

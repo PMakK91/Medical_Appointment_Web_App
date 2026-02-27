@@ -8,8 +8,12 @@ using System;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class DoctorService(IDoctorRepository doctorRepository, IImageService imageService) : IDoctorService
+
+
+    public class DoctorService(  IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IImageService imageService) : IDoctorService
     {
+
+
         public async Task<DoctorSearchViewModel> SearchAllActiveDoctors(string term, int page = 1, int pageSize = 10)
         {
             (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchActiveAsync(term, page, pageSize);
@@ -83,5 +87,9 @@ namespace MedicalAppointmentWebApp.Services
 
             return null;
         }
+
+        public Task<List<Practice>> GetPracticesAsync(Guid doctorId) => practiceRepository.GetPracticesByDoctorIdAsync(doctorId);
+
+
     }
 }
