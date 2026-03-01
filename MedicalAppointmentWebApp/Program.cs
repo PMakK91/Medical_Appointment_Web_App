@@ -85,4 +85,12 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+    var userRepo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+    await MedicalAppointmentWebApp.Data.StartupSeeder.SeedAdminAsync(authService, userRepo);
+}
+
 app.Run();
