@@ -1,7 +1,9 @@
-﻿using MedicalAppointmentWebApp.Data;
+﻿using Azure.Core;
+using MedicalAppointmentWebApp.Data;
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MedicalAppointmentWebApp.Services
 {
@@ -18,10 +21,14 @@ namespace MedicalAppointmentWebApp.Services
         IDoctorRepository doctorRepository, 
         IUserRepository userRepository,
         IPatientRepository patientRepository,
-        IAdminRepository adminRepository) : IAuthService
+        IAdminRepository adminRepository,
+        IPasswordResetTokenRepository passwordResetTokenRepository,
+        IEmailService emailService) : IAuthService
     {
         private static long TOKEN_EXPIRATION_TIME = 86400; // seconds = 24 hours
         private static long REFRESH_TOKEN_EXPIRATION_TIME = 28800; // seconds = 8 hours
+
+        private static long PASSWORD_RESET_TOKEN_EXPIRATION_TIME = 1800; // seconds = 0.5 hours
 
         public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
@@ -218,6 +225,69 @@ namespace MedicalAppointmentWebApp.Services
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+        }
+
+        public async Task<string?> CreateResetPasswordTokenAsync(string email)
+        {
+            User? user = await userRepository.GetUserByEmailAsync(email);
+            if (user is null) 
+                return "Το email δεν βρέθηκε";
+
+            // find and de-activate the active tokens
+            IEnumerable<PasswordResetToken> activePasswordResetTokens = await passwordResetTokenRepository.GetActiveByUserAsync(user.Id);
+            foreach(PasswordResetToken token in activePasswordResetTokens)
+            {
+                token.ExpiryDate = DateTime.UtcNow.AddDays(-2);
+            }
+            await passwordResetTokenRepository.SaveAsync();
+
+            PasswordResetToken passwordResetToken = new PasswordResetToken
+            {
+                Token = CreatePasswordResetToken(),
+                UserId = user.Id,
+                User = user,
+                ExpiryDate = DateTime.UtcNow.AddSeconds(PASSWORD_RESET_TOKEN_EXPIRATION_TIME),
+                IsUsed = false
+            };
+
+            passwordResetTokenRepository.InsertPasswordResetToken(passwordResetToken);
+            await passwordResetTokenRepository.SaveAsync();
+
+            await emailService.SendResetPasswordEmail(passwordResetToken);
+
+            return null;
+        }
+
+        private string CreatePasswordResetToken()
+        {
+            string token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            string hashedToken = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
+
+            return hashedToken;
+        }
+
+        public async Task<PasswordResetToken?> ResetPassword(NewPasswordRequestViewModel model)
+        {
+            if (model is null)
+                return null;
+
+            PasswordResetToken? passwordResetToken = await passwordResetTokenRepository.GetPasswordResetTokenByTokenAsync(model.Token);
+            if (passwordResetToken is null || passwordResetToken.IsUsed)
+                return null;
+
+            User? user = passwordResetToken.User;
+            if (user is null) 
+                return null;
+
+            string hashedPassword = new PasswordHasher<Doctor>().HashPassword((Doctor)user, model.Password);
+
+            passwordResetToken.User?.Password = hashedPassword;
+            await userRepository.SaveAsync();
+
+            passwordResetToken.IsUsed = true;
+            await passwordResetTokenRepository.SaveAsync();
+
+            return passwordResetToken;
         }
 
         public string? AmkaCheck(string amka)

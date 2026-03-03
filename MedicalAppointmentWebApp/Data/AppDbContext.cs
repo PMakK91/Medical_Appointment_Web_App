@@ -16,6 +16,8 @@ namespace MedicalAppointmentWebApp.Data
 
         public DbSet<Appointment> Appointments { get; set; }
 
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -47,6 +49,12 @@ namespace MedicalAppointmentWebApp.Data
                 .HasOne(p => p.Practice)
                 .WithMany(a => a.Appointments)
                 .HasForeignKey(p => p.PracticeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PasswordResetToken>()
+                .HasOne(p => p.User)
+                .WithMany(p => p.PasswordResetTokens)
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

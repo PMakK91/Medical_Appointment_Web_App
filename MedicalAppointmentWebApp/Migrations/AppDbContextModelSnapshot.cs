@@ -60,6 +60,31 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.ToTable("appointments", (string)null);
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.PasswordResetToken", b =>
+                {
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("token");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_used");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Token");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -247,6 +272,17 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.Navigation("Practice");
                 });
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.PasswordResetToken", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", "User")
+                        .WithMany("PasswordResetTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
                 {
                     b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
@@ -293,6 +329,8 @@ namespace MedicalAppointmentWebApp.Migrations
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("PasswordResetTokens");
                 });
 
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
