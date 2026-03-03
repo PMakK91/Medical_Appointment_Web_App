@@ -36,7 +36,7 @@ namespace MedicalAppointmentWebApp.Controllers
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
-                ModelState.AddModelError("", "Email already in use...");
+                ModelState.AddModelError("", "Το email χρησιμοποιείται ήδη");
                 return View("Register");
             }
 
@@ -67,7 +67,7 @@ namespace MedicalAppointmentWebApp.Controllers
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
             {
-                ModelState.AddModelError("", "Email or AMKA already submitted for review.");
+                ModelState.AddModelError("", "Αυτό το email ή το ΑΜΚΑ έχουν ήδη υποβληθεί για εξέταση.");
                 return View("Register", request);
             }
 
@@ -85,7 +85,7 @@ namespace MedicalAppointmentWebApp.Controllers
             AuthResponse? response = await authService.LoginAsync(request);
             if (response is null)
             {
-                ModelState.AddModelError("", "Wrong email or password");
+                ModelState.AddModelError("", "Λάθος email ή κωδικός");
                 return View();
             }
 

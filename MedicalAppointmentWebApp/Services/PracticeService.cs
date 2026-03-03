@@ -21,11 +21,9 @@ namespace MedicalAppointmentWebApp.Services
             practice.Name = practiceEnrollRequest.Name;
             practice.Duration = practiceEnrollRequest.Duration;
             practice.PlaceId = practiceEnrollRequest.PlaceId;
-            practice.Street = practiceEnrollRequest.Street;
-            practice.City = practiceEnrollRequest.City;
+            practice.FullAddress = practiceEnrollRequest.FullAddress;
             practice.Lon = practiceEnrollRequest.Lon;
             practice.Lat = practiceEnrollRequest.Lat;
-            practice.PostalCode = practiceEnrollRequest.PostalCode;
             practice.Phone= practiceEnrollRequest.Phone;
             practice.MondayStart = practiceEnrollRequest.MondayStart;
             practice.MondayEnd = practiceEnrollRequest.MondayEnd;
@@ -133,7 +131,7 @@ namespace MedicalAppointmentWebApp.Services
 
                 while (dayStart < dayEnd)
                 {
-                    var slotEnd = dayStart.AddMinutes(practice.AppointmentDuration);
+                    var slotEnd = dayStart.AddMinutes(practice.Duration);
 
                     // don’t create a slot that goes past the end of shift
                     if (slotEnd > dayEnd)

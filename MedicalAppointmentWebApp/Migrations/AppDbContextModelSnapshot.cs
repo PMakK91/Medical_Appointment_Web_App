@@ -67,14 +67,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<int>("AppointmentDuration")
-                        .HasColumnType("int")
-                        .HasColumnName("appointment_duration");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("city");
-
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("doctor_id");
@@ -90,6 +82,10 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.Property<TimeSpan?>("FridayStart")
                         .HasColumnType("time")
                         .HasColumnName("friday_start");
+
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("full_address");
 
                     b.Property<double>("Lat")
                         .HasColumnType("float")
@@ -115,13 +111,9 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("int")
                         .HasColumnName("phone");
 
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("int")
-                        .HasColumnName("place_id");
-
-                    b.Property<string>("PostalCode")
+                    b.Property<string>("PlaceId")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("postal_code");
+                        .HasColumnName("place_id");
 
                     b.Property<int>("RegistrationStatus")
                         .HasColumnType("int")
@@ -134,10 +126,6 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.Property<TimeSpan?>("SaturdayStart")
                         .HasColumnType("time")
                         .HasColumnName("saturday_start");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("street");
 
                     b.Property<TimeSpan?>("SundayEnd")
                         .HasColumnType("time")

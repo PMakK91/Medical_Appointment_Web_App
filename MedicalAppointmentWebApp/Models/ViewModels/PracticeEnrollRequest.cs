@@ -4,17 +4,14 @@
     {
         public  string Name { get; set; }
         public  int Duration { get; set; }
-        public  int PlaceId { get; set; }
+        public string PlaceId { get; set; }
 
         public double Lon { get; set; }
 
         public double Lat { get; set; }
 
-        public string? Street { get; set; }
+        public string FullAddress { get; set; }
 
-        public string? City { get; set; }
-
-        public string? PostalCode { get; set; }
         public  int Phone { get; set; }
 
         public TimeSpan? MondayStart { get; set; }

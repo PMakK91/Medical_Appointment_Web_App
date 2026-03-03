@@ -11,11 +11,13 @@ namespace MedicalAppointmentWebApp.Controllers
 {
     public class DoctorController(IDoctorService doctorService) : Controller
     {
-        public async Task<IActionResult> Index(string term, int page = 1, int pageSize = 10)
+        
+        public async Task<IActionResult> Search(string term, int page = 1, int pageSize = 10)
         {
             DoctorSearchViewModel model = await doctorService.SearchAllActiveDoctors(term, page, pageSize);
             return View(model);
         }
+
 
         public async Task<IActionResult> Profile(Guid doctor_id)
         {
@@ -88,44 +90,5 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(doctor);
         }
 
-        public async Task<IActionResult> OfficesAsync()
-        {
-            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId is null)
-            {
-                return RedirectToAction(controllerName: "Auth", actionName: "Login");
-            }
-
-            Doctor? doctor = await doctorService.GetDoctorById(Guid.Parse(userId));
-            if (doctor is null)
-            {
-                return View();
-            }
-
-            return View(doctor);
-        }
-
-
-        public async Task<IActionResult> Practices()
-        {
-            var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!Guid.TryParse(idStr, out var doctorId))
-                return Unauthorized();
-
-            var doctor = await doctorService.GetDoctorById(doctorId);
-            if (doctor is null)
-                return Unauthorized();
-
-            var practices = await doctorService.GetPracticesAsync(doctorId);
-
-            var model = new MedicalAppointmentWebApp.Models.ViewModels.DoctorPractices
-            {
-                Doctor = doctor,
-                Practices = practices
-            };
-
-            return View(model);
-        }
     }
 }

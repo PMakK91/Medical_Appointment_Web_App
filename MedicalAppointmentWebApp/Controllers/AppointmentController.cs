@@ -13,7 +13,7 @@ namespace MedicalAppointmentWebApp.Controllers
     [AuthorizeRoles(UserRole.Doctor, UserRole.Patient)]
     public class AppointmentController(IAppointmentService appointmentService) : Controller
     {
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> MyAppointments()
         {
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId is null)

@@ -273,8 +273,10 @@
                 Θα ενημερωθείτε για την εξέληξη του αιτήματος μέσω email μόλις ελεγχθεί από το σύστημα
             </p>
 
+            <div class="form-error mt-3">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
         </form>
 
         <div class="register-footer mt-5">

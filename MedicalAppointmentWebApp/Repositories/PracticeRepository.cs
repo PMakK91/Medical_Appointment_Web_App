@@ -41,11 +41,9 @@ namespace MedicalAppointmentWebApp.Repositories
             if (!string.IsNullOrWhiteSpace(term))
             {
                 query = query.Where(p =>
-                (p.City != null && p.City.Contains(term)) ||
-                (p.Street != null && p.Street.Contains(term)) ||
+                (p.FullAddress != null && p.FullAddress.Contains(term)) ||
                 (p.Doctor.FirstName != null && p.Doctor.FirstName.Contains(term)) ||
-                (p.Doctor.LastName != null && p.Doctor.LastName.Contains(term)) ||
-                (p.PostalCode != null && p.PostalCode.Contains(term)));
+                (p.Doctor.LastName != null && p.Doctor.LastName.Contains(term)) );
             }
 
             int totalCount = await query.CountAsync();

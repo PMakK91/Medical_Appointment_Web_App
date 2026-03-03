@@ -191,6 +191,13 @@ gmp-place-autocomplete {
         align-items: center;
         justify-content: center;
     }
+        .primary-btn.delete {
+            background: #ffffff;
+            border-color: #4ea7e7;
+            border-width: 2px;
+            color: #4ea7e7;
+        }
+
 
         .primary-btn:hover,
         .primary-focus {
@@ -198,6 +205,7 @@ gmp-place-autocomplete {
             border-color: #4096d9;
             color: #fff;
         }
+      
 
     .form-error {
         color: #e74c3c;
@@ -393,17 +401,28 @@ input:-webkit-autofill:active {
     .d-none {
         display: none;
     }
-    /****** REGISTRATION INFO PAGE *****/
 
 
 
-    .registration-info {
-        max-width: 420px;
-        background: #fff;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 23px 100px -26px #00000000;
-    }
+    /***** FORM ERRORS ****/
+
+.validation-summary-errors ul {
+    list-style: none;
+    padding: 0;
+}
+
+
+
+
+
+/****** REGISTRATION INFO PAGE *****/
+.registration-info {
+    max-width: 420px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 23px 100px -26px #00000000;
+}
 
 
         .registration-info .row {
@@ -429,12 +448,19 @@ input:-webkit-autofill:active {
     }
 
 
-    .admin-registrations-list .status-circle {
+    .status-circle {
         width: 14px;
         height: 14px;
-        background: #ffb27b;
         border-radius: 100%;
     }
+
+.status-circle.status-orange {
+    background: #ffb27b;
+}
+
+.status-circle.status-green {
+    background: #abd47c;
+}
 
     .search-form {
         max-width: 420px;

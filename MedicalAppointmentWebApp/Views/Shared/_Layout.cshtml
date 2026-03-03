@@ -53,7 +53,7 @@
                         @if (User.Identity != null && (User.IsInRole("Doctor") || User.IsInRole("Patient")))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Index">Τα Ραντεβού Μου</a>
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα Ραντεβού Μου</a>
                             </li>
                         }
 
@@ -73,7 +73,7 @@
                                 <a class="nav-link text-dark" href="@Url.Action("Calendar", "Doctor")">Ημερολόγιο</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action("Practices", "Doctor")">Ιατρεία</a>
+                                <a class="nav-link text-dark" href="@Url.Action("MyPractices", "Practice")">Ιατρεία</a>
                             </li>
                         }
 

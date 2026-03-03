@@ -26,7 +26,7 @@ namespace MedicalAppointmentWebApp.Models
         public int Duration { get; set; }
 
         [Column("place_id")]
-        public int PlaceId { get; set; }
+        public string? PlaceId { get; set; }
 
         [Column("lon")]
         public double Lon { get; set; }
@@ -34,14 +34,8 @@ namespace MedicalAppointmentWebApp.Models
         [Column("lat")]
         public double Lat { get; set; }
 
-        [Column("street")]
-        public string? Street { get; set; }
-
-        [Column("city")]
-        public string? City { get; set; }
-
-        [Column("postal_code")]
-        public string? PostalCode { get; set; }
+        [Column("full_address")]
+        public string? FullAddress { get; set; }
 
         [Column("phone")]
         public int? Phone { get; set; }
@@ -87,9 +81,6 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("sunday_end", TypeName = "time")]
         public TimeSpan? SundayEnd { get; set; }
-
-        [Column("appointment_duration")]
-        public int AppointmentDuration { get; set; }
 
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }

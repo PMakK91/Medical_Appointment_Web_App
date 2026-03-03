@@ -25,6 +25,7 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(practiceSearchViewModel);
         }
 
+
         [Authorize(Roles = nameof(UserRole.Doctor))]
         public IActionResult Enroll()
         {
