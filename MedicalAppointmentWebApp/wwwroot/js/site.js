@@ -57,7 +57,51 @@
     });
 
 
-    // -------- Specialization dropdown with search inside (doctor) --------
+    /***** FILL FORMS PATIENT AND DOCTOR SIMUTANEUSLY *******/
+
+        (function () {
+    const patientForm = document.getElementById('register-form-patient');
+        const doctorForm  = document.getElementById('register-form-doctor');
+
+        if (!patientForm || !doctorForm) return;
+
+        const fieldsToSync = ['FirstName', 'LastName', 'Phone', 'Amka', 'Email', 'Password'];
+
+        function getField(form, name) {
+      return form.querySelector(`[name="${name}"]`);
+    }
+
+        function syncValue(fromForm, toForm, name) {
+      const from = getField(fromForm, name);
+        const to   = getField(toForm, name);
+        if (!from || !to) return;
+
+        if (to.value === from.value) return;
+
+        to.value = from.value;
+
+    }
+
+        function wireSync(fromForm, toForm) {
+            fieldsToSync.forEach(name => {
+                const from = getField(fromForm, name);
+                if (!from) return;
+
+                from.addEventListener('input', () => syncValue(fromForm, toForm, name));
+                from.addEventListener('change', () => syncValue(fromForm, toForm, name));
+            });
+    }
+
+        wireSync(patientForm, doctorForm);
+        wireSync(doctorForm, patientForm);
+
+    // initial sync on load
+    fieldsToSync.forEach(name => syncValue(patientForm, doctorForm, name));
+    fieldsToSync.forEach(name => syncValue(doctorForm, patientForm, name));
+  })();
+    
+
+    // ************ Specialization dropdown with search inside (doctor) **********/
     $(function () {
         const $btn = $("#specializationDropdownBtn");
         const $selectedText = $("#specializationSelectedText");
@@ -70,7 +114,7 @@
         const $doctorForm = $("#register-form-doctor");
 
         if ($btn.length && $selectedText.length && $hidden.length && $menu.length && $search.length && $list.length) {
-            const $items = $list.find(".dropdown-item"); // jQuery collection
+            const $items = $list.find(".dropdown-item"); 
             const dd = bootstrap.Dropdown.getOrCreateInstance($btn[0], { autoClose: "outside" });
 
             const normalize = (s) =>

@@ -23,41 +23,45 @@
         <form asp-controller="Auth" asp-action="PatientRegister" id="register-form-patient" method="post" class="register-form">
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNamePatient">Όνομα:</label>
-                <input asp-for="FirstName" id="firstNamePatient" type="text"
+                <input asp-for="FirstName" type="text"
                        class="form-control register-input" aria-label="Όνομα"
                        autocomplete="given-name" required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label register-label" for="lastNamePatient">Επώνυμο:</label>
-                <input asp-for="LastName" id="lastNamePatient" type="text"
+                <input asp-for="LastName" type="text"
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label register-label" for="phonePatient">Κινητό Τηλέφωνο:</label>
-                <input asp-for="Phone" id="phonePatient" type="tel"
+                <input asp-for="Phone" type="tel"
                        class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
                        autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" minlength="10" maxlength="10"
-                       title="Το τηλέφωνο απαιτείται να έχει 10 αριθμούς"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 ψηφία"
                        required />
             </div>
             <div class="mb-3">
                 <label class="form-label register-label" for="amkaPatient">ΑΜΚΑ:</label>
-                <input asp-for="Amka" id="amkaPatient" type="text"
+                <input asp-for="Amka" type="text"
                        class="form-control register-input" aria-label="Αμκα"
                        pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
-                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 αριθμούς"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 ψηφία"
                       required />
             </div>
 
 
             <div class="mb-3">
                 <label class="form-label register-label" for="emailPatient">Email:</label>
-                <input asp-for="Email" id="emailPatient" type="email"
-                       class="form-control register-input" aria-label="Email"
-                       autocomplete="email" required />
+                <input asp-for="Email" type="email"
+                       class="form-control register-input"
+                       autocomplete="email"
+                       maxlength="254"
+                       pattern="^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$"
+                       title="Εισάγετε έγκυρο email (π.χ. name@domain.com)."
+                       required />
             </div>
 
             <div class="mb-3">
@@ -112,14 +116,14 @@
         <form asp-controller="Auth" asp-action="DoctorRegister" id="register-form-doctor" method="post" class="register-form d-none">
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNameDoctor">Όνομα:</label>
-                <input asp-for="FirstName" id="firstNameDoctor" type="text"
+                <input asp-for="FirstName" type="text"
                        class="form-control register-input" aria-label="Όνομα"
                        autocomplete="given-name" required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label register-label" for="lastNameDoctor">Επώνυμο:</label>
-                <input asp-for="LastName" id="lastNameDoctor" type="text"
+                <input asp-for="LastName" type="text"
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
             </div>
@@ -173,16 +177,23 @@
 
             <div class="mb-3">
                 <label class="form-label register-label" for="licenseNumberDoctor">Αριθμός Ιατρικού Μητρώου:</label>
-                <input asp-for="LicenseNumber" id="licenseNumberDoctor" type="text"
-                       class="form-control register-input" aria-label="Αριθμός Ιατρικού Μητρώου"
+                <input asp-for="LicenseNumber"
+                       type="text"
+                       class="form-control register-input"
+                       aria-label="Αριθμός Ιατρικού Μητρώου"
+                       minlength="11"
+                       maxlength="11"
+                       pattern="[0-9]{11}"
+                       inputmode="numeric"
+                       title="Ο αριθμός μητρώου πρέπει να περιέχει 11 ψηφία."
                        required />
             </div>
             <div class="mb-3">
                 <label class="form-label register-label" for="amkaDoctor">ΑΜΚΑ:</label>
-                <input asp-for="Amka" id="amkaDoctor" type="text"
+                <input asp-for="Amka" type="text"
                        class="form-control register-input" aria-label="Αμκα"
                        pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
-                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 αριθμούς"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 ψηφία"
                        required />
             </div>
             <div class="mb-3">
@@ -190,16 +201,28 @@
                 <p class="register-label-description mt-0">
                     Θα παραμείνει κρυφό. Χρησιμοποιείται μόνο για τον λογαριασμό σας
                 </p>
-                <input asp-for="Phone" id="phoneDoctor" type="tel"
-                       class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
-                       autocomplete="tel" inputmode="tel" required />
+                <input asp-for="Phone"
+                       type="tel"
+                       class="form-control register-input"
+                       aria-label="Κινητό Τηλέφωνο"
+                       autocomplete="tel"
+                       inputmode="numeric"
+                       pattern="[0-9]{10}"
+                       minlength="10"
+                       maxlength="10"
+                       title="Το κινητό τηλέφωνο πρέπει να περιέχει ακριβώς 10 ψηφία."
+                       required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label register-label" for="emailDoctor">Email:</label>
-                <input asp-for="Email" id="emailDoctor" type="email"
-                       class="form-control register-input" aria-label="Email"
-                       autocomplete="email" required />
+                <input asp-for="Email" type="email"
+                       class="form-control register-input"
+                       autocomplete="email"
+                       maxlength="254"
+                       pattern="^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$"
+                       title="Εισάγετε έγκυρο email (π.χ. name@domain.com)."
+                       required />
             </div>
 
             <div class="mb-3">
@@ -250,7 +273,7 @@
                 Θα ενημερωθείτε για την εξέληξη του αιτήματος μέσω email μόλις ελεγχθεί από το σύστημα
             </p>
 
-            <div class="form-error mt-3 d-none" id="doctorFormError"></div>
+
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         </form>
 

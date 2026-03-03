@@ -44,30 +44,34 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> DoctorRegister(RegisterRequest request)
         {
+            if (!ModelState.IsValid)
+                return View("Register", request);
+
             string? amkaCheck = authService.AmkaCheck(request.Amka);
             if (amkaCheck != null)
             {
                 ModelState.AddModelError("", amkaCheck);
-                return View("Register");
+                return View("Register", request);
             }
 
             string? phoneCheck = authService.PhoneCheck(request.Phone);
             if (phoneCheck != null)
             {
                 ModelState.AddModelError("", phoneCheck);
-                return View("Register");
+                return View("Register", request);
             }
 
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
             {
-                ModelState.AddModelError("", "Email or AMKA already submitted for review...");
-                return View("Register");
+                ModelState.AddModelError("", "Email or AMKA already submitted for review.");
+                return View("Register", request);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(DoctorApplicationSubmitted));
         }
 
         public IActionResult Login()
@@ -125,6 +129,11 @@ namespace MedicalAppointmentWebApp.Controllers
             return RedirectToAction("Login", "Auth");
         }
         public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        public IActionResult DoctorApplicationSubmitted()
         {
             return View();
         }
