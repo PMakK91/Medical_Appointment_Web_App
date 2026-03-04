@@ -180,10 +180,11 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return RedirectToAction(controllerName: "Auth", actionName: "Login");
         }
-    public IActionResult DoctorApplicationSubmitted()
+        
+        public IActionResult DoctorApplicationSubmitted()
         {
             return View();
         }
     }
-    }
+}
 
