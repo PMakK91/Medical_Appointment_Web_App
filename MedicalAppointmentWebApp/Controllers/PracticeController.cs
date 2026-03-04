@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace MedicalAppointmentWebApp.Controllers
 {
+
     [Route("[controller]/[action]")]
     public class PracticeController(IPracticeService practiceService) : Controller
     {
@@ -60,6 +61,35 @@ namespace MedicalAppointmentWebApp.Controllers
                 return BadRequest("Practice was not found.");
             }
             return PartialView("_AvailableTimeSlots", weekScheduleViewModel);
+        }
+
+        [HttpGet("{practiceId:guid}")]
+        public async Task<IActionResult> Get(Guid practiceId)
+        {
+            var p = await practiceService.GetPracticeByIdAsync(practiceId);
+
+            if (p == null)
+                return NotFound(new { success = false, message = "Practice not found." });
+
+            return Ok(new
+            {
+                p.Id,
+                p.Duration,
+                p.MondayStart,
+                p.MondayEnd,
+                p.TuesdayStart,
+                p.TuesdayEnd,
+                p.WednesdayStart,
+                p.WednesdayEnd,
+                p.ThursdayStart,
+                p.ThursdayEnd,
+                p.FridayStart,
+                p.FridayEnd,
+                p.SaturdayStart,
+                p.SaturdayEnd,
+                p.SundayStart,
+                p.SundayEnd
+            });
         }
     }
 }

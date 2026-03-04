@@ -244,65 +244,151 @@ function pickSlot(isoDate, time) {
 }
 
 
+
 /********************** CALENDAR ************************/
 
 const officeCalendarState = {};
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".calendarContainer").forEach(calendarContainer => {
-        const officeId = calendarContainer.dataset.officeId;
-
-        officeCalendarState[officeId] = {
-            currentDate: new Date(),
-            view: "month"
-        };
-
-        renderCurrentView(calendarContainer);
+/** ---------------------------
+ *  FETCH PRACTICE (real data)
+ *  Endpoint: GET /Practice/Get/{practiceId}
+ *  Works with both PascalCase and camelCase responses
+ *  --------------------------- */
+function fetchPracticeInfo(practiceId) {
+    return fetch(`/Practice/Get/${practiceId}`).then(async (response) => {
+        if (!response.ok) {
+            const text = await response.text().catch(() => "");
+            throw new Error(`HTTP ${response.status} ${response.statusText} ${text}`);
+        }
+        return response.json();
     });
-});
-
-function renderCurrentView(container) {
-    const officeId = container.dataset.officeId;
-    const state = officeCalendarState[officeId];
-
-    if (state.view === "month") generateMonthView(container, state.currentDate);
-    else generateDayView(container, state.currentDate);
 }
 
 /** ---------------------------
- *  CONFIG (later you’ll fetch from backend per office/doctor)
+ *  Schedule helpers (case-robust)
  *  --------------------------- */
-function getOfficeScheduleConfig(officeId, dateStr) {
-    // TODO: replace with backend response
-    return {
-        duration: 30,
-        workingIntervals: [
-            { start: "09:00", end: "14:00" },
-            { start: "17:00", end: "21:00" }
-        ]
-    };
+function toHHmm(t) {
+    return typeof t === "string" && t.length >= 5 ? t.slice(0, 5) : null; // "HH:mm:ss" -> "HH:mm"
+}
+
+function getField(obj, pascalName) {
+    if (!obj) return undefined;
+    const camel = pascalName.charAt(0).toLowerCase() + pascalName.slice(1);
+    return obj[pascalName] ?? obj[camel];
+}
+
+function getOfficeScheduleConfig(practice, dateStr) {
+    if (!practice) return { duration: 30, workingIntervals: [] };
+
+    const d = new Date(`${dateStr}T00:00:00`);
+    const dow = d.getDay(); // 0=Sun ... 6=Sat
+
+    const duration = getField(practice, "Duration") ?? 30;
+
+    const startKey = [
+        "SundayStart",
+        "MondayStart",
+        "TuesdayStart",
+        "WednesdayStart",
+        "ThursdayStart",
+        "FridayStart",
+        "SaturdayStart",
+    ][dow];
+
+    const endKey = [
+        "SundayEnd",
+        "MondayEnd",
+        "TuesdayEnd",
+        "WednesdayEnd",
+        "ThursdayEnd",
+        "FridayEnd",
+        "SaturdayEnd",
+    ][dow];
+
+    const start = toHHmm(getField(practice, startKey));
+    const end = toHHmm(getField(practice, endKey));
+
+    if (!start || !end) return { duration, workingIntervals: [] };
+
+    return { duration, workingIntervals: [{ start, end }] };
+}
+
+function isOfficeClosed(practice, dateStr) {
+    return getOfficeScheduleConfig(practice, dateStr).workingIntervals.length === 0;
+}
+
+/** ---------------------------
+ *  INIT
+ *  --------------------------- */
+document.addEventListener("DOMContentLoaded", async () => {
+    const containers = Array.from(document.querySelectorAll(".calendarContainer"));
+
+    await Promise.all(
+        containers.map(async (calendarContainer) => {
+            const officeId = calendarContainer.dataset.officeId; // Practice.Id GUID
+
+            officeCalendarState[officeId] = {
+                currentDate: new Date(),
+                view: "month",
+                practice: null,
+            };
+
+            try {
+                officeCalendarState[officeId].practice = await fetchPracticeInfo(officeId);
+
+                // Debug (uncomment to verify values)
+                // console.log("Loaded practice:", officeId, officeCalendarState[officeId].practice);
+                // console.log("Mon:", getField(officeCalendarState[officeId].practice, "MondayStart"), getField(officeCalendarState[officeId].practice, "MondayEnd"));
+                // console.log("Tue:", getField(officeCalendarState[officeId].practice, "TuesdayStart"), getField(officeCalendarState[officeId].practice, "TuesdayEnd"));
+            } catch (e) {
+                console.error("Failed to load practice info for:", officeId, e);
+            }
+
+            await renderCurrentView(calendarContainer);
+        })
+    );
+});
+
+async function renderCurrentView(container) {
+    const officeId = container.dataset.officeId;
+    const state = officeCalendarState[officeId];
+
+    if (state.view === "month") {
+        await generateMonthView(container, state.currentDate);
+    } else {
+        generateDayView(container, state.currentDate);
+    }
 }
 
 /**** DAY VIEW ****/
 function generateDayView(calendarContainer, dateObj) {
     const officeId = calendarContainer.dataset.officeId;
+    const practice = officeCalendarState[officeId]?.practice;
 
     const dayNames = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
     const monthNames = [
-        "Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαϊου", "Ιουνίου",
-        "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"
+        "Ιανουαρίου",
+        "Φεβρουαρίου",
+        "Μαρτίου",
+        "Απριλίου",
+        "Μαϊου",
+        "Ιουνίου",
+        "Ιουλίου",
+        "Αυγούστου",
+        "Σεπτεμβρίου",
+        "Οκτωβρίου",
+        "Νοεμβρίου",
+        "Δεκεμβρίου",
     ];
 
-    // heading (prev-next + current date)
     const oldHeading = calendarContainer.querySelector(".month");
     if (oldHeading) oldHeading.remove();
 
     const headingElement = document.createElement("div");
     headingElement.classList.add("month");
-    headingElement.innerText =
-        `${dayNames[dateObj.getDay()]} ${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+    headingElement.innerText = `${dayNames[dateObj.getDay()]} ${dateObj.getDate()} ${monthNames[dateObj.getMonth()]
+        } ${dateObj.getFullYear()}`;
 
-    // nav
     const navButtons = calendarContainer.querySelector(".nav-buttons-container");
     navButtons.innerHTML = "";
 
@@ -314,37 +400,36 @@ function generateDayView(calendarContainer, dateObj) {
 
     prevButton.addEventListener("click", () => {
         const st = officeCalendarState[officeId];
-        st.currentDate = new Date(st.currentDate);
-        st.currentDate.setDate(st.currentDate.getDate() - 1);
-        renderCurrentView(calendarContainer);
+        const nd = new Date(st.currentDate);
+        nd.setDate(nd.getDate() - 1);
+        st.currentDate = nd;
+        void renderCurrentView(calendarContainer);
     });
 
     nextButton.addEventListener("click", () => {
         const st = officeCalendarState[officeId];
-        st.currentDate = new Date(st.currentDate);
-        st.currentDate.setDate(st.currentDate.getDate() + 1);
-        renderCurrentView(calendarContainer);
+        const nd = new Date(st.currentDate);
+        nd.setDate(nd.getDate() + 1);
+        st.currentDate = nd;
+        void renderCurrentView(calendarContainer);
     });
 
     navButtons.appendChild(prevButton);
     navButtons.appendChild(headingElement);
     navButtons.appendChild(nextButton);
 
-    // inner container
     const inner = calendarContainer.querySelector(".calendarInnerContainer");
     inner.innerHTML = "";
 
-    // back to month button
     const backMonthBtn = document.createElement("button");
     backMonthBtn.className = "fs-14 bg-transparent fc-blue mb-3 border-0";
     backMonthBtn.textContent = "‹ Προβολή όλου του μήνα";
     backMonthBtn.addEventListener("click", () => {
         const st = officeCalendarState[officeId];
         st.view = "month";
-        renderCurrentView(calendarContainer);
+        void renderCurrentView(calendarContainer);
     });
 
-    // day container
     const dayDiv = document.createElement("div");
     dayDiv.classList.add("dayView");
 
@@ -355,91 +440,89 @@ function generateDayView(calendarContainer, dateObj) {
     inner.appendChild(backMonthBtn);
     inner.appendChild(dayDiv);
 
-    fetchAppointmentsForDate(officeId, dateStr, dayDiv);
+    fetchAppointmentsForDate(officeId, practice, dateStr, dayDiv);
 }
 
 /** ---------------------------
- *  DAY RENDERER (ONLY working intervals + separator)
+ *  DAY RENDERER
  *  --------------------------- */
 function displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals) {
-    if (!Array.isArray(appointments) || !dayDiv) return;
+    if (!dayDiv) return;
+    if (!Array.isArray(appointments)) appointments = [];
 
     dayDiv.innerHTML = "";
-
-    const apptByTime = new Map();
-    appointments.forEach(a => {
-        if (a && a.time) apptByTime.set(a.time.split('T')[1].slice(0, 5), a);
-    });
 
     const slotsContainer = document.createElement("div");
     slotsContainer.classList.add("slots-container");
 
-    const intervals = [...(workingIntervals || [])].sort(
-        (a, b) => timeToMinutesHHMM(a.start) - timeToMinutesHHMM(b.start)
-    );
+    if (!workingIntervals || workingIntervals.length === 0) {
+        const msg = document.createElement("div");
+        msg.classList.add("slot", "not-available");
+        msg.textContent = "Κλειστό";
+        slotsContainer.appendChild(msg);
+        dayDiv.appendChild(slotsContainer);
+        return;
+    }
 
-    for (let i = 0; i < intervals.length; i++) {
-        const interval = intervals[i];
-        const startMinutes = timeToMinutesHHMM(interval.start);
-        const endMinutes = timeToMinutesHHMM(interval.end);
+    const apptByTime = new Map();
+    appointments.forEach((a) => {
+        if (a && a.time) apptByTime.set(a.time.split("T")[1].slice(0, 5), a);
+    });
 
-        for (let mins = startMinutes; mins < endMinutes; mins += duration) {
-            const timeStr = minutesToHHMM(mins);
+    const interval = workingIntervals[0];
+    const startMinutes = timeToMinutesHHMM(interval.start);
+    const endMinutes = timeToMinutesHHMM(interval.end);
 
-            const slotDiv = document.createElement("div");
-            slotDiv.classList.add("slot");
-            slotDiv.dataset.time = timeStr;
+    for (let mins = startMinutes; mins < endMinutes; mins += duration) {
+        const timeStr = minutesToHHMM(mins);
 
-            const timeLabel = document.createElement("span");
-            timeLabel.classList.add("slot-time");
-            timeLabel.textContent = timeStr;
-            slotDiv.appendChild(timeLabel);
+        const slotDiv = document.createElement("div");
+        slotDiv.classList.add("slot");
+        slotDiv.dataset.time = timeStr;
 
-            const appt = apptByTime.get(timeStr);
+        const timeLabel = document.createElement("span");
+        timeLabel.classList.add("slot-time");
+        timeLabel.textContent = timeStr;
+        slotDiv.appendChild(timeLabel);
 
-            if (appt) {
-                slotDiv.classList.add("not-available");
+        const appt = apptByTime.get(timeStr);
 
-                const name = document.createElement("span");
-                name.classList.add("slot-name");
-                name.textContent = appt.patientFirstName + " " + appt.patientLastName || "Appointment";
-                slotDiv.appendChild(name);
+        if (appt) {
+            slotDiv.classList.add("not-available");
 
-                slotDiv.style.cursor = "pointer";
-                slotDiv.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    window.location.href = `/appointments/details/${appt.id}`;
-                });
-            } else {
-                slotDiv.classList.add("available");
+            const name = document.createElement("span");
+            name.classList.add("slot-name");
+            name.textContent =
+                appt.patientFirstName && appt.patientLastName
+                    ? `${appt.patientFirstName} ${appt.patientLastName}`
+                    : "Appointment";
+            slotDiv.appendChild(name);
 
-                const addButton = document.createElement("button");
-                addButton.className = "addAppointmentButton";
-                addButton.style.width = "30px";
-                addButton.style.height = "30px";
-                addButton.textContent = "+";
+            slotDiv.style.cursor = "pointer";
+            slotDiv.addEventListener("click", (e) => {
+                e.stopPropagation();
+                window.location.href = `/appointments/details/${appt.id}`;
+            });
+        } else {
+            slotDiv.classList.add("available");
 
-                addButton.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    const date = dayDiv.dataset.date;
-                    const officeId = dayDiv.dataset.officeId;
-                    window.location.href = `/appointments/create?officeId=${officeId}&date=${date}&time=${timeStr}`;
-                });
+            const addButton = document.createElement("button");
+            addButton.className = "addAppointmentButton";
+            addButton.style.width = "30px";
+            addButton.style.height = "30px";
+            addButton.textContent = "+";
 
-                slotDiv.appendChild(addButton);
-            }
+            addButton.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const date = dayDiv.dataset.date;
+                const officeId = dayDiv.dataset.officeId;
+                window.location.href = `/appointments/create?officeId=${officeId}&date=${date}&time=${timeStr}`;
+            });
 
-            slotsContainer.appendChild(slotDiv);
+            slotDiv.appendChild(addButton);
         }
 
-        // separator between intervals
-        if (i < intervals.length - 1) {
-            const next = intervals[i + 1];
-            const separator = document.createElement("div");
-            separator.classList.add("interval-separator");
-            separator.textContent = `Διάλειμμα ${interval.end} - ${next.start}`;
-            slotsContainer.appendChild(separator);
-        }
+        slotsContainer.appendChild(slotDiv);
     }
 
     dayDiv.appendChild(slotsContainer);
@@ -450,6 +533,7 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
  *  --------------------------- */
 async function generateMonthView(calendarContainer, dateObj) {
     const officeId = calendarContainer.dataset.officeId;
+    const practice = officeCalendarState[officeId]?.practice;
 
     const inner = calendarContainer.querySelector(".calendarInnerContainer");
     const navButtons = calendarContainer.querySelector(".nav-buttons-container");
@@ -461,8 +545,18 @@ async function generateMonthView(calendarContainer, dateObj) {
     inner.innerHTML = "";
 
     const monthNames = [
-        "Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος",
-        "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"
+        "Ιανουάριος",
+        "Φεβρουάριος",
+        "Μάρτιος",
+        "Απρίλιος",
+        "Μάιος",
+        "Ιούνιος",
+        "Ιούλιος",
+        "Αύγουστος",
+        "Σεπτέμβριος",
+        "Οκτώβριος",
+        "Νοέμβριος",
+        "Δεκέμβριος",
     ];
     const weekDaysShort = ["Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ", "Κυρ"];
 
@@ -473,7 +567,6 @@ async function generateMonthView(calendarContainer, dateObj) {
     headingElement.classList.add("month");
     headingElement.innerText = `${monthNames[month]} ${year}`;
 
-    // nav
     navButtons.innerHTML = "";
 
     const prevButton = document.createElement("button");
@@ -491,7 +584,7 @@ async function generateMonthView(calendarContainer, dateObj) {
         const d = new Date(st.currentDate);
         d.setMonth(d.getMonth() - 1);
         st.currentDate = d;
-        renderCurrentView(calendarContainer);
+        void renderCurrentView(calendarContainer);
     });
 
     nextButton.addEventListener("click", () => {
@@ -499,19 +592,17 @@ async function generateMonthView(calendarContainer, dateObj) {
         const d = new Date(st.currentDate);
         d.setMonth(d.getMonth() + 1);
         st.currentDate = d;
-        renderCurrentView(calendarContainer);
+        void renderCurrentView(calendarContainer);
     });
 
-    // layout mode
     const mode = getLayoutMode();
 
     const grid = document.createElement("div");
     grid.classList.add(mode === "mobile" ? "month-list" : "month-grid");
     if (mode === "tablet") grid.classList.add("month-grid-tablet");
 
-    // weekday headers
     if (mode !== "mobile") {
-        weekDaysShort.forEach(w => {
+        weekDaysShort.forEach((w) => {
             const h = document.createElement("div");
             h.classList.add("month-header");
             h.textContent = w;
@@ -519,13 +610,11 @@ async function generateMonthView(calendarContainer, dateObj) {
         });
     }
 
-    // Monday-first fix
     let firstDay = new Date(year, month, 1).getDay(); // 0=Sun
     firstDay = (firstDay + 6) % 7; // Monday=0
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // empty cells
     if (mode !== "mobile") {
         for (let i = 0; i < firstDay; i++) {
             const empty = document.createElement("div");
@@ -534,34 +623,27 @@ async function generateMonthView(calendarContainer, dateObj) {
         }
     }
 
-    let monthFirst = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-    var appointments;
-    await fetchAppointmentsForMonth(officeId, monthFirst).then(x => appointments = x);
+    const monthFirst = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+    const appointments = await fetchAppointmentsForMonth(officeId, monthFirst);
 
-    for (let d = 1; d <= daysInMonth; d++) {
+    for (let day = 1; day <= daysInMonth; day++) {
         const cell = document.createElement("div");
         cell.classList.add("month-cell");
 
-        const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-        const closed = isOfficeClosed(officeId, dateStr);
+        const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const closed = isOfficeClosed(practice, dateStr);
 
         if (closed) cell.classList.add("month-cell-closed");
 
         const dayNum = document.createElement("div");
         dayNum.classList.add("month-day-number");
-        dayNum.textContent = d;
+        dayNum.textContent = day;
         cell.appendChild(dayNum);
 
-        // Summary (only if open)
         if (!closed) {
-            const { duration, workingIntervals } = getOfficeScheduleConfig(officeId, dateStr);
+            const { duration, workingIntervals } = getOfficeScheduleConfig(practice, dateStr);
 
-            let appts = getAppointmentsByDay(appointments, year, month+1, d);
-            //console.log(appts);
-
-            //await fetchAppointmentsForDay(officeId, dateStr).then(x => appts = x);
-            //const appts = generateFakeAppointments(officeId, dateStr, { duration, workingIntervals });
-
+            const appts = getAppointmentsByDay(appointments, year, month + 1, day);
             const booked = appts.length;
 
             const totalSlots = calculateTotalSlots(duration, workingIntervals);
@@ -589,9 +671,8 @@ async function generateMonthView(calendarContainer, dateObj) {
             if (summary.children.length > 0) cell.appendChild(summary);
         }
 
-        // Today highlight
         const today = new Date();
-        if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) {
+        if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
             cell.classList.add("today");
         }
 
@@ -601,7 +682,7 @@ async function generateMonthView(calendarContainer, dateObj) {
                 const st = officeCalendarState[officeId];
                 st.currentDate = new Date(`${dateStr}T00:00:00`);
                 st.view = "day";
-                renderCurrentView(calendarContainer);
+                void renderCurrentView(calendarContainer);
             });
         } else {
             cell.style.cursor = "not-allowed";
@@ -613,219 +694,41 @@ async function generateMonthView(calendarContainer, dateObj) {
     inner.appendChild(grid);
 }
 
-function fetchAppointmentsForDate(officeId, dateStr, dayDiv) {
-    const { duration, workingIntervals } = getOfficeScheduleConfig(officeId, dateStr);
+/** ---------------------------
+ *  APPOINTMENTS
+ *  --------------------------- */
+function fetchAppointmentsForDate(officeId, practice, dateStr, dayDiv) {
+    const { duration, workingIntervals } = getOfficeScheduleConfig(practice, dateStr);
 
-    //const appointments = generateFakeAppointments(officeId, dateStr, {
-    //    duration,
-    //    workingIntervals
-    //});
-
-    fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
-        .then(response => response.json())
-        .then(appointments => {
+    fetch(`/Appointment/GetAppointmentsByDayAndPracticeId?date=${dateStr}&practiceId=${officeId}`)
+        .then((response) => response.json())
+        .then((appointments) => {
             displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
-        });
-
-    //displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
-}
-
-async function fetchAppointmentsForDay(officeId, dateStr) {
-    return await fetch('/Appointment/GetAppointmentsByDayAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
-        .then(response => response.json())
-        .then(appointments => {
-            return appointments;
+        })
+        .catch((e) => {
+            console.error("Failed to fetch appointments for day:", officeId, dateStr, e);
+            displayAppointmentsForDate([], dayDiv, duration, workingIntervals);
         });
 }
 
 async function fetchAppointmentsForMonth(officeId, dateStr) {
-    return await fetch('/Appointment/GetAppointmentsByMonthAndPracticeId?date=' + dateStr + '&practiceId=' + officeId)
-        .then(response => response.json())
-        .then(appointments => {
-            return appointments;
+    return fetch(`/Appointment/GetAppointmentsByMonthAndPracticeId?date=${dateStr}&practiceId=${officeId}`)
+        .then((response) => response.json())
+        .then((appointments) => appointments)
+        .catch((e) => {
+            console.error("Failed to fetch appointments for month:", officeId, dateStr, e);
+            return [];
         });
 }
 
 function getAppointmentsByDay(appointments, year, month, day) {
-    return appointments.filter(app => {
+    return (appointments || []).filter((app) => {
         const [y, m, d] = app.time.slice(0, 10).split("-");
-
-        return (
-            Number(y) === Number(year) &&
-            Number(m) === Number(month) &&
-            Number(d) === Number(day)
-        );
-    }
-    );
-}
-
-function generateFakeAppointments(officeId, dateStr, options = {}) {
-    const names = [
-        "Maria Papadopoulos",
-        "Giannis Nikolaou",
-        "Eleni Georgiou",
-        "Nikos Kostopoulos",
-        "Katerina Ioannou",
-        "Dimitris Vlachos"
-    ];
-
-    const duration = options.duration ?? 30;
-    const workingIntervals = options.workingIntervals ?? [
-        { start: "09:00", end: "14:00" },
-        { start: "17:00", end: "21:00" }
-    ];
-
-    // Build all valid slot start times (ONLY inside intervals)
-    const allSlotMins = [];
-    const intervals = [...workingIntervals].sort(
-        (a, b) => timeToMinutesHHMM(a.start) - timeToMinutesHHMM(b.start)
-    );
-
-    for (const intv of intervals) {
-        const startMin = timeToMinutesHHMM(intv.start);
-        const endMin = timeToMinutesHHMM(intv.end);
-        for (let m = startMin; m < endMin; m += duration) {
-            allSlotMins.push(m);
-        }
-    }
-
-    if (allSlotMins.length === 0) return [];
-
-    // Deterministic count 0..min(20, slots)
-    const baseSeed = `${officeId}|${dateStr}|${duration}|${intervals.map(i => `${i.start}-${i.end}`).join(",")}`;
-    const maxAppointments = Math.min(20, allSlotMins.length);
-    const count = Math.floor(seededRandom(baseSeed + "|count") * (maxAppointments + 1));
-
-    const used = new Set();
-    const appointments = [];
-
-    for (let i = 0; i < count; i++) {
-        let tries = 0;
-        let idx;
-
-        do {
-            idx = Math.floor(seededRandom(baseSeed + `|pick|${i}|${tries}`) * allSlotMins.length);
-            tries++;
-        } while (used.has(idx) && tries < 60);
-
-        if (used.has(idx)) break;
-        used.add(idx);
-
-        const mins = allSlotMins[idx];
-        const timeStr = minutesToHHMM(mins);
-
-        const userName = names[Math.floor(seededRandom(baseSeed + `|name|${i}`) * names.length)];
-
-        appointments.push({
-            id: Number(`${officeId}${dateStr.replaceAll("-", "")}${i}`.slice(0, 12)),
-            user_name: userName,
-            time: timeStr
-        });
-    }
-
-    appointments.sort((a, b) => a.time.localeCompare(b.time));
-    return appointments;
-}
-
-function seededRandom(seedStr) {
-    let h = 2166136261;
-    for (let i = 0; i < seedStr.length; i++) {
-        h ^= seedStr.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-    }
-    h += h << 13; h ^= h >>> 7; h += h << 3; h ^= h >>> 17; h += h << 5;
-    return (h >>> 0) / 4294967296;
-}
-
-function getOfficeScheduleConfig(officeId, dateStr) {
-    const d = new Date(`${dateStr}T00:00:00`);
-    const dow = d.getDay(); // 0=Sun ... 6=Sat
-
-    // default duration (fixed per doctor/office)
-    const duration = 30;
-
-    // different schedules for testing
-    if (dow === 1) { // Monday
-        return {
-            duration,
-            workingIntervals: [
-                { start: "09:00", end: "14:00" },
-                { start: "17:00", end: "21:00" }
-            ]
-        };
-    }
-
-    if (dow === 2) { // Tuesday
-        return {
-            duration: 20,
-            workingIntervals: [
-                { start: "08:00", end: "12:00" },
-                { start: "16:00", end: "19:00" }
-            ]
-        };
-    }
-
-    if (dow === 3) { // Wednesday (single continuous)
-        return {
-            duration,
-            workingIntervals: [
-                { start: "10:00", end: "18:00" }
-            ]
-        };
-    }
-
-    if (dow === 4) { // Thursday (3 intervals)
-        return {
-            duration: 15,
-            workingIntervals: [
-                { start: "09:00", end: "11:00" },
-                { start: "12:00", end: "14:00" },
-                { start: "18:00", end: "20:00" }
-            ]
-        };
-    }
-
-    if (dow === 5) { // Friday (late shift)
-        return {
-            duration,
-            workingIntervals: [
-                { start: "12:00", end: "20:00" }
-            ]
-        };
-    }
-
-    if (dow === 6) { // Saturday (short)
-        return {
-            duration,
-            workingIntervals: [
-                { start: "09:00", end: "13:00" }
-            ]
-        };
-    }
-
-    // Sunday closed (no intervals)
-    return { duration, workingIntervals: [] };
-}
-
-/*** REAL DATA ***
-async function fetchAppointmentsForDate(officeId, dateStr, dayDiv) {
-    const res = await fetch(`/api/offices/${officeId}/schedule/day?date=${dateStr}`, {
-        headers: { "Accept": "application/json" }
+        return Number(y) === Number(year) && Number(m) === Number(month) && Number(d) === Number(day);
     });
-
-    if (!res.ok) {
-        console.error("Failed to load schedule", await res.text());
-        dayDiv.innerHTML = "<p>Failed to load schedule</p>";
-        return;
-    }
-
-    const data = await res.json();
-    const { duration, workingIntervals, appointments } = data;
-
-    displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
 }
-*/
-/****  HELPERS ****/
+
+/**** HELPERS ****/
 function timeToMinutesHHMM(t) {
     const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
@@ -855,22 +758,14 @@ function formatLocalYYYYMMDD(dateObj) {
     return `${y}-${m}-${d}`;
 }
 
-function isOfficeClosed(officeId, dateStr) {
-    const d = new Date(`${dateStr}T00:00:00`);
-    const isSunday = d.getDay() === 0;
-
-    const r = seededRandom(`${officeId}|${dateStr}|closed`);
-    const randomClosed = r < 0.10;
-
-    return isSunday || randomClosed;
-}
-
 function getLayoutMode() {
     const w = window.innerWidth;
     if (w < 768) return "mobile";
     if (w < 1024) return "tablet";
     return "desktop";
 }
+
+
 
 
 
