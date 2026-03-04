@@ -2,6 +2,7 @@
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -85,7 +86,7 @@ namespace MedicalAppointmentWebApp.Controllers
             AuthResponse? response = await authService.LoginAsync(request);
             if (response is null)
             {
-                ModelState.AddModelError("", "Λάθος email ή κωδικός");
+                TempData["ErrorMessage"] = "Λάθος email ή κωδικός";
                 return View();
             }
 
@@ -128,16 +129,56 @@ namespace MedicalAppointmentWebApp.Controllers
 
             return RedirectToAction("Login", "Auth");
         }
-        public IActionResult ResetPassword()
+
+        public IActionResult ForgotPassword()
         {
             return View();
         }
 
-        public IActionResult DoctorApplicationSubmitted()
+        [HttpPost]
+        public async Task<IActionResult> ForgotPasswordAsync(string email)
         {
+            string? errorMessage = await authService.CreateResetPasswordTokenAsync(email);
+            if (errorMessage != null)
+            {
+                TempData["ErrorMessage"] = errorMessage;
+                return View();
+            }
+            TempData["SuccessMessage"] = "Σας έχει αποσταλεί email για την αλλαγή του κωδικού πρόσβασης σας.";
             return View();
         }
-    }
-  
-    }
 
+        public IActionResult ResetPassword(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "ForgotPassword");
+            }
+
+            NewPasswordRequestViewModel newPasswordRequestViewModel = new NewPasswordRequestViewModel
+            {
+                Token = token
+            };
+            return View(newPasswordRequestViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(NewPasswordRequestViewModel model)
+        {
+            if (model is null || !model.Password.Equals(model.ConfirmPassword))
+            {
+                TempData["ErrorMessage"] = "Οι κωδικός που δώθηκε δεν τεριάζει με την επιβεβαίωση του.";
+                return RedirectToAction(controllerName: "Auth", actionName: "ForgotPassword");
+            }
+
+            PasswordResetToken? passwordResetToken = await authService.ResetPassword(model);
+            if (passwordResetToken is null)
+            {
+                TempData["ErrorMessage"] = "Δεν βρέθηκε το ενεργό τόκεν.";
+                return RedirectToAction(controllerName: "Auth", actionName: "ForgotPassword");
+            }
+
+            return RedirectToAction(controllerName: "Auth", actionName: "Login");
+        }
+    }
+}

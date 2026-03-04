@@ -58,9 +58,12 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("refresh_token")]
         public string? RefreshToken { get; set; }
+
         [Column("refresh_token_expiry_time")]
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+
+        public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
     }
 }
