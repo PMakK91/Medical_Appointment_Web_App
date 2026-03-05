@@ -198,21 +198,21 @@
 });
 
 /******WEEK SCROLLER*******/
-    function showOffice(officeId) {
-        document.querySelectorAll('.office-panel').forEach(p => p.style.display = 'none');
+function showOffice(officeId) {
+    document.querySelectorAll('.office-panel').forEach(p => p.style.display = 'none');
     const panel = document.getElementById('office-' + officeId);
     if (panel) panel.style.display = 'block';
 
     document.querySelectorAll('.office-tab').forEach(b => {
         b.classList.toggle('active', b.dataset.officeId == officeId);
     });
-  }
+}
 
-    function scrollDays(direction, officeId) {
-    const scroller = document.getElementById('daysScroller-' + officeId);
-    if (!scroller) return;
-    scroller.scrollBy({left: direction * 320, behavior: 'smooth' });
-  }
+  //  function scrollDays(direction, officeId) {
+  //  const scroller = document.getElementById('daysScroller-' + officeId);
+  //  if (!scroller) return;
+  //  scroller.scrollBy({left: direction * 320, behavior: 'smooth' });
+  //}
 
     function pickSlot(officeId, dateIso, slot) {
         console.log({ officeId, dateIso, slot });

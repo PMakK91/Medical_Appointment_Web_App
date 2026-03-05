@@ -181,11 +181,6 @@
                        type="text"
                        class="form-control register-input"
                        aria-label="Αριθμός Ιατρικού Μητρώου"
-                       minlength="11"
-                       maxlength="11"
-                       pattern="[0-9]{11}"
-                       inputmode="numeric"
-                       title="Ο αριθμός μητρώου πρέπει να περιέχει 11 ψηφία."
                        required />
             </div>
             <div class="mb-3">
@@ -275,9 +270,16 @@
 
             <div class="form-error mt-3">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
             </div>
+
         </form>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mt-5 alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
 
         <div class="register-footer mt-5">
             <p class="mb-1">Έχετε ήδη λογαριασμό;</p>

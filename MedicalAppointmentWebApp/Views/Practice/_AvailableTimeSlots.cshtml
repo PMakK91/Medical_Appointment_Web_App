@@ -1,6 +1,124 @@
 ﻿@model MedicalAppointmentWebApp.Models.ViewModels.WeekScheduleViewModel
 
-<div class="practice-schedule position-relative" 
+<div id="schedule-@Model.Practice.Id" style="display:block">
+<p>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+        <circle cx="12" cy="10" r="3" />
+    </svg>
+    @Model.Practice.Name
+</p>
+
+<div class="schedule-wrap">
+    <button class="nav-btn" type="button"
+            onclick="scrollDays(-7, '@Model.Practice.Id')">
+        &#x2039;
+    </button>
+
+    <div id="daysScroller-@Model.Practice.Id"
+        class="days-scroller"
+        data-startdate="@Model.WeekStartDate.ToString("yyyy-MM-dd")">
+
+        @{
+            bool isEmpty = true;
+        }
+        @for (int dayInd = 0; dayInd < Model.Slots.Length; dayInd++)
+        {
+            @if (Model.Slots[dayInd].Any())
+            {
+                var day = @Model.WeekStartDate.AddDays(dayInd);
+                var isSelected = day.Date == Model.WeekStartDate.Date;
+
+                <div class="day-col @(isSelected ? "selected" : "")">
+                    <div class="day-head">
+                        <div class="day-name fs-14">@day.DayOfWeek.ToString()</div>
+                        <div class="day-date fs-16">@day.Date.ToString("dd/MM/yyyy")</div>
+                    </div>
+
+                    <div class="slots">
+                        @if (Model.Slots[dayInd].Any())
+                        {
+                            isEmpty = false;
+                            foreach (var slot in Model.Slots[dayInd])
+                            {
+                                if (!slot.IsBooked)
+                                {
+                                    <button class="slot-btn" type="button"
+                                            onclick="window.location.href='@Url.Action("VerifyAppointment", "Appointment", new MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel { 
+                                                    PracticeId = Model.Practice.Id, 
+                                                    Time = slot.Start })'">
+                                        @slot.Start.ToString("HH:mm")
+                                    </button>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div class="no-slots">—</div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+        @if (isEmpty)
+        {
+            <p>μη διαθέσιμα ραντεβού από @Model.WeekStartDate.ToString("dd-MM-yyyy") εώς @Model.WeekStartDate.AddDays(7).ToString("dd-MM-yyyy")</p>
+        }
+    </div>
+
+    <button class="nav-btn" type="button"
+        onclick="scrollDays(7, '@Model.Practice.Id')">
+        &#x203A;
+    </button>
+</div>
+</div>
+
+
+
+
+
+<script>
+    function scrollDays(direction, practiceId) {
+        const container = document.querySelector(`#daysScroller-${practiceId}`);
+        const wrapper = document.querySelector(`#schedule-${practiceId}`);
+        if (!container || !wrapper) return;
+
+        const startDateStr = container.dataset.startdate;
+        let startDate = new Date(startDateStr);
+        startDate.setDate(startDate.getDate() + direction);
+        const newDate = startDate.toISOString().split('T')[0];
+
+        wrapper.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+        wrapper.style.transform = `translateX(${direction * -10}px)`;
+        wrapper.style.opacity = 0;
+
+        setTimeout(() => {
+            fetch(`/Practice/AvailableTimeSlots?Id=${practiceId}&weekStart=${newDate}`)
+                .then(response => response.text())
+                .then(html => {
+                    wrapper.innerHTML = html;
+
+                    wrapper.style.transition = "none";
+                    wrapper.style.transform = `translateX(${direction * 10}px)`;
+                    wrapper.style.opacity = 0;
+
+                    // Force reflow
+                    void wrapper.offsetWidth;
+
+                    wrapper.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+                    wrapper.style.transform = "translateX(0)";
+                    wrapper.style.opacity = 1;
+                })
+                .catch(err => console.error("Schedule load error:", err));
+        }, 200); // match animation duration
+    }
+</script>
+
+
+@* <div class="practice-schedule position-relative" 
      data-practice-id="@Model.Practice.Id"
      data-week-start="@Model.WeekStartDate.ToString("yyyy-MM-dd")">
 
@@ -43,6 +161,10 @@
                                 s.Start.Date == day.Date &&
                                 s.Start.TimeOfDay == timeGroup.Key);
 
+                            @if (slot is null)
+                            {
+                                continue;
+                            }
                             <td class="slot @(slot?.IsBooked == true ? "bg-danger" : "bg-success")"
                                 data-time="@slot?.Start.ToString("o")">
                                 @if (!slot.IsBooked)
@@ -184,4 +306,4 @@ $(function () {
     });
 
 });
-</script>
+</script> *@

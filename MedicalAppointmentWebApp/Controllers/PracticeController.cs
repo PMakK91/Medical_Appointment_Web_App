@@ -55,7 +55,7 @@ namespace MedicalAppointmentWebApp.Controllers
 
         public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id, DateTime? weekStart)
         {
-            WeekScheduleViewModel weekScheduleViewModel = await practiceService.GetPracticeByIdAsync(id, weekStart);
+            WeekScheduleViewModel? weekScheduleViewModel = await practiceService.GetPracticeByIdAsync(id, weekStart);
             if (weekScheduleViewModel is null)
             {
                 return BadRequest("Practice was not found.");

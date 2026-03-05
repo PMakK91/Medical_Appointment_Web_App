@@ -20,24 +20,27 @@ namespace MedicalAppointmentWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> PatientRegister(RegisterRequest request)
         {
-            string? amkaCheck = authService.AmkaCheck(request.Amka);
+            string? amkaCheck = authService.AmkaCheck(request.Amka!);
             if (amkaCheck != null)
             {
-                ModelState.AddModelError("", amkaCheck);
+                //ModelState.AddModelError("", amkaCheck);
+                TempData["ErrorMessage"] = amkaCheck;
                 return View("Register");
             }
 
-            string? phoneCheck = authService.PhoneCheck(request.Phone);
+            string? phoneCheck = authService.PhoneCheck(request.Phone!);
             if (phoneCheck != null)
             {
-                ModelState.AddModelError("", phoneCheck);
+                //ModelState.AddModelError("", phoneCheck);
+                TempData["ErrorMessage"] = phoneCheck;
                 return View("Register");
             }
 
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
-                ModelState.AddModelError("", "Το email χρησιμοποιείται ήδη");
+                //ModelState.AddModelError("", "Το email χρησιμοποιείται ήδη");
+                TempData["ErrorMessage"] = "Το email χρησιμοποιείται ήδη.";
                 return View("Register");
             }
 
@@ -51,24 +54,27 @@ namespace MedicalAppointmentWebApp.Controllers
             if (!ModelState.IsValid)
                 return View("Register", request);
 
-            string? amkaCheck = authService.AmkaCheck(request.Amka);
+            string? amkaCheck = authService.AmkaCheck(request.Amka!);
             if (amkaCheck != null)
             {
-                ModelState.AddModelError("", amkaCheck);
+                //ModelState.AddModelError("", amkaCheck);
+                TempData["ErrorMessage"] = amkaCheck;
                 return View("Register", request);
             }
 
-            string? phoneCheck = authService.PhoneCheck(request.Phone);
+            string? phoneCheck = authService.PhoneCheck(request.Phone!);
             if (phoneCheck != null)
             {
-                ModelState.AddModelError("", phoneCheck);
+                //ModelState.AddModelError("", phoneCheck);
+                TempData["ErrorMessage"] = phoneCheck;
                 return View("Register", request);
             }
 
             Doctor? doctor = await authService.DoctorRegisterAsync(request);
             if (doctor == null)
             {
-                ModelState.AddModelError("", "Αυτό το email ή το ΑΜΚΑ έχουν ήδη υποβληθεί για εξέταση.");
+                //ModelState.AddModelError("", "Αυτό το email ή το ΑΜΚΑ έχουν ήδη υποβληθεί για εξέταση.");
+                TempData["ErrorMessage"] = "Το email χρησιμοποιείται ήδη.";
                 return View("Register", request);
             }
 

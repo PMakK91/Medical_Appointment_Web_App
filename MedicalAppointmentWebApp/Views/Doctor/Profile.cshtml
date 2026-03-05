@@ -1,4 +1,5 @@
-﻿@model Doctor
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model Doctor
 
 
 @{
@@ -63,170 +64,98 @@
     Layout = "_Layout";
 }
 
+@if (Model.Practices != null && Model.Practices.Any())
+{
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
         <img class="doctor-profile-img" src="" alt=""/>
         <h1 class="title mb-2">@Model.FirstName @Model.LastName</h1>
         <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
-        <p class="fc-black fs-16 fw-100">orem ipsum dolor sit amet, consectetur adipiscing elit. Donec et metus quis nulla mollis dictum at quis nisl. Donec dignissim sagittis iaculis. Fusce quis nulla tristique, congue nibh nec, scelerisque leo. Phasellus quis libero quis neque interdum lobortis et sed velit. Vivamus urna orci, pretium cursus mi sed, pretium iaculis nulla. Vestibulum nibh velit, placerat et tortor quis, viverra feugiat felis. Nunc nibh nulla, vulputate non pulvinar ut, fringilla et neque. Morbi quis tellus placerat velit luctus varius vitae a sapien. Aliquam in sodales velit. Integer ut eros elit. Ut turpis libero, rutrum at lorem eu, finibus auctor turpis. Morbi sit amet dui eros. Sed se</p>
+        @if (!string.IsNullOrEmpty(Model.Bio))
+        {
+            <p class="fc-black fs-16 fw-100">@Model.Bio</p>
+        }
 
-            <div class="office-tabs mt-5">
-                @for (int i = 0; i < offices.Length; i++)
-                {
-                    var o = offices[i];
-                    <button type="button"
-                            class="office-tab @(i == 0 ? "active" : "")"
-                            data-office-id="@o.OfficeId"
-                            onclick="showOffice(@o.OfficeId)">
-                        @o.OfficeName
-                    </button>
-                }
-            </div>
-
-        
-
-            @foreach (var office in offices)
+        <div class="office-tabs mt-5">
+            @{
+                bool firstTab = true;
+            }
+            @foreach (var practice in Model.Practices)
             {
+                @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                {
+                    <button type="button"
+                            class="office-tab @(firstTab ? "active" : "")"
+                            data-office-id="@practice.Id"
+                            onclick="showOffice('@practice.Id')">
+                        @practice.Name
+                    </button>
         
+                    firstTab = false;
+                }
+            }
+        </div>
 
+        @{
+            firstTab = true;
+        }
+
+        @foreach (var practice in Model.Practices)
+        {
+            @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+            {
                 <div class="office-panel"
-                     id="office-@office.OfficeId"
-                     style="display:@(office.Equals(offices[0]) ? "block" : "none")">
-                <p>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         aria-hidden="true">
-                        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
-                        <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    @office.OfficeAddress
-                </p>
-                    <div class="schedule-wrap">
-                        <button class="nav-btn" type="button"
-                                onclick="scrollDays(-1, @office.OfficeId)">
-                            &#x2039;
-                        </button>
+                     id="office-@practice.Id"
+                     style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
 
-                        <div id="daysScroller-@office.OfficeId" class="days-scroller">
-                            @foreach (var day in office.Days)
-                            {
-                                var isSelected = day.Date.Date == selectedDate.Date;
+                        <div class="schedule-wrap d-flex justify-content-center mt-3">
 
-                                <div class="day-col @(isSelected ? "selected" : "")">
-                                    <div class="day-head">
-                                        <div class="day-name fs-14">@day.DayName</div>
-                                        <div class="day-date fs-16">@day.Date.ToString("dd/MM/yyyy")</div>
-                                    </div>
-
-                                    <div class="slots">
-                                        @if (day.Slots.Any())
-                                        {
-                                            foreach (var s in day.Slots)
-                                            {
-                                                <button class="slot-btn" type="button"
-                                                        onclick="event.stopPropagation();
-                                                                     pickSlot('@office.OfficeId',
-                                                                              '@day.Date.ToString("yyyy-MM-dd")',
-                                                                              '@s')">
-                                                    @s
-                                                </button>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <div class="no-slots">—</div>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-
-                        <button class="nav-btn" type="button"
-                                onclick="scrollDays(1, @office.OfficeId)">
-                            &#x203A;
-                        </button>
                     </div>
                 </div>
+                
+                firstTab = false;
             }
-
-
-
-    </div>
-</div>
-
-<div>
-    <h3>Practices</h3>
-</div>
-@if (Model.Practices != null && Model.Practices.Any())
-{
-    bool firstTab = true;
-
-    <!-- Tabs -->
-    <ul class="nav nav-tabs" id="practiceTabs" role="tablist">
-        @foreach (var practice in Model.Practices)
-        {
-            <li class="nav-item" role="presentation">
-                <button class="nav-link @(firstTab ? "active" : "")"
-                        data-bs-toggle="tab"
-                        data-bs-target="#tab-@practice.Id"
-                        type="button"
-                        role="tab"
-                        data-id="@practice.Id">
-                    @practice.PlaceId
-                </button>
-            </li>
-
-            firstTab = false;
-        }
-    </ul>
-
-    firstTab = true;
-
-    <!-- Tab Content -->
-    <div class="tab-content mt-3">
-        @foreach (var practice in Model.Practices)
-        {
-            <div class="tab-pane fade @(firstTab ? "show active" : "")"
-                 id="tab-@practice.Id"
-                 role="tabpanel">
-
-                <div class="loading">Loading...</div>
-
-            </div>
-
-            firstTab = false;
         }
     </div>
+</div>
+}
 
-    <script>
-        $(document).ready(function () {
-            function loadTab(practiceId) {
-                var tabPane = $("#tab-" + practiceId);
+<script>
+    $(document).ready(function () {
 
-                // Only load once
-                if (tabPane.data("loaded")) return;
+        function loadOffice(practiceId) {
+            var officePanel = $("#office-" + practiceId);
+            var scheduleWrap = officePanel.find(".schedule-wrap");
 
-                tabPane.load('@Url.Action("AvailableTimeSlots", "Practice")?Id=' + practiceId, function () {
-                    tabPane.data("loaded", true);
-                });
-            }
+            if (officePanel.data("loaded")) return;
 
-            // Load first tab on page load
-            var firstId = $(".nav-link.active").data("id");
-            loadTab(firstId);
+            scheduleWrap.load('@Url.Action("AvailableTimeSlots", "Practice")?Id=' + practiceId, function () {
+                officePanel.data("loaded", true);
+            });
+        }
 
-            // Bind tab switch event correctly
-            var tabTriggerEl = document.querySelectorAll('#practiceTabs button[data-bs-toggle="tab"]');
-            tabTriggerEl.forEach(function (el) {
-                el.addEventListener('shown.bs.tab', function (e) {
-                    var practiceId = e.target.getAttribute('data-id');
-                    loadTab(practiceId);
-                });
+        var firstVisibleOffice = $(".office-panel:visible").first();
+        if (firstVisibleOffice.length) {
+            var firstId = firstVisibleOffice.attr("id").replace("office-", "");
+            loadOffice(firstId);
+        }
+
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === "style") {
+                    var element = $(mutation.target);
+
+                    if (element.is(":visible")) {
+                        var practiceId = element.attr("id").replace("office-", "");
+                        loadOffice(practiceId);
+                    }
+                }
             });
         });
-    </script>
-}
-else
-{
-    <p>No practices found.</p>
-}
+
+        $(".office-panel").each(function () {
+            observer.observe(this, { attributes: true });
+        });
+
+    });
+</script>
