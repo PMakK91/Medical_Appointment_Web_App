@@ -2,7 +2,6 @@
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace MedicalAppointmentWebApp.Repositories
 {
@@ -38,27 +37,52 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.FirstOrDefaultAsync(d => d.Email!.Equals(email));
         }
 
-        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, int page, int pageSize)
+        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int page, int pageSize)
         {
-            return await SearchAsync(term, page, pageSize, RegistrationFormStatus.Accepted);
+            return await SearchAsync(term, lon, lat, page, pageSize, RegistrationFormStatus.Accepted);
         }
 
         public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchPendingAsync(string term, int page, int pageSize)
         {
-            return await SearchAsync(term, page, pageSize, RegistrationFormStatus.Pending);
+            return await SearchAsync(term, null, null, page, pageSize, RegistrationFormStatus.Pending);
         }
 
-        private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(string term, int page, int pageSize, RegistrationFormStatus status)
+        private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(string term, double? lon, double? lat, int page, int pageSize, RegistrationFormStatus status)
         {
-            IQueryable<Doctor> query = context.Doctors.Where(d => d.RegistrationStatus == status);
+            IQueryable<Doctor> query = context.Doctors
+                .Where(d => d.RegistrationStatus == status);
 
             if (!string.IsNullOrWhiteSpace(term))
             {
                 query = query.Where(d =>
-                (d.FirstName != null && d.FirstName.Contains(term)) ||
-                (d.LastName != null && d.LastName.Contains(term)) ||
-                (d.Email != null && d.Email.Contains(term)) ||
-                ((d.Specialty).ToString().Contains(term)));
+                    (d.FirstName != null && d.FirstName.Contains(term)) ||
+                    (d.LastName != null && d.LastName.Contains(term)) ||
+                    (d.Email != null && d.Email.Contains(term)) ||
+                    (d.Specialty.ToString().Contains(term))
+                );
+            }
+
+            if (lon != null && lat != null)
+            {
+                double maxDistanceKm = 10.0;
+                double R = 6371.0; // radius of earth in km
+
+                var doctorIds = await context.Practices
+                    .Where(p =>
+                        R * 2 * Math.Asin(
+                            Math.Sqrt(
+                                Math.Pow(Math.Sin(((p.Lat - lat.Value) * Math.PI / 180) / 2), 2) +
+                                Math.Cos(lat.Value * Math.PI / 180) *
+                                Math.Cos(p.Lat * Math.PI / 180) *
+                                Math.Pow(Math.Sin(((p.Lon - lon.Value) * Math.PI / 180) / 2), 2)
+                            )
+                        ) <= maxDistanceKm
+                    )
+                    .Select(p => p.DoctorId)
+                    .Distinct()
+                    .ToListAsync();
+
+                query = query.Where(d => doctorIds.Contains(d.Id));
             }
 
             int totalCount = await query.CountAsync();
@@ -72,6 +96,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
             return (Doctors: doctors, TotalCount: totalCount);
         }
+
 
         public void Save()
         {

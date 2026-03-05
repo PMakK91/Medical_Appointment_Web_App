@@ -11,7 +11,7 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<Doctor?> GetDoctorByIDAsync(Guid doctorId);
         Task<Doctor?> GetDoctorByEmailAsync(string email);
 
-        Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, int page, int pageSize);
+        Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int page, int pageSize);
         Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchPendingAsync(string term, int page, int pageSize);
 
         void Save();

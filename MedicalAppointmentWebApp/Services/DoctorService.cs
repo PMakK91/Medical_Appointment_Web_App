@@ -10,18 +10,20 @@ namespace MedicalAppointmentWebApp.Services
 {
 
 
-    public class DoctorService(  IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IImageService imageService) : IDoctorService
+    public class DoctorService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IImageService imageService) : IDoctorService
     {
 
 
-        public async Task<DoctorSearchViewModel> SearchAllActiveDoctors(string term, int page = 1, int pageSize = 10)
+        public async Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(string term, double? lon, double? lat, int page = 1, int pageSize = 10)
         {
-            (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchActiveAsync(term, page, pageSize);
+            (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchActiveAsync(term, lon, lat, page, pageSize);
 
             return new DoctorSearchViewModel
             {
                 Doctors = doctorsAndCount.Item1,
                 Term = term,
+                Lon = lon,
+                Lat = lat,
                 CurrentPage = page,
                 PageSize = pageSize,
                 TotalItems = doctorsAndCount.Item2

@@ -12,9 +12,16 @@ namespace MedicalAppointmentWebApp.Controllers
     public class DoctorController(IDoctorService doctorService) : Controller
     {
         
-        public async Task<IActionResult> Search(string term, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Search(DoctorSearchViewModel request)
         {
-            DoctorSearchViewModel model = await doctorService.SearchAllActiveDoctors(term, page, pageSize);
+            if (request is null)
+            {
+                return BadRequest("Something went wrong");
+            }
+
+            DoctorSearchViewModel model = await doctorService.SearchAllActiveDoctorsAsync(
+                request.Term!, request.Lon, request.Lat, request.CurrentPage, request.PageSize);
+
             return View(model);
         }
 
