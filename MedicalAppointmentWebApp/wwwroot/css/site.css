@@ -282,14 +282,59 @@ input:-webkit-autofill:active {
     background-color: #eaeaea;
     border: 0;
 }
-    /******* Register Tabs **********/
+
+.google-auth {
+    display: flex;
+    margin: auto;
+    padding: 12px 23px;
+    gap: 9px;
+    width: 100%;
+    max-width: 420px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid #cfcfcf;
+}
+.google-auth:hover {
+background: #fff;
+}
 
 
-    .register-tabs {
-        display: flex;
-        max-width: 420px;
-        margin: 0 auto 24px;
+
+.login-separator {
+    width: 100%;
+    display: block;
+    text-align: center;
+    position: relative;
+    margin: 38px 0 38px 0;
+    height: 1px;
+}
+
+    .login-separator span {
+        background-color: #f6f6f6;
+        position: absolute;
+        line-height: 10px;
+        top: -5px;
+        margin-left: -15px;
+        padding: 0 10px;
+        color: #8a8a8a;
+        font-weight: 300;
     }
+    .login-separator:before {
+        width: 100%;
+        content: "";
+        height: 1px;
+        display: block;
+        background-color: #eaeaea;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+/******* Register Tabs **********/
+.register-tabs {
+    display: flex;
+    max-width: 420px;
+    margin: 0 auto 24px;
+}
 
     .register-tab {
         background: transparent;
