@@ -19,9 +19,6 @@ namespace MedicalAppointmentWebApp.Models
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; } = null!;
 
-        [Column("name")]
-        public string? Name { get; set; }
-
         [Column("duration")]
         public int Duration { get; set; }
 

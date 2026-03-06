@@ -19,7 +19,6 @@ namespace MedicalAppointmentWebApp.Services
             Practice practice = new Practice();
 
             practice.DoctorId = doctor.Id;
-            practice.Name = practiceEnrollRequest.Name;
             practice.Duration = practiceEnrollRequest.Duration;
             practice.PlaceId = practiceEnrollRequest.PlaceId;
             practice.FullAddress = practiceEnrollRequest.FullAddress;

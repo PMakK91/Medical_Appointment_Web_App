@@ -73,11 +73,12 @@ namespace MedicalAppointmentWebApp.Controllers
             string? errorMessage = await doctorService.UpdateDoctorInfo(Guid.Parse(userId), request);
             if (errorMessage != null)
             {
-                TempData["ErrorMessage"] = errorMessage;
-                return RedirectToAction(controllerName: "Doctor", actionName: "EditProfile");
+                TempData["ErrorMessage"] = "errorMessage";
+                return RedirectToAction(nameof(EditProfile));
             }
 
-            return RedirectToAction(controllerName: "Home", actionName: "Index");
+            TempData["SuccessMessage"] = "Οι αλλαγές αποθηκεύτηκαν επιτυχώς.";
+            return RedirectToAction(nameof(EditProfile));
         }
 
         public async Task<IActionResult> CalendarAsync()

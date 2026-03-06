@@ -13,14 +13,9 @@
 
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
-        <img class="doctor-profile-img" src="/Images/@Model.Doctor.ImageUrl" alt="" />
-        <h1 class="title mb-2">@Model.Doctor?.FirstName @Model.Doctor?.LastName</h1>
-        <p class="subtitle mb-5">@Html.DisplayFor(m => m.Doctor!.Specialty)</p>
-        <p class="fc-black fs-16 fw-100">orem ipsum dolor sit amet, consectetur adipiscing elit. Donec et metus quis nulla mollis dictum at quis nisl. Donec dignissim sagittis iaculis. Fusce quis nulla tristique, congue nibh nec, scelerisque leo. Phasellus quis libero quis neque interdum lobortis et sed velit. Vivamus urna orci, pretium cursus mi sed, pretium iaculis nulla. Vestibulum nibh velit, placerat et tortor quis, viverra feugiat felis. Nunc nibh nulla, vulputate non pulvinar ut, fringilla et neque. Morbi quis tellus placerat velit luctus varius vitae a sapien. Aliquam in sodales velit. Integer ut eros elit. Ut turpis libero, rutrum at lorem eu, finibus auctor turpis. Morbi sit amet dui eros. Sed se</p>
-
-       
-        
-        <form asp-controller="Doctor" asp-action="EditProfile" method="post" enctype="multipart/form-data">
+      
+      
+        <form asp-controller="Doctor" asp-action="EditProfile" method="post" class="register-form" enctype="multipart/form-data">
             <div class="my-1">
                 <div class="container mt-4 text-center">
                     <div class="image-wrapper">
@@ -51,17 +46,33 @@
                 </div>
             </div>
 
-            <h1 class="title mb-2">@Model.Doctor?.FirstName @Model.Doctor?.LastName</h1>
+            <h1 class="title mt-2 mb-2">@Model.Doctor?.FirstName @Model.Doctor?.LastName</h1>
             <p class="subtitle mb-5">@Html.DisplayFor(m => m.Doctor!.Specialty)</p>
 
-            <div class="my-5">
-                <textarea asp-for="Bio" id="bioInput" class="form-control mb-2" rows="3" maxlength="499">
-                </textarea>
+             
+
+            <div class="mt-5 doctor-bio-edit">
+                <textarea asp-for="Bio"
+                          id="bioInput"
+                          class="form-control mb-2"
+                          rows="1"
+                          maxlength="499"></textarea>
             </div>
 
-            <div class="my-2">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
+           
+                <button type="submit" class="w-100 mx-auto mt-3 btn primary-btn">Αποθήκευση</button>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="mt-4 alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="mt-4 alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
         </form>
     </div>
 </div>

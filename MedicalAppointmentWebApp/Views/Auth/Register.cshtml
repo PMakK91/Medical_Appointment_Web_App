@@ -22,6 +22,37 @@
         <!-- ===================== PATIENT FORM ===================== -->
         <form asp-controller="Auth" asp-action="PatientRegister" id="register-form-patient" method="post" class="register-form">
             <div class="mb-3">
+                <label class="form-label register-label">Φύλο:</label>
+
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="1"
+                               id="genderMalePatient"
+                               required>
+
+                        <label class="form-check-label" for="genderMalePatient">
+                            Άντρας
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="2"
+                               id="genderFemalePatient">
+
+                        <label class="form-check-label" for="genderFemalePatient">
+                            Γυναίκα
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
                 <label class="form-label register-label" for="firstNamePatient">Όνομα:</label>
                 <input asp-for="FirstName" type="text"
                        class="form-control register-input" aria-label="Όνομα"
@@ -33,6 +64,16 @@
                 <input asp-for="LastName" type="text"
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label">Ημερομηνία Γέννησης:</label>
+
+                <input asp-for="BirthDate"
+                       type="date"
+                       class="form-control register-input"
+                       aria-label="Ημερομηνία Γέννησης"
+                       required />
             </div>
 
             <div class="mb-3">
@@ -114,6 +155,37 @@
 
         <!-- ===================== DOCTOR FORM ===================== -->
         <form asp-controller="Auth" asp-action="DoctorRegister" id="register-form-doctor" method="post" class="register-form d-none">
+           <div class="mb-3">
+    <label class="form-label register-label">Φύλο:</label>
+
+    <div class="d-flex gap-3">
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="radio"
+                   asp-for="Gender"
+                   value="1"
+                   id="genderMaleDoctor"
+                   required>
+
+            <label class="form-check-label" for="genderMaleDoctor">
+                Άντρας
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="radio"
+                   asp-for="Gender"
+                   value="2"
+                   id="genderFemaleDoctor">
+
+            <label class="form-check-label" for="genderFemaleDoctor">
+                Γυναίκα
+            </label>
+        </div>
+    </div>
+</div>
+            
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNameDoctor">Όνομα:</label>
                 <input asp-for="FirstName" type="text"
@@ -127,6 +199,17 @@
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
             </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label">Ημερομηνία Γέννησης:</label>
+
+                <input asp-for="BirthDate"
+                       type="date"
+                       class="form-control register-input"
+                       aria-label="Ημερομηνία Γέννησης"
+                       required />
+            </div>
+
 
             <!-- Specialization searchable dropdown (search inside dropdown) -->
             <div class="mb-3">
@@ -276,7 +359,7 @@
 
         @if (TempData["ErrorMessage"] != null)
         {
-            <div class="mt-5 alert alert-danger">
+            <div class="mt-4 alert alert-danger">
                 @TempData["ErrorMessage"]
             </div>
         }

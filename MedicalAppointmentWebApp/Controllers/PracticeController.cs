@@ -50,7 +50,7 @@ namespace MedicalAppointmentWebApp.Controllers
                 return RedirectToAction(controllerName: "Auth", actionName: "Login");
             }
 
-            return RedirectToAction(controllerName: "Home", actionName: "Index");
+            return RedirectToAction(controllerName: "Practice", actionName: "MyPractices");
         }
 
         public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id, DateTime? weekStart)

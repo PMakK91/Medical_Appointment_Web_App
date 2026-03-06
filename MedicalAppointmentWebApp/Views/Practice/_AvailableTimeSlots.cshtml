@@ -1,25 +1,13 @@
 ﻿@model MedicalAppointmentWebApp.Models.ViewModels.WeekScheduleViewModel
 
+
+<button class="nav-btn" type="button"onclick="scrollDays(-7, '@Model.Practice.Id')"> 
+    &#x2039 Προηγούμενη εβδομάδα
+</button>
+
 <div id="schedule-@Model.Practice.Id" style="display:block">
-<p>
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-         aria-hidden="true">
-        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
-        <circle cx="12" cy="10" r="3" />
-    </svg>
-    @Model.Practice.Name
-</p>
-
-<div class="schedule-wrap">
-    <button class="nav-btn" type="button"
-            onclick="scrollDays(-7, '@Model.Practice.Id')">
-        &#x2039;
-    </button>
-
-    <div id="daysScroller-@Model.Practice.Id"
-        class="days-scroller"
-        data-startdate="@Model.WeekStartDate.ToString("yyyy-MM-dd")">
+    
+    <div id="daysScroller-@Model.Practice.Id" class="days-scroller" data-startdate="@Model.WeekStartDate.ToString("yyyy-MM-dd")">
 
         @{
             bool isEmpty = true;
@@ -65,54 +53,14 @@
 
         @if (isEmpty)
         {
-            <p>μη διαθέσιμα ραντεβού από @Model.WeekStartDate.ToString("dd-MM-yyyy") εώς @Model.WeekStartDate.AddDays(7).ToString("dd-MM-yyyy")</p>
+            <p class="fs-14 fw-100">Δεν υπάρχουν διαθέσιμα ραντεβού από @Model.WeekStartDate.ToString("dd-MM-yyyy") εώς @Model.WeekStartDate.AddDays(7).ToString("dd-MM-yyyy")</p>
         }
     </div>
 
-    <button class="nav-btn" type="button"
-        onclick="scrollDays(7, '@Model.Practice.Id')">
-        &#x203A;
-    </button>
-</div>
+   
 </div>
 
 
-
-
-
-<script>
-    function scrollDays(direction, practiceId) {
-        const container = document.querySelector(`#daysScroller-${practiceId}`);
-        const wrapper = document.querySelector(`#schedule-${practiceId}`);
-        if (!container || !wrapper) return;
-
-        const startDateStr = container.dataset.startdate;
-        let startDate = new Date(startDateStr);
-        startDate.setDate(startDate.getDate() + direction);
-        const newDate = startDate.toISOString().split('T')[0];
-
-        wrapper.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-        wrapper.style.transform = `translateX(${direction * -10}px)`;
-        wrapper.style.opacity = 0;
-
-        setTimeout(() => {
-            fetch(`/Practice/AvailableTimeSlots?Id=${practiceId}&weekStart=${newDate}`)
-                .then(response => response.text())
-                .then(html => {
-                    wrapper.innerHTML = html;
-
-                    wrapper.style.transition = "none";
-                    wrapper.style.transform = `translateX(${direction * 10}px)`;
-                    wrapper.style.opacity = 0;
-
-                    // Force reflow
-                    void wrapper.offsetWidth;
-
-                    wrapper.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-                    wrapper.style.transform = "translateX(0)";
-                    wrapper.style.opacity = 1;
-                })
-                .catch(err => console.error("Schedule load error:", err));
-        }, 200); // match animation duration
-    }
-</script>
+ <button class="nav-btn" type="button" onclick="scrollDays(7, '@Model.Practice.Id')">
+    Επόμενη εβδομάδα &#x203A;
+</button>
