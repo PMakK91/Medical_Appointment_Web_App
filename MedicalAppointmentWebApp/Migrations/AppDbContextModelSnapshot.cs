@@ -228,7 +228,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
 

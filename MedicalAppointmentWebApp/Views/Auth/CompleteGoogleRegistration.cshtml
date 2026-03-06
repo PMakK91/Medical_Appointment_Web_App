@@ -1,0 +1,170 @@
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.Security.RegisterRequest
+@{
+    ViewData["Title"] = "Εγγραφή με λογαριασμό Google";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center mb-5 mt-4">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Εγγραφή με λογαριασμό Google</h1>
+        <p class="subtitle mb-5"></p>
+
+        <div class="register-tabs" role="tablist" aria-label="Επιλογή ρόλου">
+            <button type="button" class="register-tab active" role="tab" aria-selected="true">
+                Ασθενής
+            </button>
+            <button type="button" class="register-tab" role="tab" aria-selected="false">
+                Ιατρός
+            </button>
+        </div>
+
+        <!-- ===================== PATIENT FORM ===================== -->
+        <form asp-controller="Auth" asp-action="CompleteGoogleRegistration" id="register-form-patient" method="post" class="register-form">
+
+            <input asp-for="@Model.Email" value="@Model.Email" type="hidden" />
+            <input asp-for="@Model.FirstName" value="@Model.FirstName" type="hidden" />
+            <input asp-for="@Model.LastName" value="@Model.LastName" type="hidden" />
+            <input asp-for="@Model.UserRole" value="@UserRole.Patient" type="hidden" />
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="phonePatient">Κινητό Τηλέφωνο:</label>
+                <input asp-for="Phone" type="tel"
+                       class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
+                       autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" minlength="10" maxlength="10"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 ψηφία"
+                       required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label register-label" for="amkaPatient">ΑΜΚΑ:</label>
+                <input asp-for="Amka" type="text"
+                       class="form-control register-input" aria-label="Αμκα"
+                       pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 ψηφία"
+                       required />
+            </div>
+
+            <button type="submit" class="btn primary-btn w-100">
+                Εγγραφή ως ασθενής
+            </button>
+
+            <div class="form-error mt-3 d-none" id="patientFormError"></div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </form>
+
+        <!-- ===================== DOCTOR FORM ===================== -->
+        <form asp-controller="Auth" asp-action="CompleteGoogleRegistration" id="register-form-doctor" method="post" class="register-form d-none">
+
+            <input asp-for="@Model.Email" value="@Model.Email" type="hidden" />
+            <input asp-for="@Model.FirstName" value="@Model.FirstName" type="hidden" />
+            <input asp-for="@Model.LastName" value="@Model.LastName" type="hidden" />
+            <input asp-for="@Model.UserRole" value="@UserRole.Doctor" type="hidden" />
+
+            <!-- Specialization searchable dropdown (search inside dropdown) -->
+            <div class="mb-3">
+                <label class="form-label register-label">Ειδικότητα:</label>
+
+                <div class="dropdown w-100" id="specializationDropdownWrap">
+                    <button class="btn register-select dropdown-toggle w-100"
+                            type="button"
+                            id="specializationDropdownBtn"
+                            data-bs-toggle="dropdown"
+                            data-bs-auto-close="outside"
+                            aria-expanded="false">
+                        <span id="specializationSelectedText" aria-hidden="true"></span>
+                    </button>
+
+                    <div class="dropdown-menu w-100 p-2" aria-labelledby="specializationDropdownBtn" id="specializationMenu">
+                        <div class="px-1 pb-2">
+                            <input type="text"
+                                   class="form-control register-input"
+                                   id="specializationSearch"
+                                   placeholder="Αναζήτηση ειδικότητας..."
+                                   autocomplete="off" />
+                        </div>
+
+                        <ul class="list-unstyled mb-0" id="specializationList">
+                            @foreach (var item in Html.GetEnumSelectList<Specialty>())
+                            {
+                                <li>
+                                    <button class="dropdown-item"
+                                            type="button"
+                                            data-value="@( (int)Enum.Parse(typeof(Specialty), item.Value) )">
+                                        @item.Text
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="text-muted px-2 py-2 d-none" id="specializationNoResults">
+                            Δεν βρέθηκαν αποτελέσματα
+                        </div>
+                    </div>
+
+                    <input asp-for="Specialty" type="hidden" id="Specialization" required />
+                </div>
+
+                <div class="form-error mt-2 d-none" id="specializationError"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="licenseNumberDoctor">Αριθμός Ιατρικού Μητρώου:</label>
+                <input asp-for="LicenseNumber"
+                       type="text"
+                       class="form-control register-input"
+                       aria-label="Αριθμός Ιατρικού Μητρώου"
+                       required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label register-label" for="amkaDoctor">ΑΜΚΑ:</label>
+                <input asp-for="Amka" type="text"
+                       class="form-control register-input" aria-label="Αμκα"
+                       pattern="[0-9]{11}" minlength="11" maxlength="11" inputmode="numeric"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 ψηφία"
+                       required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label register-label mb-0" for="phoneDoctor">Κινητό Τηλέφωνο:</label>
+                <p class="register-label-description mt-0">
+                    Θα παραμείνει κρυφό. Χρησιμοποιείται μόνο για τον λογαριασμό σας
+                </p>
+                <input asp-for="Phone"
+                       type="tel"
+                       class="form-control register-input"
+                       aria-label="Κινητό Τηλέφωνο"
+                       autocomplete="tel"
+                       inputmode="numeric"
+                       pattern="[0-9]{10}"
+                       minlength="10"
+                       maxlength="10"
+                       title="Το κινητό τηλέφωνο πρέπει να περιέχει ακριβώς 10 ψηφία."
+                       required />
+            </div>
+
+            <button type="submit" class="btn w-100 primary-btn">
+                Αίτηση εγγραφής ως ιατρός
+            </button>
+
+            <p class="register-info mt-3 mb-5">
+                Θα ενημερωθείτε για την εξέληξη του αιτήματος μέσω email μόλις ελεγχθεί από το σύστημα
+            </p>
+
+            <div class="form-error mt-3">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+
+        </form>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mt-5 alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="register-footer mt-5">
+            <p class="mb-1">Έχετε ήδη λογαριασμό;</p>
+            <a asp-controller="Auth" asp-action="Login" class="register-link">Κάντε σύνδεση</a>
+        </div>
+    </div>
+</div>

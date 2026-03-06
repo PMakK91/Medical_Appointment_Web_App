@@ -1,6 +1,7 @@
 using MedicalAppointmentWebApp.Data;
 using MedicalAppointmentWebApp.Repositories;
 using MedicalAppointmentWebApp.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,29 +18,74 @@ builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddCookie(options =>
+{
+    options.Cookie.Name = "ExternalAuth"; // Temporary cookie for Google identity
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration.GetValue<string>("Issuer"),
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration.GetValue<string>("Audience"),
-            ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretKey")!)),
-            ValidateIssuerSigningKey = true
-        };
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration.GetValue<string>("Issuer"),
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration.GetValue<string>("Audience"),
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretKey")!)),
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero
+    };
 
-        options.Events = new JwtBearerEvents
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
         {
-            OnMessageReceived = context =>
-            {
-                context.Token = context.Request.Cookies["access_token"];
-                return Task.CompletedTask;
-            }
-        };
-    });
+            // Read the JWT from the cookie
+            context.Token = context.Request.Cookies["access_token"];
+            return Task.CompletedTask;
+        }
+    };
+})
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Google:ClientId"]!;
+    options.ClientSecret = builder.Configuration["Google:ClientSecret"]!;
+    // This tells Google to use the Cookie scheme for the initial result
+    options.SignInScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+});
+
+//builder.Services.AddAuthentication(x =>
+//{
+//    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//}).AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidIssuer = builder.Configuration.GetValue<string>("Issuer"),
+//        ValidateAudience = true,
+//        ValidAudience = builder.Configuration.GetValue<string>("Audience"),
+//        ValidateLifetime = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretKey")!)),
+//        ValidateIssuerSigningKey = true
+//    };
+
+//    options.Events = new JwtBearerEvents
+//    {
+//        OnMessageReceived = context =>
+//        {
+//            context.Token = context.Request.Cookies["access_token"];
+//            return Task.CompletedTask;
+//        }
+//    };
+//}).AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+//{
+//    options.ClientId = builder.Configuration.GetValue<string>("Google:ClientId");
+//    options.ClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret");
+//});
 
 builder.Services.AddAuthorization();
 

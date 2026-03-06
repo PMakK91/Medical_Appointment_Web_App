@@ -41,7 +41,6 @@ namespace MedicalAppointmentWebApp.Models
         [Display(Name = "Birth Date")]
         public DateOnly? BirthDate { get; set; }
 
-        [Required]
         [Column("password")]
         public string? Password { get; set; }
 

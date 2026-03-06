@@ -5,8 +5,10 @@ using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -38,10 +40,13 @@ namespace MedicalAppointmentWebApp.Services
             }
 
             Doctor doctor = new Doctor();
-            string hashedPassword = new PasswordHasher<Doctor>().HashPassword(doctor, request.Password);
-
             doctor.Email = request.Email;
-            doctor.Password = hashedPassword;
+
+            if (request.Password != null)
+            {
+                string hashedPassword = new PasswordHasher<Doctor>().HashPassword(doctor, request.Password);
+                doctor.Password = hashedPassword;
+            }
 
             doctor.FirstName = request.FirstName;
             doctor.LastName = request.LastName;
@@ -69,8 +74,11 @@ namespace MedicalAppointmentWebApp.Services
 
             Patient? patient = new();
 
-            string hashedPassword = new PasswordHasher<Patient>().HashPassword(patient, request.Password);
-            patient.Password = hashedPassword;
+            if (request.Password != null)
+            {
+                string hashedPassword = new PasswordHasher<Patient>().HashPassword(patient, request.Password);
+                patient.Password = hashedPassword;
+            }
 
             patient = AssignValues(patient, request) as Patient;
 
@@ -137,18 +145,16 @@ namespace MedicalAppointmentWebApp.Services
         public async Task<AuthResponse?> LoginAsync(AuthRequest request)
         {
             User? user = await userRepository.GetUserByEmailAsync(request.Email);
-            if (user is null)
-            {
-                return null;
-            }
+            if (user is null) return null;
 
-            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.Password!, request.Password)
-                == PasswordVerificationResult.Failed)
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(user.Password) && !string.IsNullOrEmpty(request.Password)) return null;
 
-            if (user is Doctor && ((Doctor)user).RegistrationStatus != RegistrationFormStatus.Accepted)
+            var passwordHasher = new PasswordHasher<User>();
+            var verificationResult = passwordHasher.VerifyHashedPassword(user, user.Password ?? "", request.Password);
+
+            if (verificationResult == PasswordVerificationResult.Failed) return null;
+
+            if (user is Doctor doctor && doctor.RegistrationStatus != RegistrationFormStatus.Accepted)
             {
                 return null;
             }
@@ -227,6 +233,26 @@ namespace MedicalAppointmentWebApp.Services
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
+        public async Task<AuthResponse?> GoogleLoginAsync(string email)
+        {
+            User? user = await userRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+                return null;
+
+            return await CreateTokenResponse(user);
+        }
+
+        public async Task<User?> CreateGoogleUserAsync(RegisterRequest request)
+        {
+            if (request.UserRole.Equals(UserRole.Patient))
+            {
+                return await PatientRegisterAsync(request);
+            }
+
+            return await DoctorRegisterAsync(request);
+        }
+
         public async Task<string?> CreateResetPasswordTokenAsync(string email)
         {
             User? user = await userRepository.GetUserByEmailAsync(email);
@@ -276,11 +302,11 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
 
             User? user = passwordResetToken.User;
-            if (user is null) 
+            if (user is null)
                 return null;
 
-            string hashedPassword = new PasswordHasher<Doctor>().HashPassword((Doctor)user, model.Password);
-
+            string hashedPassword = new PasswordHasher<User>().HashPassword(user, model.Password);
+            user.Password = hashedPassword;
             passwordResetToken.User?.Password = hashedPassword;
             await userRepository.SaveAsync();
 
