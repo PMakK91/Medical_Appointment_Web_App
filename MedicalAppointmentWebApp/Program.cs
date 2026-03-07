@@ -9,7 +9,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -21,7 +20,19 @@ builder.Services.AddAuthentication(x =>
 })
 .AddCookie(options =>
 {
-    options.Cookie.Name = "ExternalAuth"; // Temporary cookie for Google identity
+    options.Cookie.Name = "ExternalAuth";
+
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.Redirect("/Auth/Login");
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.Redirect("/Error/403");
+        return Task.CompletedTask;
+    };
 })
 .AddJwtBearer(options =>
 {
@@ -41,8 +52,24 @@ builder.Services.AddAuthentication(x =>
     {
         OnMessageReceived = context =>
         {
-            // Read the JWT from the cookie
             context.Token = context.Request.Cookies["access_token"];
+            return Task.CompletedTask;
+        },
+
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            string? token = context.Request.Cookies["access_token"];
+
+            if (string.IsNullOrEmpty(token))
+            {
+                context.Response.Redirect("/Auth/Login");
+            }
+            else
+            {
+                context.Response.Redirect("/Error/403");
+            }
+
             return Task.CompletedTask;
         }
     };
@@ -51,41 +78,8 @@ builder.Services.AddAuthentication(x =>
 {
     options.ClientId = builder.Configuration["Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Google:ClientSecret"]!;
-    // This tells Google to use the Cookie scheme for the initial result
     options.SignInScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
 });
-
-//builder.Services.AddAuthentication(x =>
-//{
-//    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = true,
-//        ValidIssuer = builder.Configuration.GetValue<string>("Issuer"),
-//        ValidateAudience = true,
-//        ValidAudience = builder.Configuration.GetValue<string>("Audience"),
-//        ValidateLifetime = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretKey")!)),
-//        ValidateIssuerSigningKey = true
-//    };
-
-//    options.Events = new JwtBearerEvents
-//    {
-//        OnMessageReceived = context =>
-//        {
-//            context.Token = context.Request.Cookies["access_token"];
-//            return Task.CompletedTask;
-//        }
-//    };
-//}).AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration.GetValue<string>("Google:ClientId");
-//    options.ClientSecret = builder.Configuration.GetValue<string>("Google:ClientSecret");
-//});
 
 builder.Services.AddAuthorization();
 
@@ -141,5 +135,19 @@ await using (var scope = app.Services.CreateAsyncScope())
 
     await MedicalAppointmentWebApp.Data.StartupSeeder.SeedAdminAsync(authService, userRepo);
 }
+
+app.UseStatusCodePages(async context =>
+{
+    int code = context.HttpContext.Response.StatusCode;
+
+    if (code == 404)
+    {
+        context.HttpContext.Response.Redirect("/Error/404");
+    }
+    else if (code == 403)
+    {
+        context.HttpContext.Response.Redirect("/Error/403");
+    }
+});
 
 app.Run();

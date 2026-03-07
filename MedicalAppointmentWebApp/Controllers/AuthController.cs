@@ -55,7 +55,6 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> DoctorRegister(RegisterRequest request)
         {
             if (!ModelState.IsValid)

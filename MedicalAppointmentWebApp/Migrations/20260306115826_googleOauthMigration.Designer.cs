@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalAppointmentWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260306111700_googleOauthMigration")]
+    [Migration("20260306115826_googleOauthMigration")]
     partial class googleOauthMigration
     {
         /// <inheritdoc />
