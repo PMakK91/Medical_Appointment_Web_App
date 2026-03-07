@@ -216,13 +216,13 @@ gmp-place-autocomplete {
             border-color: #4096d9;
             color: #fff;
         }
-      
 
-    .form-error {
-        color: #e74c3c;
-        font-size: 12px;
-        text-align: center;
-    }
+
+.form-error {
+    color: #e74c3c;
+    font-size: 12px;
+    text-align: center;
+}
 
 .alert {
     max-width: 420px;
@@ -301,14 +301,25 @@ background: #fff;
 
 
 
-.login-separator {
+.registration-separator {
     width: 100%;
     display: block;
     text-align: center;
     position: relative;
-    margin: 38px 0 38px 0;
+    margin: 18px 0 18px 0;
     height: 1px;
+    background: #eeeeee;
 }
+
+    .registration-separator {
+        width: 100%;
+        display: block;
+        text-align: center;
+        position: relative;
+        margin: 18px 0 18px 0;
+        height: 1px;
+        background: #eeeeee;
+    }
 
     .login-separator span {
         background-color: #f6f6f6;
@@ -320,6 +331,7 @@ background: #fff;
         color: #8a8a8a;
         font-weight: 300;
     }
+
     .login-separator:before {
         width: 100%;
         content: "";
@@ -329,12 +341,12 @@ background: #fff;
         max-width: 420px;
         margin: 0 auto;
     }
-/******* Register Tabs **********/
-.register-tabs {
-    display: flex;
-    max-width: 420px;
-    margin: 0 auto 24px;
-}
+    /******* Register Tabs **********/
+    .register-tabs {
+        display: flex;
+        max-width: 420px;
+        margin: 0 auto 24px;
+    }
 
     .register-tab {
         background: transparent;
@@ -512,16 +524,16 @@ background: #fff;
             }
     /*********** REGISTRATION LIST PAGE *************/
 
-    ul.admin-registrations-list, ul.doctor-result-list {
+    ul.admin-registrations-list, ul.doctor-result-list, .my-appointments-list {
         max-width: 420px;
     }
 
-    .admin-registrations-list li, .doctor-result-list li {
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 23px 100px -26px #00000000;
-    }
+.admin-registrations-list li, .doctor-result-list li, .my-appointments-list  li{
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 23px 100px -26px #00000000;
+}
 
 
     .status-circle {
@@ -561,12 +573,12 @@ background: #fff;
     }
     /******WEEK SCROLLER*****/
 
-.office-panel {
-    background: #fff;
-    border-radius: 12px;
-    margin-top: -12px;
-    padding-top: 12px;
-}
+    .office-panel {
+        background: #fff;
+        border-radius: 12px;
+        margin-top: -12px;
+        padding-top: 12px;
+    }
 
     .schedule-wrap {
         display: flex;
@@ -575,12 +587,12 @@ background: #fff;
         width: 100%;
     }
 
-.nav-btn {
-    border: none;
-    background: transparent;
-    font-size: 12px;
-    color: #000000;
-}
+    .nav-btn {
+        border: none;
+        background: transparent;
+        font-size: 12px;
+        color: #000000;
+    }
 
     .days-scroller {
         display: flex;
@@ -591,15 +603,15 @@ background: #fff;
         width: 100%;
     }
 
-.day-col {
-    min-width: 130px;
-    background: #fff;
-    border-radius: 18px;
-    padding: 14px 18px;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid #eeeeee;
-}
+    .day-col {
+        min-width: 130px;
+        background: #fff;
+        border-radius: 18px;
+        padding: 14px 18px;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid #eeeeee;
+    }
 
 
     .day-head {
@@ -647,18 +659,13 @@ background: #fff;
         background: transparent;
     }
 
-.schedule-wrap {
-    display: flex;
-    align-items: stretch;
-    gap: 10px;
-    width: 100%;
-    justify-content: space-between;
-}
-
-
-
-
-
+    .schedule-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
     /********* DOCTRO PROFILE PAGE *******/
 
     .doctor-profile-img {
@@ -1092,32 +1099,56 @@ background: #fff;
         }
     /**********EDIT PROFILE************/
 
-.image-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-    .image-wrapper img {
-        width: 160px;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 50%;
-        display: block;
+    .image-wrapper {
+        position: relative;
+        display: inline-block;
     }
 
-.overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    border-radius: 50%;
+        .image-wrapper img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        cursor: pointer;
+    }
+
+    .image-wrapper:hover .overlay {
+        opacity: 1;
+    }
+
+    /********MY APPOINTMENTS *****/
+
+.my-appointments-list .doctor-image {
+    width: 100%;
+    border-radius: 100%;
+}
+
+.status-tag {
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    cursor: pointer;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-weight: 200;
 }
 
-.image-wrapper:hover .overlay {
-    opacity: 1;
-}
+    .status-tag.tag-green {
+        background: #cef0cf;
+    }
+    .status-tag.tag-red {
+        background: #ffe0e0;
+    }

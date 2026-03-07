@@ -331,11 +331,7 @@ function scrollDays(direction, practiceId) {
 
 const officeCalendarState = {};
 
-/** ---------------------------
- *  FETCH PRACTICE (real data)
- *  Endpoint: GET /Practice/Get/{practiceId}
- *  Works with both PascalCase and camelCase responses
- *  --------------------------- */
+/*FETCH PRACTICE*/
 function fetchPracticeInfo(practiceId) {
     return fetch(`/Practice/Get/${practiceId}`).then(async (response) => {
         if (!response.ok) {
@@ -346,9 +342,7 @@ function fetchPracticeInfo(practiceId) {
     });
 }
 
-/** ---------------------------
- *  Schedule helpers (case-robust)
- *  --------------------------- */
+/* Schedule helpers */
 function toHHmm(t) {
     return typeof t === "string" && t.length >= 5 ? t.slice(0, 5) : null; // "HH:mm:ss" -> "HH:mm"
 }
@@ -362,37 +356,33 @@ function getField(obj, pascalName) {
 function getOfficeScheduleConfig(practice, dateStr) {
     if (!practice) return { duration: 30, workingIntervals: [] };
 
+    const duration = 30; // or read from practice if needed
+
     const d = new Date(`${dateStr}T00:00:00`);
-    const dow = d.getDay(); // 0=Sun ... 6=Sat
+    const dow = (d.getDay() + 6) % 7; // 0=Mon ... 6=Sun
 
-    const duration = getField(practice, "Duration") ?? 30;
-
-    const startKey = [
-        "SundayStart",
-        "MondayStart",
-        "TuesdayStart",
-        "WednesdayStart",
-        "ThursdayStart",
-        "FridayStart",
-        "SaturdayStart",
+    const dayName = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
     ][dow];
 
-    const endKey = [
-        "SundayEnd",
-        "MondayEnd",
-        "TuesdayEnd",
-        "WednesdayEnd",
-        "ThursdayEnd",
-        "FridayEnd",
-        "SaturdayEnd",
-    ][dow];
+    const startKey = `${dayName}Start`;
+    const endKey = `${dayName}End`;
 
     const start = toHHmm(getField(practice, startKey));
     const end = toHHmm(getField(practice, endKey));
 
     if (!start || !end) return { duration, workingIntervals: [] };
 
-    return { duration, workingIntervals: [{ start, end }] };
+    return {
+        duration,
+        workingIntervals: [{ start, end }],
+    };
 }
 
 function isOfficeClosed(practice, dateStr) {

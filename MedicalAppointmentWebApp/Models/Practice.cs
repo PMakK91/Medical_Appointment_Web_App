@@ -82,6 +82,12 @@ namespace MedicalAppointmentWebApp.Models
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }
 
+        [Required]
+        [Column("registration_date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayName("Registration Date")]
+        public DateTime RegistrationDate { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

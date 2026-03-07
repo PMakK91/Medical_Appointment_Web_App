@@ -40,6 +40,8 @@ namespace MedicalAppointmentWebApp.Services
             practice.SundayStart = practiceEnrollRequest.SundayStart;
             practice.SundayEnd = practiceEnrollRequest.SundayEnd;
 
+            practice.RegistrationDate = DateTime.Now;
+
             practice.RegistrationStatus = Data.Enums.RegistrationFormStatus.Pending;
 
             practiceRepository.InsertPractice(practice);

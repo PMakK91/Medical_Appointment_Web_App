@@ -136,6 +136,10 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("place_id");
 
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("registration_date");
+
                     b.Property<int>("RegistrationStatus")
                         .HasColumnType("int")
                         .HasColumnName("registration_status");
