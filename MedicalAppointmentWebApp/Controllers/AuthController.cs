@@ -268,7 +268,7 @@ namespace MedicalAppointmentWebApp.Controllers
         {
             if (model is null || !model.Password.Equals(model.ConfirmPassword))
             {
-                TempData["ErrorMessage"] = "Οι κωδικός που δώθηκε δεν τεριάζει με την επιβεβαίωση του.";
+                TempData["ErrorMessage"] = "Ο κωδικός που δώθηκε δεν ταιριάζει με την επιβεβαίωση του.";
                 return RedirectToAction(controllerName: "Auth", actionName: "ForgotPassword");
             }
 

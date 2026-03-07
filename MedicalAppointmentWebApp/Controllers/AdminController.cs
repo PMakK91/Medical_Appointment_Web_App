@@ -18,9 +18,9 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(registrationForms);
         }
 
-        public async Task<IActionResult> AcceptRegistrationAsync(Guid id)
+        public async Task<IActionResult> AcceptRegistrationAsync(DoctorRegistrationReviewVeiwModel model)
         {
-            Doctor? doctor = await adminService.AcceptRegistrationAsync(id);
+            Doctor? doctor = await adminService.AcceptRegistrationAsync(model.DoctorId);
 
             if (doctor is null)
             {
@@ -30,9 +30,9 @@ namespace MedicalAppointmentWebApp.Controllers
             return RedirectToAction("PendingRegistrationForms", "Admin");
         }
 
-        public async Task<IActionResult> RejectRegistrationAsync(Guid id)
+        public async Task<IActionResult> RejectRegistrationAsync(DoctorRegistrationReviewVeiwModel model)
         {
-            Doctor? doctor = await adminService.RejectRegistrationAsync(id);
+            Doctor? doctor = await adminService.RejectRegistrationAsync(model.DoctorId, model.Reason);
 
             if (doctor is null)
             {
@@ -43,8 +43,7 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         public async Task<IActionResult> RegistrationInfoPageAsync(Guid id)
-        { 
-
+        {
             Doctor? doctor = await adminService.ViewRegistrationAsync(id);
 
             if (doctor is null)
@@ -52,8 +51,15 @@ namespace MedicalAppointmentWebApp.Controllers
                 return BadRequest("Doctor not found");
             }
 
-            return View(doctor);
+            var model = new DoctorRegistrationReviewVeiwModel
+            {
+                DoctorId = doctor.Id,
+                Doctor = doctor
+            };
+
+            return View(model);
         }
+
 
         public IActionResult GetWeekMock()
         {

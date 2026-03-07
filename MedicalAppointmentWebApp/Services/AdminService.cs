@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AdminService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository) : IAdminService
+    public class AdminService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IEmailService emailService) : IAdminService
     {
         public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
         {
@@ -28,18 +28,27 @@ namespace MedicalAppointmentWebApp.Services
             return await ReviewRegistrationAsync(id, RegistrationFormStatus.Accepted);
         }
 
-        public async Task<Doctor?> RejectRegistrationAsync(Guid id)
+        public async Task<Doctor?> RejectRegistrationAsync(Guid id, string reason)
         {
-            return await ReviewRegistrationAsync(id, RegistrationFormStatus.Rejected);
+            return await ReviewRegistrationAsync(id, RegistrationFormStatus.Rejected, reason);
         }
 
-        private async Task<Doctor?> ReviewRegistrationAsync(Guid id, RegistrationFormStatus status)
+        private async Task<Doctor?> ReviewRegistrationAsync(Guid id, RegistrationFormStatus status, string? reason = null)
         {
             Doctor? doctor = await doctorRepository.GetDoctorByIDAsync(id);
 
             if (doctor is null)
             {
                 return null;
+            }
+
+            if (status == RegistrationFormStatus.Accepted)
+            {
+                await emailService.SendAcceptDoctorRegistrationEmail(doctor.Email);
+            }
+            else if (status == RegistrationFormStatus.Rejected)
+            {
+                await emailService.SendRejectDoctorRegistrationEmail(doctor.Email, reason);
             }
 
             doctor.RegistrationStatus = status;

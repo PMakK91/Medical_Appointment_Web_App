@@ -7,7 +7,7 @@ namespace MedicalAppointmentWebApp.Services
     {
         Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page, int pageSize);
         Task<Doctor?> AcceptRegistrationAsync(Guid id);
-        Task<Doctor?> RejectRegistrationAsync(Guid id);
+        Task<Doctor?> RejectRegistrationAsync(Guid id, string reason);
         Task<Doctor?> ViewRegistrationAsync(Guid id);
         Task<PracticeSearchViewModel> SearchPendingPractices(string term, int page = 1, int pageSize = 10);
         

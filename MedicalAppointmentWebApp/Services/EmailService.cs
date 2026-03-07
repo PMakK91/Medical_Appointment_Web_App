@@ -28,9 +28,38 @@ namespace MedicalAppointmentWebApp.Services
             </p>
             <p>Αν δεν ήσασταν εσείς που ζητήσατε την αλλαγή του κωδικού αγνοείστε αυτό το email.</p>
             <br />
-            <p>Η ομάδα του Medicall appointment web app</p>";
+            <p>Η ομάδα του MyDoctorNow</p>";
 
             await SendEmailAsync(token.User.Email, "Αλλαγή κωδικού πρόσβασης", htmlBody);
+        }
+
+        public async Task SendAcceptDoctorRegistrationEmail(string doctorEmail)
+        {
+
+            var htmlBody = $@"
+            <h2>Επιτυχής Εγγραφή Ιατρού</h2>
+            <p>Η εγγραφή σας ολοκληρώθηκε.</p>
+
+
+            <br />
+            <p>Η ομάδα του MyDoctorNow</p>";
+
+            await SendEmailAsync(doctorEmail, "Επιτυχής Εγγραφή Ιατρού", htmlBody);
+        }
+
+        public async Task SendRejectDoctorRegistrationEmail(string doctorEmail, string reason)
+        {
+
+            var htmlBody = $@"
+            <h2>Η αίτηση εγγραφής απορρίφθηκε</h2>
+            <p>Λόγος απόρριψης: {reason}</p>
+            <p>Κάντε νέα αίτηση εγγραφής</p>
+
+
+            <br />
+            <p>Η ομάδα του MyDoctorNow</p>";
+
+            await SendEmailAsync(doctorEmail, "Απόρριψη Αίτησης Εγγραφής", htmlBody);
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
