@@ -30,7 +30,13 @@
                             class="office-tab @(firstTab ? "active" : "")"
                             data-office-id="@practice.Id"
                             onclick="showOffice('@practice.Id')">
-                        @practice.Name
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                        @practice.FullAddress
                     </button>
         
                     firstTab = false;
@@ -61,43 +67,3 @@
     }
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-
-        function loadOffice(practiceId) {
-            var officePanel = $("#office-" + practiceId);
-            var scheduleWrap = officePanel.find(".schedule-wrap");
-
-            if (officePanel.data("loaded")) return;
-
-            scheduleWrap.load('@Url.Action("AvailableTimeSlots", "Practice")?Id=' + practiceId, function () {
-                officePanel.data("loaded", true);
-            });
-        }
-
-        var firstVisibleOffice = $(".office-panel:visible").first();
-        if (firstVisibleOffice.length) {
-            var firstId = firstVisibleOffice.attr("id").replace("office-", "");
-            loadOffice(firstId);
-        }
-
-        const observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.attributeName === "style") {
-                    var element = $(mutation.target);
-
-                    if (element.is(":visible")) {
-                        var practiceId = element.attr("id").replace("office-", "");
-                        loadOffice(practiceId);
-                    }
-                }
-            });
-        });
-
-        $(".office-panel").each(function () {
-            observer.observe(this, { attributes: true });
-        });
-
-    });
-</script>

@@ -22,7 +22,7 @@
                         class="office-tab @(first ? "active" : "")"
                         data-office-id="@practice.Id"
                         onclick="showOffice('@practice.Id')">
-                    @practice.Name
+                    @practice.FullAddress
                 </button>
                 first = false;
             }

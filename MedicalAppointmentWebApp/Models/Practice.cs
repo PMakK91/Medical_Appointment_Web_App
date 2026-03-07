@@ -19,9 +19,6 @@ namespace MedicalAppointmentWebApp.Models
         [ForeignKey("DoctorId")]
         public virtual Doctor Doctor { get; set; } = null!;
 
-        [Column("name")]
-        public string? Name { get; set; }
-
         [Column("duration")]
         public int Duration { get; set; }
 
@@ -85,6 +82,12 @@ namespace MedicalAppointmentWebApp.Models
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }
 
+        [Required]
+        [Column("registration_date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayName("Registration Date")]
+        public DateTime RegistrationDate { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

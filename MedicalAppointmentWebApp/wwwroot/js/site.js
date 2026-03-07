@@ -59,46 +59,86 @@
 
     /***** FILL FORMS PATIENT AND DOCTOR SIMUTANEUSLY *******/
 
-        (function () {
-    const patientForm = document.getElementById('register-form-patient');
-        const doctorForm  = document.getElementById('register-form-doctor');
-
+    (function () {
+        const patientForm = document.getElementById('register-form-patient');
+        const doctorForm = document.getElementById('register-form-doctor');
         if (!patientForm || !doctorForm) return;
 
-        const fieldsToSync = ['FirstName', 'LastName', 'Phone', 'Amka', 'Email', 'Password'];
+        const fieldsToSync = [
+            'FirstName', 'LastName', 'Phone', 'Amka', 'Email', 'Password',
+            'Gender', 'BirthDate'
+        ];
+
+        const isVisible = (el) => !!el && !el.classList.contains('d-none');
 
         function getField(form, name) {
-      return form.querySelector(`[name="${name}"]`);
-    }
+            return form.querySelector(`[name="${name}"]`);
+        }
+
+        function getCheckedRadio(form, name) {
+            return form.querySelector(`input[type="radio"][name="${name}"]:checked`);
+        }
+
+        function getRadios(form, name) {
+            return form.querySelectorAll(`input[type="radio"][name="${name}"]`);
+        }
 
         function syncValue(fromForm, toForm, name) {
-      const from = getField(fromForm, name);
-        const to   = getField(toForm, name);
-        if (!from || !to) return;
+            // RADIO GROUP
+            const fromAnyRadio = fromForm.querySelector(`input[type="radio"][name="${name}"]`);
+            const toAnyRadio = toForm.querySelector(`input[type="radio"][name="${name}"]`);
+            if (fromAnyRadio && toAnyRadio) {
+                const fromChecked = getCheckedRadio(fromForm, name);
+                if (!fromChecked) return; // μην γράφεις τίποτα αν δεν έχει επιλεγεί
 
-        if (to.value === from.value) return;
+                const target = toForm.querySelector(
+                    `input[type="radio"][name="${name}"][value="${fromChecked.value}"]`
+                );
+                if (target && !target.checked) target.checked = true;
+                return;
+            }
 
-        to.value = from.value;
+            // NORMAL INPUTS (text/tel/email/password/date/hidden etc.)
+            const from = getField(fromForm, name);
+            const to = getField(toForm, name);
+            if (!from || !to) return;
 
-    }
+            // ΜΗΝ αντιγράφεις κενές τιμές (για να μην "σβήνει" το άλλο form)
+            if (from.value == null || from.value === '') return;
+
+            if (to.value !== from.value) {
+                to.value = from.value;
+            }
+        }
 
         function wireSync(fromForm, toForm) {
             fieldsToSync.forEach(name => {
+                // radio group
+                const radios = getRadios(fromForm, name);
+                if (radios && radios.length) {
+                    radios.forEach(r => {
+                        r.addEventListener('change', () => syncValue(fromForm, toForm, name));
+                    });
+                    return;
+                }
+
+                // normal field
                 const from = getField(fromForm, name);
                 if (!from) return;
 
                 from.addEventListener('input', () => syncValue(fromForm, toForm, name));
                 from.addEventListener('change', () => syncValue(fromForm, toForm, name));
             });
-    }
+        }
 
         wireSync(patientForm, doctorForm);
         wireSync(doctorForm, patientForm);
 
-    // initial sync on load
-    fieldsToSync.forEach(name => syncValue(patientForm, doctorForm, name));
-    fieldsToSync.forEach(name => syncValue(doctorForm, patientForm, name));
-  })();
+        // ✅ Initial sync: από το ορατό form προς το κρυφό
+        const source = isVisible(patientForm) ? patientForm : doctorForm;
+        const target = source === patientForm ? doctorForm : patientForm;
+        fieldsToSync.forEach(name => syncValue(source, target, name));
+    })();
     
 
     // ************ Specialization dropdown with search inside (doctor) **********/
@@ -196,64 +236,102 @@
         }
     });
 });
-
-/******WEEK SCROLLER*******/
+/****** WEEK SCROLLER *******/
 function showOffice(officeId) {
-    document.querySelectorAll('.office-panel').forEach(p => p.style.display = 'none');
-    const panel = document.getElementById('office-' + officeId);
-    if (panel) panel.style.display = 'block';
+    document.querySelectorAll(".office-panel").forEach(p => p.style.display = "none");
 
-    document.querySelectorAll('.office-tab').forEach(b => {
-        b.classList.toggle('active', b.dataset.officeId == officeId);
+    const panel = document.getElementById("office-" + officeId);
+    if (panel) panel.style.display = "block";
+
+    document.querySelectorAll(".office-tab").forEach(b => {
+        b.classList.toggle("active", b.dataset.officeId == officeId);
     });
 }
 
-  //  function scrollDays(direction, officeId) {
-  //  const scroller = document.getElementById('daysScroller-' + officeId);
-  //  if (!scroller) return;
-  //  scroller.scrollBy({left: direction * 320, behavior: 'smooth' });
-  //}
+function loadOffice(practiceId, weekStart = null) {
+    const officePanel = $("#office-" + practiceId);
+    const scheduleWrap = officePanel.find(".schedule-wrap");
 
-    function pickSlot(officeId, dateIso, slot) {
-        console.log({ officeId, dateIso, slot });
-    // set hidden inputs or submit form here
-  }
+    let url = `/Practice/AvailableTimeSlots?Id=${practiceId}`;
+    if (weekStart) {
+        url += `&weekStart=${weekStart}`;
+    }
 
-function scrollDays(dir) {
-    const el = document.getElementById('daysScroller');
-    if (!el) return;
-    el.scrollLeft += dir * 220; // ~1 column per click
+    scheduleWrap.load(url, function () {
+        officePanel.data("loaded", true);
+    });
 }
 
-function selectDay(isoDate) {
-    // Frontend-only mode: just log.
-    // When backend is ready, you can reload with ?date=isoDate or fetch slots.
-    console.log('Selected day:', isoDate);
+$(document).ready(function () {
+    const firstVisibleOffice = $(".office-panel:visible").first();
 
-    /* Optional: visually mark selected day client-side (no reload)
-    const cols = document.querySelectorAll('#daysScroller .day-col');
-    cols.forEach(c => c.classList.remove('selected'));
-    const target = document.querySelector(`#daysScroller .day-col[data-date="${isoDate}"]`);
-    if (target) target.classList.add('selected');
-    */
+    if (firstVisibleOffice.length) {
+        const firstId = firstVisibleOffice.attr("id").replace("office-", "");
+        loadOffice(firstId);
+    }
+
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.attributeName === "style") {
+                const element = $(mutation.target);
+
+                if (element.is(":visible")) {
+                    const practiceId = element.attr("id").replace("office-", "");
+                    loadOffice(practiceId);
+                }
+            }
+        });
+    });
+
+    $(".office-panel").each(function () {
+        observer.observe(this, { attributes: true });
+    });
+});
+
+function scrollDays(direction, practiceId) {
+    const container = document.querySelector(`#daysScroller-${practiceId}`);
+    const officePanel = document.querySelector(`#office-${practiceId}`);
+    const scheduleWrap = officePanel ? officePanel.querySelector(".schedule-wrap") : null;
+
+    if (!container || !scheduleWrap) return;
+
+    const startDateStr = container.dataset.startdate;
+    const startDate = new Date(startDateStr);
+    startDate.setDate(startDate.getDate() + direction);
+
+    const year = startDate.getFullYear();
+    const month = String(startDate.getMonth() + 1).padStart(2, "0");
+    const day = String(startDate.getDate()).padStart(2, "0");
+    const newDate = `${year}-${month}-${day}`;
+
+    scheduleWrap.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+    scheduleWrap.style.transform = `translateX(${direction * -10}px)`;
+    scheduleWrap.style.opacity = "0";
+
+    setTimeout(() => {
+        fetch(`/Practice/AvailableTimeSlots?Id=${practiceId}&weekStart=${newDate}`)
+            .then(response => response.text())
+            .then(html => {
+                scheduleWrap.innerHTML = html;
+
+                scheduleWrap.style.transition = "none";
+                scheduleWrap.style.transform = `translateX(${direction * 10}px)`;
+                scheduleWrap.style.opacity = "0";
+
+                void scheduleWrap.offsetWidth;
+
+                scheduleWrap.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+                scheduleWrap.style.transform = "translateX(0)";
+                scheduleWrap.style.opacity = "1";
+            })
+            .catch(err => console.error("Schedule load error:", err));
+    }, 200);
 }
-
-function pickSlot(isoDate, time) {
-    console.log('Selected slot:', isoDate, time);
-    // TODO later: open modal / POST reservation / navigate to booking form
-}
-
-
-
 /********************** CALENDAR ************************/
 
 const officeCalendarState = {};
 
-/** ---------------------------
- *  FETCH PRACTICE (real data)
- *  Endpoint: GET /Practice/Get/{practiceId}
- *  Works with both PascalCase and camelCase responses
- *  --------------------------- */
+/*FETCH PRACTICE*/
 function fetchPracticeInfo(practiceId) {
     return fetch(`/Practice/Get/${practiceId}`).then(async (response) => {
         if (!response.ok) {
@@ -264,9 +342,7 @@ function fetchPracticeInfo(practiceId) {
     });
 }
 
-/** ---------------------------
- *  Schedule helpers (case-robust)
- *  --------------------------- */
+/* Schedule helpers */
 function toHHmm(t) {
     return typeof t === "string" && t.length >= 5 ? t.slice(0, 5) : null; // "HH:mm:ss" -> "HH:mm"
 }
@@ -280,37 +356,33 @@ function getField(obj, pascalName) {
 function getOfficeScheduleConfig(practice, dateStr) {
     if (!practice) return { duration: 30, workingIntervals: [] };
 
+    const duration = 30; // or read from practice if needed
+
     const d = new Date(`${dateStr}T00:00:00`);
-    const dow = d.getDay(); // 0=Sun ... 6=Sat
+    const dow = (d.getDay() + 6) % 7; // 0=Mon ... 6=Sun
 
-    const duration = getField(practice, "Duration") ?? 30;
-
-    const startKey = [
-        "SundayStart",
-        "MondayStart",
-        "TuesdayStart",
-        "WednesdayStart",
-        "ThursdayStart",
-        "FridayStart",
-        "SaturdayStart",
+    const dayName = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
     ][dow];
 
-    const endKey = [
-        "SundayEnd",
-        "MondayEnd",
-        "TuesdayEnd",
-        "WednesdayEnd",
-        "ThursdayEnd",
-        "FridayEnd",
-        "SaturdayEnd",
-    ][dow];
+    const startKey = `${dayName}Start`;
+    const endKey = `${dayName}End`;
 
     const start = toHHmm(getField(practice, startKey));
     const end = toHHmm(getField(practice, endKey));
 
     if (!start || !end) return { duration, workingIntervals: [] };
 
-    return { duration, workingIntervals: [{ start, end }] };
+    return {
+        duration,
+        workingIntervals: [{ start, end }],
+    };
 }
 
 function isOfficeClosed(practice, dateStr) {
@@ -858,4 +930,15 @@ input.addEventListener("change", function () {
         reader.readAsDataURL(file);
     }
 });
-       
+
+const textarea = document.getElementById("bioInput");
+
+function autoResize() {
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+}
+
+textarea.addEventListener("input", autoResize);
+
+// run on page load
+window.addEventListener("load", autoResize);

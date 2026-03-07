@@ -34,8 +34,8 @@
 
         document.getElementById("PlaceId").value = place.id || "";
         document.getElementById("FullAddress").value = place.formattedAddress || "";
-         document.getElementById("Lat").value = lat.toString().replace(".", ",");
-    document.getElementById("Lon").value = lng.toString().replace(".", ",");
+         document.getElementById("Lat").value = lat
+    document.getElementById("Lon").value = lng
     });
     }
 
@@ -56,12 +56,17 @@
 
         <form id="officeForm" class="office-form" method="post">
 
-
-
             <div class="mb-3">
-                <label class="office-label">Ονομασία</label>
-                <input asp-for="Name" class="form-control office-input" required />
+                <label class="office-label" for="officeAddress">Διεύθυνση</label>
 
+
+                <gmp-place-autocomplete id="officeAddress"></gmp-place-autocomplete>
+
+
+                <input type="hidden" asp-for="PlaceId" id="PlaceId" />
+                <input type="hidden" asp-for="FullAddress" id="FullAddress" />
+                <input type="hidden" asp-for="Lat" id="Lat" />
+                <input type="hidden" asp-for="Lon" id="Lon" />
             </div>
 
             <div class="mb-3">
@@ -80,18 +85,7 @@
 
             </div>
 
-            <div class="mb-3">
-                <label class="office-label" for="officeAddress">Διεύθυνση</label>
-
-
-                <gmp-place-autocomplete id="officeAddress"></gmp-place-autocomplete>
-
-
-                <input type="hidden" asp-for="PlaceId" id="PlaceId" />
-                <input type="hidden" asp-for="FullAddress" id="FullAddress" />
-                <input type="hidden" asp-for="Lat" id="Lat" />
-                <input type="hidden" asp-for="Lon" id="Lon" />
-            </div>
+          
 
             <h3 class="fs-16 fw-400 fc-black mt-5">Ώρες Λειτουργίας</h3>
 

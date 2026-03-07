@@ -4,32 +4,94 @@
     ViewData["Title"] = "Τα Ραντεβού μου";
     Layout = "_Layout";
 }
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Τα Ραντεβού μου</h1>
+        <p class="subtitle mb-5"></p>
 
 @if (Model.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Practice Id</th>
-                <th scope="col">Doctor Id</th>
-                <th scope="col">Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ap in Model)
-            {
-                <tr>
-                    <td>@ap.PracticeId</td>
-                    <td>@ap.DoctorId</td>
-                    <td>@ap.Time</td>
-                </tr>
+
+
+
+     <ul class="my-appointments-list list-unstyled mx-auto">
+
+               
+    @foreach (var ap in Model)
+    {
+        
+
+                    <li class="mb-3">
+                        <div class="row">
+                            <div class="col-8 text-start">
+                                <div class="d-inline fc-blue fs-18 fw-600 ">@ap.Time.ToString("dd/MM/yyyy")</div>
+                                <div class="d-inline fc-blue fs-18 fw-200 ms-2">@ap.Time.ToString("HH:mm")</div>
+                            </div>
+                            <div class="col-4 d-flex justify-content-end"><div class="status-tag @(ap.Status == 0 ? "tag-green" : "tag-red")">@(ap.Status == 0 ? "Επερχόμενο" : "Ακυρωμένο")</div></div>
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-2 pe-0">
+                                <img class="doctor-image" src="/Images/@ap.Doctor.ImageUrl" alt="Profile"> 
+                                </div>
+
+                                <div class="col-10">
+                            <div class=" fc-black fs-16 fw-400 text-start"> @ap.Doctor?.FirstName @ap.Doctor?.LastName</div>
+                          
+                                <div class=" fc-black fs-16 fw-100 text-start">@Html.DisplayFor(modelItem => ap.Doctor.Specialty)</div>
+                           
+
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+
+                        <div class="col-12 fc-black fs-16 fw-100 text-start">       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                            </svg> @ap.Practice.FullAddress</div>
+                            
+                  
+
+                        </div>
+
+                        <div class="registration-separator"></div>
+
+
+                        <div class="row">
+                            <div class="col-sm-4  col-xs-12 text-start p-1">
+                                <a class="btn primary-btn delete " sp-controller="Admin" asp-action="apInfoPage" asp-route-id="@ap.Id">
+                                    <svg style="    margin-right: 5px;" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                    </svg> Ακύρωση
+                                </a>
+                            </div>
+                            <div class="col-sm-4  col-xs-12 text-start p-1">
+                                <a class=" btn primary-btn delete " sp-controller="Admin" asp-action="apInfoPage" asp-route-id="@ap.Id">
+                                    <svg style="    margin-right: 5px;" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
+                                        <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z" />
+                                        <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                                    </svg> Αλλαγή
+                                </a>
+                            </div>
+                            <div class="col-sm-4 col-xs-12 text-end p-1">
+                                <a class=" btn primary-btn " sp-controller="Admin" asp-action="apInfoPage" asp-route-id="@ap.Id">Λεπτομέριες</a>
+                            </div>
+                        </div>
+
+                    </li>
 
             }
-        </tbody>
-    </table>
+            </ul>
 }
 else
 {
-    <h2>Δεν βρέθηκαν ραντεβού</h2>
-    <a asp-controller="Doctor" asp-action="Index">Κλείστε ραντεβού τώρα!</a>
-}
+
+            <p class="fw-100 fc-grey mb-1">Δεν βρέθηκαν ραντεβού</p>
+                <!--    <a class="login-link" sp-controller="Doctor" asp-action="Index">Κλείστε ραντεβού τώρα!</a> -->
+            
+        }
+
+    </div>
+</div>

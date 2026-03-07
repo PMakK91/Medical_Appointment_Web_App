@@ -164,6 +164,17 @@ body {
     font-weight: 100;
 }
 
+.doctor-bio-edit textarea {
+    border-radius: 12px;
+    border: none;
+    background: #EAEAEA;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 100;
+    overflow: hidden;
+    resize: none;
+}
+
 gmp-place-autocomplete {
     padding: 0;
 }
@@ -205,13 +216,32 @@ gmp-place-autocomplete {
             border-color: #4096d9;
             color: #fff;
         }
-      
 
-    .form-error {
-        color: #e74c3c;
-        font-size: 12px;
-        text-align: center;
-    }
+
+.form-error {
+    color: #e74c3c;
+    font-size: 12px;
+    text-align: center;
+}
+
+.alert {
+    max-width: 420px;
+    margin: auto;
+    font-size: 14px;
+    font-weight: 100;
+    padding: 6px;
+    font-weight: 400;
+}
+.alert-danger {
+    background: transparent;
+    border: 0;
+    color: #dc3545;
+}
+.alert-success {
+    background: transparent;
+    border: 0;
+    color: #198754;
+}
 
     .login-footer p, .register-footer p, .register-info {
         color: #676767;
@@ -241,11 +271,77 @@ input:-webkit-autofill:active {
     transition: background-color 9999s ease-in-out 0s;
 }
 
+.form-check-input:checked {
+    background-color: #4EA7E7;
+    border-color: #4EA7E7;
+}
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem #4EA7E7, 0 0 0 0.25rem #ffffff00;
+}
+.form-check-input {
+    background-color: #eaeaea;
+    border: 0;
+}
+
+.google-auth {
+    display: flex;
+    margin: auto;
+    padding: 12px 23px;
+    gap: 9px;
+    width: 100%;
+    max-width: 420px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid #cfcfcf;
+}
+.google-auth:hover {
+background: #fff;
+}
 
 
+
+.registration-separator {
+    width: 100%;
+    display: block;
+    text-align: center;
+    position: relative;
+    margin: 18px 0 18px 0;
+    height: 1px;
+    background: #eeeeee;
+}
+
+    .registration-separator {
+        width: 100%;
+        display: block;
+        text-align: center;
+        position: relative;
+        margin: 18px 0 18px 0;
+        height: 1px;
+        background: #eeeeee;
+    }
+
+    .login-separator span {
+        background-color: #f6f6f6;
+        position: absolute;
+        line-height: 10px;
+        top: -5px;
+        margin-left: -15px;
+        padding: 0 10px;
+        color: #8a8a8a;
+        font-weight: 300;
+    }
+
+    .login-separator:before {
+        width: 100%;
+        content: "";
+        height: 1px;
+        display: block;
+        background-color: #eaeaea;
+        max-width: 420px;
+        margin: 0 auto;
+    }
     /******* Register Tabs **********/
-
-
     .register-tabs {
         display: flex;
         max-width: 420px;
@@ -401,28 +497,20 @@ input:-webkit-autofill:active {
     .d-none {
         display: none;
     }
-
-
-
     /***** FORM ERRORS ****/
 
-.validation-summary-errors ul {
-    list-style: none;
-    padding: 0;
-}
-
-
-
-
-
-/****** REGISTRATION INFO PAGE *****/
-.registration-info {
-    max-width: 420px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 23px 100px -26px #00000000;
-}
+    .validation-summary-errors ul {
+        list-style: none;
+        padding: 0;
+    }
+    /****** REGISTRATION INFO PAGE *****/
+    .registration-info {
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 23px 100px -26px #00000000;
+    }
 
 
         .registration-info .row {
@@ -436,16 +524,16 @@ input:-webkit-autofill:active {
             }
     /*********** REGISTRATION LIST PAGE *************/
 
-    ul.admin-registrations-list, ul.doctor-result-list {
+    ul.admin-registrations-list, ul.doctor-result-list, .my-appointments-list {
         max-width: 420px;
     }
 
-    .admin-registrations-list li, .doctor-result-list li {
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 23px 100px -26px #00000000;
-    }
+.admin-registrations-list li, .doctor-result-list li, .my-appointments-list  li{
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 23px 100px -26px #00000000;
+}
 
 
     .status-circle {
@@ -454,13 +542,13 @@ input:-webkit-autofill:active {
         border-radius: 100%;
     }
 
-.status-circle.status-orange {
-    background: #ffb27b;
-}
+        .status-circle.status-orange {
+            background: #ffb27b;
+        }
 
-.status-circle.status-green {
-    background: #abd47c;
-}
+        .status-circle.status-green {
+            background: #abd47c;
+        }
 
     .search-form {
         max-width: 420px;
@@ -485,6 +573,13 @@ input:-webkit-autofill:active {
     }
     /******WEEK SCROLLER*****/
 
+    .office-panel {
+        background: #fff;
+        border-radius: 12px;
+        margin-top: -12px;
+        padding-top: 12px;
+    }
+
     .schedule-wrap {
         display: flex;
         align-items: stretch;
@@ -493,13 +588,10 @@ input:-webkit-autofill:active {
     }
 
     .nav-btn {
-        width: 42px;
         border: none;
         background: transparent;
-        font-size: 34px;
-        cursor: pointer;
-        color: #9aa3ad;
-        line-height: 1;
+        font-size: 12px;
+        color: #000000;
     }
 
     .days-scroller {
@@ -518,6 +610,7 @@ input:-webkit-autofill:active {
         padding: 14px 18px;
         cursor: pointer;
         user-select: none;
+        border: 1px solid #eeeeee;
     }
 
 
@@ -564,6 +657,14 @@ input:-webkit-autofill:active {
 
     .days-scroller::-webkit-scrollbar-track {
         background: transparent;
+    }
+
+    .schedule-wrap {
+        display: flex;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+        justify-content: space-between;
     }
     /********* DOCTRO PROFILE PAGE *******/
 
@@ -924,29 +1025,30 @@ input:-webkit-autofill:active {
         gap: 10px
     }
 
-.ranges select {
-    padding: 8px 10px;
-    border: 0;
-    border-radius: 10px;
-    background: #eaeaea;
-    font-size: 14px;
-    font-weight: 100;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,\
+    .ranges select {
+        padding: 8px 10px;
+        border: 0;
+        border-radius: 10px;
+        background: #eaeaea;
+        font-size: 14px;
+        font-weight: 100;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,\
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'>\
     <polyline points='7 10 12 15 17 10'/>\
     </svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 18px;
-    padding-right: 40px;
-}
-.ranges select option{
-    font-size: 14px;
-    font-weight: 100;
-}
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 18px;
+        padding-right: 40px;
+    }
+
+        .ranges select option {
+            font-size: 14px;
+            font-weight: 100;
+        }
 
 
     .toggle {
@@ -995,43 +1097,58 @@ input:-webkit-autofill:active {
             cursor: pointer;
             font-weight: 800
         }
+    /**********EDIT PROFILE************/
 
-/**********EDIT PROFILE************/
-
-.image-wrapper {
-    width: 100%;
-    max-width: 150px;
-    aspect-ratio: 1 / 1;
-    margin: auto;
-    position: relative;
-    cursor: pointer;
-}
-
-    .image-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 3px solid #dee2e6;
+    .image-wrapper {
+        position: relative;
+        display: inline-block;
     }
 
-.overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
+        .image-wrapper img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        cursor: pointer;
+    }
+
+    .image-wrapper:hover .overlay {
+        opacity: 1;
+    }
+
+    /********MY APPOINTMENTS *****/
+
+.my-appointments-list .doctor-image {
+    width: 100%;
+    border-radius: 100%;
+}
+
+.status-tag {
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: 0.3s;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-weight: 200;
 }
 
-    .overlay svg {
-        width: 25%;
-        height: 25%;
+    .status-tag.tag-green {
+        background: #cef0cf;
     }
-
-.image-wrapper:hover.overlay {
-    opacity: 1;
-}
+    .status-tag.tag-red {
+        background: #ffe0e0;
+    }

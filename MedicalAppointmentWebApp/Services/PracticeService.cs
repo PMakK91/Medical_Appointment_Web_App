@@ -19,7 +19,6 @@ namespace MedicalAppointmentWebApp.Services
             Practice practice = new Practice();
 
             practice.DoctorId = doctor.Id;
-            practice.Name = practiceEnrollRequest.Name;
             practice.Duration = practiceEnrollRequest.Duration;
             practice.PlaceId = practiceEnrollRequest.PlaceId;
             practice.FullAddress = practiceEnrollRequest.FullAddress;
@@ -40,6 +39,8 @@ namespace MedicalAppointmentWebApp.Services
             practice.SaturdayEnd = practiceEnrollRequest.SaturdayEnd;
             practice.SundayStart = practiceEnrollRequest.SundayStart;
             practice.SundayEnd = practiceEnrollRequest.SundayEnd;
+
+            practice.RegistrationDate = DateTime.Now;
 
             practice.RegistrationStatus = Data.Enums.RegistrationFormStatus.Pending;
 

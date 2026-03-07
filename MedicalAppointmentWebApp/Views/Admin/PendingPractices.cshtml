@@ -38,16 +38,39 @@
                         <div class="col-4 d-flex justify-content-end"><div class="status-circle"></div></div>
 
                     </div>
-                    <div class="row mt-3 mb-3">
-                        <div class="col-12 fw-100 fc-black fs-16 text-start">#@practice.DoctorId.ToString().Substring(0, Math.Min(6, practice.DoctorId.ToString().Length)), @practice.Doctor?.FirstName @practice.Doctor?.LastName</div>
+                    <div class="row mt-4">
+
+                        <div class="col-8 fc-black fs-16 fw-400 text-start">
+                       
+                             @practice.Doctor?.FirstName @practice.Doctor?.LastName
+                           
+                        </div>
+                        <div class="col-4 fc-black fs-16 fw-400 text-end">
+
+                            #@practice.DoctorId.ToString().Substring(0, Math.Min(6, practice.DoctorId.ToString().Length))
+                        </div>
+
+                      
 
                     </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-12 fc-black fs-16 fw-100 text-start"> @practice.FullAddress</div>
+
+
+                    </div>
+
+                    <div class="registration-separator"></div>
+
+                   
                     <div class="row">
-                        <div class="col-5 fs-16 fw-100 fc-grey text-start"> @practice.MondayStart - @practice.MondayEnd</div>
+                        <div class="col-5 fs-16 fw-100 fc-grey text-start">@practice.RegistrationDate.ToString("dd-MM-yyyy")</div>
                         <div class="col-7 text-end">
                             <a class="fs-16 fw-100 fc-blue text-decoration-none" sp-controller="Admin" asp-action="PracticeInfoPage" asp-route-id="@practice.Id">Λεπτομέρειες</a>
                         </div>
                     </div>
+
                 </li>
 
             }

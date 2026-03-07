@@ -22,6 +22,37 @@
         <!-- ===================== PATIENT FORM ===================== -->
         <form asp-controller="Auth" asp-action="PatientRegister" id="register-form-patient" method="post" class="register-form">
             <div class="mb-3">
+                <label class="form-label register-label">Φύλο:</label>
+
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="1"
+                               id="genderMalePatient"
+                               required>
+
+                        <label class="form-check-label" for="genderMalePatient">
+                            Άντρας
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="2"
+                               id="genderFemalePatient">
+
+                        <label class="form-check-label" for="genderFemalePatient">
+                            Γυναίκα
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
                 <label class="form-label register-label" for="firstNamePatient">Όνομα:</label>
                 <input asp-for="FirstName" type="text"
                        class="form-control register-input" aria-label="Όνομα"
@@ -33,6 +64,16 @@
                 <input asp-for="LastName" type="text"
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label">Ημερομηνία Γέννησης:</label>
+
+                <input asp-for="BirthDate"
+                       type="date"
+                       class="form-control register-input"
+                       aria-label="Ημερομηνία Γέννησης"
+                       required />
             </div>
 
             <div class="mb-3">
@@ -110,10 +151,54 @@
 
             <div class="form-error mt-3 d-none" id="patientFormError"></div>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div class="login-separator"><span>ή</span></div>
+
+
+            <a asp-controller="Auth" asp-action="GoogleRegisterPatient" class="mt-4 btn google-auth">
+                <svg height="1em" style="flex:none;line-height:1" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M23 12.245c0-.905-.075-1.565-.236-2.25h-10.54v4.083h6.186c-.124 1.014-.797 2.542-2.294 3.569l-.021.136 3.332 2.53.23.022C21.779 18.417 23 15.593 23 12.245z" fill="#4285F4"></path><path d="M12.225 23c3.03 0 5.574-.978 7.433-2.665l-3.542-2.688c-.948.648-2.22 1.1-3.891 1.1a6.745 6.745 0 01-6.386-4.572l-.132.011-3.465 2.628-.045.124C4.043 20.531 7.835 23 12.225 23z" fill="#34A853"></path><path d="M5.84 14.175A6.65 6.65 0 015.463 12c0-.758.138-1.491.361-2.175l-.006-.147-3.508-2.67-.115.054A10.831 10.831 0 001 12c0 1.772.436 3.447 1.197 4.938l3.642-2.763z" fill="#FBBC05"></path><path d="M12.225 5.253c2.108 0 3.529.892 4.34 1.638l3.167-3.031C17.787 2.088 15.255 1 12.225 1 7.834 1 4.043 3.469 2.197 7.062l3.63 2.763a6.77 6.77 0 016.398-4.572z" fill="#EB4335"></path></svg>
+                Εγγραφή με Google
+            </a>
         </form>
+
 
         <!-- ===================== DOCTOR FORM ===================== -->
         <form asp-controller="Auth" asp-action="DoctorRegister" id="register-form-doctor" method="post" class="register-form d-none">
+
+
+
+           <div class="mb-3">
+    <label class="form-label register-label">Φύλο:</label>
+
+    <div class="d-flex gap-3">
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="radio"
+                   asp-for="Gender"
+                   value="1"
+                   id="genderMaleDoctor"
+                   required>
+
+            <label class="form-check-label" for="genderMaleDoctor">
+                Άντρας
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="radio"
+                   asp-for="Gender"
+                   value="2"
+                   id="genderFemaleDoctor">
+
+            <label class="form-check-label" for="genderFemaleDoctor">
+                Γυναίκα
+            </label>
+        </div>
+    </div>
+</div>
+            
             <div class="mb-3">
                 <label class="form-label register-label" for="firstNameDoctor">Όνομα:</label>
                 <input asp-for="FirstName" type="text"
@@ -127,6 +212,17 @@
                        class="form-control register-input" aria-label="Επώνυμο"
                        autocomplete="family-name" required />
             </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label">Ημερομηνία Γέννησης:</label>
+
+                <input asp-for="BirthDate"
+                       type="date"
+                       class="form-control register-input"
+                       aria-label="Ημερομηνία Γέννησης"
+                       required />
+            </div>
+
 
             <!-- Specialization searchable dropdown (search inside dropdown) -->
             <div class="mb-3">
@@ -264,6 +360,19 @@
                 Αίτηση εγγραφής ως ιατρός
             </button>
 
+
+            <div class="login-separator"><span>ή</span></div>
+
+
+            <a asp-controller="Auth" asp-action="GoogleRegisterDoctor" class="mt-4 btn google-auth">
+                <svg height="1em" style="flex:none;line-height:1" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M23 12.245c0-.905-.075-1.565-.236-2.25h-10.54v4.083h6.186c-.124 1.014-.797 2.542-2.294 3.569l-.021.136 3.332 2.53.23.022C21.779 18.417 23 15.593 23 12.245z" fill="#4285F4"></path><path d="M12.225 23c3.03 0 5.574-.978 7.433-2.665l-3.542-2.688c-.948.648-2.22 1.1-3.891 1.1a6.745 6.745 0 01-6.386-4.572l-.132.011-3.465 2.628-.045.124C4.043 20.531 7.835 23 12.225 23z" fill="#34A853"></path><path d="M5.84 14.175A6.65 6.65 0 015.463 12c0-.758.138-1.491.361-2.175l-.006-.147-3.508-2.67-.115.054A10.831 10.831 0 001 12c0 1.772.436 3.447 1.197 4.938l3.642-2.763z" fill="#FBBC05"></path><path d="M12.225 5.253c2.108 0 3.529.892 4.34 1.638l3.167-3.031C17.787 2.088 15.255 1 12.225 1 7.834 1 4.043 3.469 2.197 7.062l3.63 2.763a6.77 6.77 0 016.398-4.572z" fill="#EB4335"></path></svg>
+                Εγγραφή με Google
+            </a>
+
+
+
+
+
             <p class="register-info mt-3 mb-5">
                 Θα ενημερωθείτε για την εξέληξη του αιτήματος μέσω email μόλις ελεγχθεί από το σύστημα
             </p>
@@ -276,7 +385,7 @@
 
         @if (TempData["ErrorMessage"] != null)
         {
-            <div class="mt-5 alert alert-danger">
+            <div class="mt-4 alert alert-danger">
                 @TempData["ErrorMessage"]
             </div>
         }

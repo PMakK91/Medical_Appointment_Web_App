@@ -7,7 +7,8 @@
 
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
-        <p class="subtitle mb-5">Πληροφορίες Ραντεβού</p>
+        <h1 class="title mb-2">Προεπισκόπηση Ραντεβού</h1>
+        <p class="subtitle mb-5">Πατήστε το κουμπί "Επιβεβαίωση" για να ολοκληρώσετε την κράτηση</p>
 
         <div class="registration-info mx-auto">
 
@@ -25,7 +26,7 @@
 
             <div class="row">
                 <div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Practice?.PlaceId
+                    @Model.Practice?.FullAddress
                 </div>
             </div>
 
@@ -50,10 +51,10 @@
                      stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
                     <path d="M20 6 L9 17 L4 12"></path>
                 </svg>
-                Αποδοχή
+                Επιβεβαίωση
             </button>
         </form>
-        <form asp-controller="Appointment" asp-action="RejectAppointment">
+       <!-- <form asp-controller="Appointment" asp-action="RejectAppointment">
             <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2"
@@ -64,7 +65,7 @@
                 Απόρριψη
             </button>
         </form>
-
+         -->
 
     </div>
 </div>

@@ -54,11 +54,9 @@ namespace MedicalAppointmentWebApp.Services
                 if (errorMessage != null) return errorMessage;
             }
 
-            if (request.Bio != null)
-            {
-                doctor.Bio = request.Bio;
-                await doctorRepository.SaveAsync();
-            }
+            doctor.Bio = request.Bio ?? "";
+            await doctorRepository.SaveAsync();
+            
 
             return null;
         }
