@@ -18,10 +18,9 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(registrationForms);
         }
 
-        public async Task<IActionResult> AcceptRegistrationAsync(DoctorRegistrationReviewVeiwModel model)
+        public async Task<IActionResult> AcceptRegistrationAsync(Guid id)
         {
-            Doctor? doctor = await adminService.AcceptRegistrationAsync(model.DoctorId);
-
+            Doctor? doctor = await adminService.AcceptRegistrationAsync(id);
             if (doctor is null)
             {
                 return BadRequest("Doctor not found");
@@ -45,7 +44,6 @@ namespace MedicalAppointmentWebApp.Controllers
         public async Task<IActionResult> RegistrationInfoPageAsync(Guid id)
         {
             Doctor? doctor = await adminService.ViewRegistrationAsync(id);
-
             if (doctor is null)
             {
                 return BadRequest("Doctor not found");

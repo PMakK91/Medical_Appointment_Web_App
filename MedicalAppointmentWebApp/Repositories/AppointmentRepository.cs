@@ -7,6 +7,11 @@ namespace MedicalAppointmentWebApp.Repositories
 {
     public class AppointmentRepository(AppDbContext context) : IAppointmentRepository, IDisposable
     {
+        public async Task<Appointment?> GetAppointmentByIdAsync(Guid id)
+        {
+            return await context.Appointments.Include(a => a.Practice).Include(a => a.Patient).Include(a => a.Doctor).FirstOrDefaultAsync(a => a.Id == id);
+        }
+
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {
             return await context.Appointments.Include(a => a.Practice).Include(a => a.Doctor).Where(a => a.PatientId == patientId).ToListAsync();

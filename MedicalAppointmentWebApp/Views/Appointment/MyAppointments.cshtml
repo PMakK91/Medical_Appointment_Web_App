@@ -4,6 +4,7 @@
     ViewData["Title"] = "Τα Ραντεβού μου";
     Layout = "_Layout";
 }
+
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
         <h1 class="title mb-2">Τα Ραντεβού μου</h1>
@@ -76,7 +77,7 @@
                                 </a>
                             </div>
                             <div class="col-sm-4 col-xs-12 text-end p-1">
-                                <a class=" btn primary-btn " sp-controller="Admin" asp-action="apInfoPage" asp-route-id="@ap.Id">Λεπτομέριες</a>
+                                <a class=" btn primary-btn " asp-controller="Appointment" asp-action="Index" asp-route-id="@ap.Id">Λεπτομέριες</a>
                             </div>
                         </div>
 

@@ -9,6 +9,12 @@ namespace MedicalAppointmentWebApp.Services
         IDoctorRepository doctorRepository,
         IUserRepository userRepository) : IAppointmentService
     {
+
+        public async Task<Appointment?> GetAppointmentByIdAsync(Guid id)
+        {
+            return await appointmentRepository.GetAppointmentByIdAsync(id);
+        }
+
         public async Task<AppointmentRequestViewModel?> GetPracticeById(Guid practiceId, AppointmentRequestViewModel request)
         {
             Practice? practice = await practiceRepository.GetPracticeByIdAsync(practiceId);
