@@ -913,32 +913,211 @@ $(function () {
 
 });
 
-
-/*******EDIT PROFILE *********/
+/******* EDIT PROFILE *********/
 
 const wrapper = document.querySelector(".image-wrapper");
 const input = document.getElementById("imageInput");
 const preview = document.getElementById("previewImage");
 
-wrapper.addEventListener("click", () => input.click());
+if (wrapper && input) {
+    wrapper.addEventListener("click", () => input.click());
+}
 
-input.addEventListener("change", function () {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = e => preview.src = e.target.result;
-        reader.readAsDataURL(file);
-    }
-});
+if (input) {
+    input.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file && preview) {
+            const reader = new FileReader();
+            reader.onload = e => preview.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    });
+}
 
 const textarea = document.getElementById("bioInput");
 
 function autoResize() {
+    if (!textarea) return;
+
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
 }
 
-textarea.addEventListener("input", autoResize);
+if (textarea) {
+    textarea.addEventListener("input", autoResize);
+    window.addEventListener("load", autoResize);
+}
 
-// run on page load
-window.addEventListener("load", autoResize);
+
+
+/******** GOOGLE PLACES ************/
+
+        window.initOfficeAddressAutocomplete = async function () {
+    console.log("Initializing custom Office Address Autocomplete");
+
+    const wrapper = document.querySelector(".address-autocomplete");
+    const input = document.getElementById("officeAddress");
+    const suggestionsEl = document.getElementById("officeSuggestions");
+
+    if (!wrapper || !input || !suggestionsEl) {
+        console.log("Address autocomplete elements not found, skipping");
+        return;
+    }
+
+    if (input.dataset.autocompleteInitialized === "true") {
+        return;
+    }
+
+    input.dataset.autocompleteInitialized = "true";
+
+    const { AutocompleteSuggestion, AutocompleteSessionToken } =
+        await google.maps.importLibrary("places");
+
+    let autocompleteToken = new AutocompleteSessionToken();
+    let currentSuggestions = [];
+    let activeIndex = -1;
+    let debounceTimer = null;
+
+    function resetSession() {
+        autocompleteToken = new AutocompleteSessionToken();
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function clearSuggestions() {
+        currentSuggestions = [];
+        activeIndex = -1;
+        suggestionsEl.innerHTML = "";
+        suggestionsEl.hidden = true;
+    }
+
+    function updateActiveItem() {
+        const items = suggestionsEl.querySelectorAll(".suggestion-item");
+        items.forEach(function (item, idx) {
+            item.classList.toggle("active", idx === activeIndex);
+        });
+    }
+
+    function renderSuggestions(suggestions) {
+        currentSuggestions = suggestions || [];
+        activeIndex = -1;
+        suggestionsEl.innerHTML = "";
+
+        if (!currentSuggestions.length) {
+            clearSuggestions();
+            return;
+        }
+
+        currentSuggestions.forEach(function (suggestion, index) {
+            const prediction = suggestion.placePrediction;
+            const text = prediction.text?.toString?.() || "";
+            const secondaryText =
+                prediction.structuredFormat?.secondaryText?.text || "";
+
+            const item = document.createElement("div");
+            item.className = "suggestion-item";
+            item.dataset.index = index;
+
+            item.innerHTML =
+                '<div class="suggestion-main">' + escapeHtml(text) + '</div>' +
+                (secondaryText
+                    ? '<div class="suggestion-secondary">' + escapeHtml(secondaryText) + '</div>'
+                    : '');
+
+            item.addEventListener("mousedown", async function (e) {
+                e.preventDefault();
+                await selectSuggestion(index);
+            });
+
+            suggestionsEl.appendChild(item);
+        });
+
+        suggestionsEl.hidden = false;
+    }
+
+    async function fetchSuggestions(query) {
+        if (!query || !query.trim()) {
+            clearSuggestions();
+            return;
+        }
+
+        const response =
+            await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+                input: query,
+                sessionToken: autocompleteToken
+            });
+
+        renderSuggestions(response.suggestions || []);
+    }
+
+    async function selectSuggestion(index) {
+        const suggestion = currentSuggestions[index];
+        if (!suggestion) return;
+
+        const place = suggestion.placePrediction.toPlace();
+
+        await place.fetchFields({
+            fields: ["formattedAddress", "location", "addressComponents"]
+        });
+
+        const formattedAddress = place.formattedAddress || "";
+        const lat = place.location?.lat?.() ?? "";
+        const lng = place.location?.lng?.() ?? "";
+
+        input.value = formattedAddress;
+
+        const fullAddressEl = document.getElementById("FullAddress");
+        const latEl = document.getElementById("Lat");
+        const lonEl = document.getElementById("Lon");
+
+        if (fullAddressEl) fullAddressEl.value = formattedAddress;
+        if (latEl) latEl.value = lat;
+        if (lonEl) lonEl.value = lng;
+
+        clearSuggestions();
+        resetSession();
+    }
+
+    input.addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function () {
+            fetchSuggestions(input.value).catch(console.error);
+        }, 250);
+    });
+
+    input.addEventListener("keydown", async function (e) {
+        if (suggestionsEl.hidden) return;
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            activeIndex = Math.min(activeIndex + 1, currentSuggestions.length - 1);
+            updateActiveItem();
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            activeIndex = Math.max(activeIndex - 1, 0);
+            updateActiveItem();
+        } else if (e.key === "Enter") {
+            if (activeIndex >= 0) {
+                e.preventDefault();
+                await selectSuggestion(activeIndex);
+            }
+        } else if (e.key === "Escape") {
+            clearSuggestions();
+        }
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".address-autocomplete")) {
+            clearSuggestions();
+        }
+    });
+
+    resetSession();
+};

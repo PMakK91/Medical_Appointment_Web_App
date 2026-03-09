@@ -43,7 +43,7 @@
 
 
             <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ημ/νία Γέννησης</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Doctor.BirthDate</div>
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ημ/νία Γέννησης</div> <div class="text-start fc-black fs-16 fw-100 col-6">@Model.Doctor.BirthDate.ToString()</div>
             </div>
          
 
@@ -67,8 +67,8 @@
     </div>
 
 <form asp-controller="Admin" asp-action="AcceptRegistration" asp-route-id="@Model.Doctor.Id">
-
-    <button class="mx-auto btn btn-primary w-100 primary-btn mt-5" >
+            <input asp-for="@Model.DoctorId" value="@Model.Doctor!.Id" type="hidden" />
+    <button class="mx-auto btn btn-primary w-100 primary-btn mt-3" >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
@@ -77,10 +77,13 @@
         Αποδοχή
     </button>
 </form>
-<form asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Doctor.Id">
+        <div class="login-separator"><span>ή</span></div>
+
+        <form asp-controller="Admin" asp-action="RejectRegistration" asp-route-id="@Model.Doctor.Id" class="mt-5 login-form mb-5">
             <input asp-for="@Model.DoctorId" value="@Model.Doctor!.Id" type="hidden" />
-            <input type="text" asp-for="Reason" aria-label="Reason" />
-    <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
+            <label class="form-label login-label" for="Reason">Λόγος απόρριψης:</label>
+            <input type="text" asp-for="Reason" aria-label="Reason" class="form-control login-input" />
+    <button class="mx-auto btn btn-primary w-100 primary-btn mt-3">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">

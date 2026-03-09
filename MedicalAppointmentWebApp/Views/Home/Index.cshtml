@@ -4,47 +4,6 @@
     ViewData["Title"] = "Αρχική Σελίδα";
 }
 
-<!--- GOOGLE MAPS API ----->
-<script>
-    async function init() {
-        await google.maps.importLibrary("places");
-
-        // MUST match the element id in the HTML
-        const widget = document.getElementById("officeAddress");
-        if (!widget) return;
-
-            widget.addEventListener("gmp-select", async (event) => {
-        const place = event.placePrediction.toPlace();
-
-        await place.fetchFields({
-            fields: ["id", "formattedAddress", "location", "addressComponents"]
-        });
-
-        const lat = place.location?.lat?.() ?? "";
-        const lng = place.location?.lng?.() ?? "";
-
-        let city = "";
-
-        place.addressComponents?.forEach(component => {
-            if (component.types.includes("locality")) {
-                city = component.longText;
-            }
-        });
-
-        document.getElementById("FullAddress").value = place.formattedAddress || "";
-        document.getElementById("Lat").value = lat;
-        document.getElementById("Lon").value = lng;
-    });
-    }
-
-    window.init = init;
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&libraries=places&v=beta&callback=init&loading=async"
-        async
-        defer>
-</script>
-<!--- /GOOGLE MAPS API ----->
 
 <div class="wrapper d-flex">
     <div class="mx-auto w-100">
@@ -62,12 +21,24 @@
             </div>
 
             <div class="position-relative mt-1">
-                @* <svg class="position-absolute top-50 start-0 translate-middle-y ms-3" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="pointer-events: none;">
-                    <path fill="#757575" fill-rule="evenodd" clip-rule="evenodd" d="M12 21.75L11.3 21.05C7.5 17.25 4 13.8 4 10.2C4 5.67 7.58 2 12 2C16.42 2 20 5.67 20 10.2C20 13.8 16.5 17.25 12.7 21.05L12 21.75ZM12 4C8.69 4 6 6.78 6 10.2C6 13.1 9 16.15 12 19.25C15 16.15 18 13.1 18 10.2C18 6.78 15.31 4 12 4ZM12 13C13.66 13 15 11.66 15 10C15 8.34 13.66 7 12 7C10.34 7 9 8.34 9 10C9 11.66 10.34 13 12 13ZM12 11C12.55 11 13 10.55 13 10C13 9.45 12.55 9 12 9C11.45 9 11 9.45 11 10C11 10.55 11.45 11 12 11Z" />
-                </svg> *@
 
-                @* <input type="text" asp-for="FullAddress" aria-label="Τοποθεσία" placeholder="Τοποθεσία" class="form-control search-input ps-5" /> *@
-                <gmp-place-autocomplete id="officeAddress"></gmp-place-autocomplete>
+                <div class="address-autocomplete" id="address-autocomplete">
+                    <div class="input-wrap">
+                        <div class="pin-icon" aria-hidden="true">
+                            <svg class="position-absolute top-50 start-0 translate-middle-y ms-3" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="pointer-events: none;">
+                                <path fill="#757575" fill-rule="evenodd" clip-rule="evenodd" d="M12 21.75L11.3 21.05C7.5 17.25 4 13.8 4 10.2C4 5.67 7.58 2 12 2C16.42 2 20 5.67 20 10.2C20 13.8 16.5 17.25 12.7 21.05L12 21.75ZM12 4C8.69 4 6 6.78 6 10.2C6 13.1 9 16.15 12 19.25C15 16.15 18 13.1 18 10.2C18 6.78 15.31 4 12 4ZM12 13C13.66 13 15 11.66 15 10C15 8.34 13.66 7 12 7C10.34 7 9 8.34 9 10C9 11.66 10.34 13 12 13ZM12 11C12.55 11 13 10.55 13 10C13 9.45 12.55 9 12 9C11.45 9 11 9.45 11 10C11 10.55 11.45 11 12 11Z" />
+                            </svg>
+                        </div>
+                        <input id="officeAddress"
+                               type="text"
+                               placeholder="Τοποθεσία"
+                               autocomplete="off" />
+                    </div>
+
+                    <div id="officeSuggestions" class="suggestions" hidden></div>
+                </div>
+
+
 
                 <input type="hidden" asp-for="FullAddress" id="FullAddress" />
                 <input type="hidden" asp-for="Lat" id="Lat" />

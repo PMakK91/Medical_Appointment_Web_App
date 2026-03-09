@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,7 +107,18 @@ builder.Services
     .AddControllersWithViews()
     .AddRazorRuntimeCompilation();
 
+var culture = CultureInfo.InvariantCulture;
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(culture);
+    options.SupportedCultures = new[] { culture };
+    options.SupportedUICultures = new[] { new CultureInfo("el-GR"), culture };
+});
+
+
 var app = builder.Build();
+app.UseRequestLocalization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
