@@ -43,8 +43,8 @@
                     <div class="row mt-3 mb-3">
 
 
-                        <gmp-map style="height:200px;" center="@practice.Lat,@practice.Lon" zoom="15" map-id="@practice.Id">
-                            <gmp-advanced-marker position="@practice.Lat,@practice.Lon" title=""></gmp-advanced-marker>
+                        <gmp-map style="height:200px;" center="@practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" zoom="15" map-id="@practice.Id">
+                            <gmp-advanced-marker position="@practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" title=""></gmp-advanced-marker>
 
                         </gmp-map>
 
