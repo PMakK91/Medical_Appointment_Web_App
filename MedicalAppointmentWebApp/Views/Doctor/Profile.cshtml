@@ -6,9 +6,14 @@
     Layout = "_Layout";
 }
 
+<!---GOOGLE MAPS API ----->
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<!-------------->
+
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
-        <img class="doctor-profile-img" src="" alt=""/>
+        <img class="doctor-profile-img" src="/Images/@Model.ImageUrl" alt="" />
         <h1 class="title mb-2">@Model.FirstName @Model.LastName</h1>
         <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
         @if (!string.IsNullOrEmpty(Model.Bio))
@@ -16,54 +21,74 @@
             <p class="fc-black fs-16 fw-100">@Model.Bio</p>
         }
 
-    @if (Model.Practices != null && Model.Practices.Any())
-    {
-        <div class="office-tabs mt-5">
-            @{
-                bool firstTab = true;
-            }
-            @foreach (var practice in Model.Practices)
-            {
-                @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+        @if (Model.Practices != null && Model.Practices.Any())
+        {
+            <div class="office-tabs mt-5">
+                @{
+                    bool firstTab = true;
+                }
+                @foreach (var practice in Model.Practices)
                 {
-                    <button type="button"
-                            class="office-tab @(firstTab ? "active" : "")"
-                            data-office-id="@practice.Id"
-                            onclick="showOffice('@practice.Id')">
+                    @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                    {
+                        <button type="button"
+                                class="office-tab @(firstTab ? "active" : "")"
+                                data-office-id="@practice.Id"
+                                onclick="showOffice('@practice.Id')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                  aria-hidden="true">
                                 <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
                                 <circle cx="12" cy="10" r="3" />
                             </svg>
-                        @practice.FullAddress
-                    </button>
-        
+                            @practice.FullAddress
+                        </button>
+
+                        firstTab = false;
+                    }
+                }
+            </div>
+
+            {
+                firstTab = true;
+            }
+
+            @foreach (var practice in Model.Practices)
+            {
+                @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                {
+
+
+
+
+                    <div class="office-panel"
+                         id="office-@practice.Id"
+                         style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
+
+
+
+                        <gmp-map style="height:200px; height: 200px;
+                width: 82%;
+                margin: auto;" center="@practice.Lat,@practice.Lon" zoom="15" map-id="@practice.Id">
+                            <gmp-advanced-marker position="@practice.Lat,@practice.Lon" title=""></gmp-advanced-marker>
+
+                        </gmp-map>
+
+                         <h2 class="mt-5 mb-3 fc-black fw-400 fs-16">Τηλέφωνο Επικοινωνίας</h2>
+                        <p class="fc-black fw-100 fs-16">  @practice.Phone</p>
+
+                        <h2 class="mt-5 mb-3 fc-black fw-400 fs-16">Διαθεσιμότητα</h2>
+                        <div class="available-hours">
+                            <button class="nav-btn nav-left" aria-label="Scroll left">‹</button>
+                            <div class="schedule-wrap mt-3">
+                            </div>
+
+                            <button class="nav-btn nav-right" aria-label="Scroll right">›</button>
+                        </div>
+                    </div>
                     firstTab = false;
                 }
             }
-        </div>
-
-        {
-            firstTab = true;
         }
-
-        @foreach (var practice in Model.Practices)
-        {
-            @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
-            {
-                <div class="office-panel"
-                     id="office-@practice.Id"
-                     style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
-
-                        <div class="schedule-wrap d-flex justify-content-center mt-3">
-
-                    </div>
-                </div>
-                
-                firstTab = false;
-            }
-        }
-    }
     </div>
 </div>

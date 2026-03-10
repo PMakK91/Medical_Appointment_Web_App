@@ -1,66 +1,32 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.WeekScheduleViewModel
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.AvailableSlotsViewModel
 
+@using System.Globalization
+@foreach (var dayEntry in Model.Slots.OrderBy(x => x.Key))
+{
+    var day = dayEntry.Key;
+    var daySlots = dayEntry.Value;
+    if (daySlots.Any())
+    {
+        <div class="day-col">
+            <div class="day-head">
+                <div class="day-name fs-14"> @day.ToString("dddd", new CultureInfo("el-GR"))</div>
+                <div class="day-date fs-14">@day.ToString("dd/MM/yyyy")</div>
+            </div>
 
-<button class="nav-btn" type="button"onclick="scrollDays(-7, '@Model.Practice.Id')"> 
-    &#x2039 Προηγούμενη εβδομάδα
-</button>
-
-<div id="schedule-@Model.Practice.Id" style="display:block">
-    
-    <div id="daysScroller-@Model.Practice.Id" class="days-scroller" data-startdate="@Model.WeekStartDate.ToString("yyyy-MM-dd")">
-
-        @{
-            bool isEmpty = true;
-        }
-        @for (int dayInd = 0; dayInd < Model.Slots.Length; dayInd++)
-        {
-            @if (Model.Slots[dayInd].Any())
-            {
-                var day = @Model.WeekStartDate.AddDays(dayInd);
-                var isSelected = day.Date == Model.WeekStartDate.Date;
-
-                <div class="day-col @(isSelected ? "selected" : "")">
-                    <div class="day-head">
-                        <div class="day-name fs-14">@day.DayOfWeek.ToString()</div>
-                        <div class="day-date fs-16">@day.Date.ToString("dd/MM/yyyy")</div>
-                    </div>
-
-                    <div class="slots">
-                        @if (Model.Slots[dayInd].Any())
-                        {
-                            isEmpty = false;
-                            foreach (var slot in Model.Slots[dayInd])
+            <div class="slots">
+                @foreach (var slot in daySlots)
+                {
+                    <button class="slot-btn"
+                            type="button"
+                            onclick="window.location.href='@Url.Action("VerifyAppointment", "Appointment", new MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel
                             {
-                                if (!slot.IsBooked)
-                                {
-                                    <button class="slot-btn" type="button"
-                                            onclick="window.location.href='@Url.Action("VerifyAppointment", "Appointment", new MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel { 
-                                                    PracticeId = Model.Practice.Id, 
-                                                    Time = slot.Start })'">
-                                        @slot.Start.ToString("HH:mm")
-                                    </button>
-                                }
-                            }
-                        }
-                        else
-                        {
-                            <div class="no-slots">—</div>
-                        }
-                    </div>
-                </div>
-            }
-        }
-
-        @if (isEmpty)
-        {
-            <p class="fs-14 fw-100">Δεν υπάρχουν διαθέσιμα ραντεβού από @Model.WeekStartDate.ToString("dd-MM-yyyy") εώς @Model.WeekStartDate.AddDays(7).ToString("dd-MM-yyyy")</p>
-        }
-    </div>
-
-   
-</div>
-
-
- <button class="nav-btn" type="button" onclick="scrollDays(7, '@Model.Practice.Id')">
-    Επόμενη εβδομάδα &#x203A;
-</button>
+                                PracticeId = Model.Practice.Id,
+                                Time = slot.Start
+                            })'">
+            @slot.Start.ToString("HH:mm")
+        </button>
+                }
+            </div>
+        </div>
+    }
+}

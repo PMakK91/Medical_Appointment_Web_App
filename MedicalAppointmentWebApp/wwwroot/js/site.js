@@ -236,26 +236,37 @@
         }
     });
 });
-/****** WEEK SCROLLER *******/
+
+
+
+/****** DAY SCROLLER *******/
 function showOffice(officeId) {
-    document.querySelectorAll(".office-panel").forEach(p => p.style.display = "none");
+    document.querySelectorAll(".office-panel").forEach(panel => {
+        panel.style.display = "none";
+    });
 
     const panel = document.getElementById("office-" + officeId);
-    if (panel) panel.style.display = "block";
+    if (panel) {
+        panel.style.display = "block";
+        loadOffice(officeId);
+    }
 
-    document.querySelectorAll(".office-tab").forEach(b => {
-        b.classList.toggle("active", b.dataset.officeId == officeId);
+    document.querySelectorAll(".office-tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.officeId == officeId);
     });
 }
 
-function loadOffice(practiceId, weekStart = null) {
+function loadOffice(practiceId) {
     const officePanel = $("#office-" + practiceId);
-    const scheduleWrap = officePanel.find(".schedule-wrap");
 
-    let url = `/Practice/AvailableTimeSlots?Id=${practiceId}`;
-    if (weekStart) {
-        url += `&weekStart=${weekStart}`;
-    }
+    if (!officePanel.length) return;
+
+    const scheduleWrap = officePanel.find(".schedule-wrap");
+    const alreadyLoaded = officePanel.data("loaded");
+
+    if (alreadyLoaded) return;
+
+    const url = `/Practice/AvailableTimeSlotsAll?practiceId=${practiceId}`;
 
     scheduleWrap.load(url, function () {
         officePanel.data("loaded", true);
@@ -272,13 +283,13 @@ $(document).ready(function () {
 
     const observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
-            if (mutation.attributeName === "style") {
-                const element = $(mutation.target);
+            if (mutation.attributeName !== "style") return;
 
-                if (element.is(":visible")) {
-                    const practiceId = element.attr("id").replace("office-", "");
-                    loadOffice(practiceId);
-                }
+            const element = $(mutation.target);
+
+            if (element.is(":visible")) {
+                const practiceId = element.attr("id").replace("office-", "");
+                loadOffice(practiceId);
             }
         });
     });
@@ -288,45 +299,39 @@ $(document).ready(function () {
     });
 });
 
-function scrollDays(direction, practiceId) {
-    const container = document.querySelector(`#daysScroller-${practiceId}`);
-    const officePanel = document.querySelector(`#office-${practiceId}`);
-    const scheduleWrap = officePanel ? officePanel.querySelector(".schedule-wrap") : null;
 
-    if (!container || !scheduleWrap) return;
+// carousel
 
-    const startDateStr = container.dataset.startdate;
-    const startDate = new Date(startDateStr);
-    startDate.setDate(startDate.getDate() + direction);
+document.addEventListener("DOMContentLoaded", function () {
 
-    const year = startDate.getFullYear();
-    const month = String(startDate.getMonth() + 1).padStart(2, "0");
-    const day = String(startDate.getDate()).padStart(2, "0");
-    const newDate = `${year}-${month}-${day}`;
+    document.querySelectorAll(".available-hours").forEach(container => {
 
-    scheduleWrap.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-    scheduleWrap.style.transform = `translateX(${direction * -10}px)`;
-    scheduleWrap.style.opacity = "0";
+        const schedule = container.querySelector(".schedule-wrap");
+        const leftBtn = container.querySelector(".nav-left");
+        const rightBtn = container.querySelector(".nav-right");
 
-    setTimeout(() => {
-        fetch(`/Practice/AvailableTimeSlots?Id=${practiceId}&weekStart=${newDate}`)
-            .then(response => response.text())
-            .then(html => {
-                scheduleWrap.innerHTML = html;
+        function getScrollAmount() {
+            return container.clientWidth; 
+        }
 
-                scheduleWrap.style.transition = "none";
-                scheduleWrap.style.transform = `translateX(${direction * 10}px)`;
-                scheduleWrap.style.opacity = "0";
+        rightBtn.addEventListener("click", () => {
+            schedule.scrollBy({
+                left: getScrollAmount(),
+                behavior: "smooth"
+            });
+        });
 
-                void scheduleWrap.offsetWidth;
+        leftBtn.addEventListener("click", () => {
+            schedule.scrollBy({
+                left: -getScrollAmount(),
+                behavior: "smooth"
+            });
+        });
 
-                scheduleWrap.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-                scheduleWrap.style.transform = "translateX(0)";
-                scheduleWrap.style.opacity = "1";
-            })
-            .catch(err => console.error("Schedule load error:", err));
-    }, 200);
-}
+    });
+
+});
+/********************** CALENDAR ************************/
 /********************** CALENDAR ************************/
 
 const officeCalendarState = {};

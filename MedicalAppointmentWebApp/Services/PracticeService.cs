@@ -89,6 +89,20 @@ namespace MedicalAppointmentWebApp.Services
 
             return await BuildWeekScheduleAsync(practice, StartOfWeek((DateTime)weekStart));
         }
+        public async Task<AvailableSlotsViewModel?> GetPracticeAvailableSlotsAsync(Guid id)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+
+            DateTime startDate = DateTime.Now;
+            
+
+            return await BuildCalendarAsync(practice, startDate);
+        }
+
 
         private async Task<WeekScheduleViewModel> BuildWeekScheduleAsync(Practice practice, DateTime weekStart)
         {
@@ -101,8 +115,8 @@ namespace MedicalAppointmentWebApp.Services
                 slots[day] = new List<TimeSlotViewModel>();
 
                 DateTime currentDay = weekStart.AddDays(day);
-                
-                if (currentDay.Date < DateTime.UtcNow.Date) 
+
+                if (currentDay.Date < DateTime.UtcNow.Date)
                     continue;
 
                 TimeSpan? shiftStart = currentDay.DayOfWeek switch
@@ -161,6 +175,94 @@ namespace MedicalAppointmentWebApp.Services
             {
                 Practice = practice,
                 WeekStartDate = weekStart,
+                Slots = slots
+            };
+        }
+
+        private async Task<AvailableSlotsViewModel> BuildCalendarAsync(Practice practice, DateTime startDate)
+        {
+            DateTime rangeStart = startDate.Date;
+            DateTime rangeEnd = rangeStart.AddMonths(2);
+
+            IEnumerable<Appointment> appointments =
+                await appointmentRepository.GetAllByPracticeAndTimeFrameAsync(
+                    rangeStart,
+                    rangeEnd,
+                    practice.Id);
+
+            HashSet<DateTime> bookedTimes = appointments
+                .Select(a => a.Time)
+                .ToHashSet();
+
+            var slots = new Dictionary<DateTime, List<TimeSlotViewModel>>();
+
+            for (DateTime currentDay = rangeStart; currentDay < rangeEnd; currentDay = currentDay.AddDays(1))
+            {
+                if (currentDay.Date < DateTime.UtcNow.Date)
+                    continue;
+
+                TimeSpan? shiftStart = currentDay.DayOfWeek switch
+                {
+                    DayOfWeek.Monday => practice.MondayStart,
+                    DayOfWeek.Tuesday => practice.TuesdayStart,
+                    DayOfWeek.Wednesday => practice.WednesdayStart,
+                    DayOfWeek.Thursday => practice.ThursdayStart,
+                    DayOfWeek.Friday => practice.FridayStart,
+                    DayOfWeek.Saturday => practice.SaturdayStart,
+                    DayOfWeek.Sunday => practice.SundayStart,
+                    _ => null
+                };
+
+                TimeSpan? shiftEnd = currentDay.DayOfWeek switch
+                {
+                    DayOfWeek.Monday => practice.MondayEnd,
+                    DayOfWeek.Tuesday => practice.TuesdayEnd,
+                    DayOfWeek.Wednesday => practice.WednesdayEnd,
+                    DayOfWeek.Thursday => practice.ThursdayEnd,
+                    DayOfWeek.Friday => practice.FridayEnd,
+                    DayOfWeek.Saturday => practice.SaturdayEnd,
+                    DayOfWeek.Sunday => practice.SundayEnd,
+                    _ => null
+                };
+
+                if (!shiftStart.HasValue || !shiftEnd.HasValue)
+                    continue;
+
+                DateTime dayStart = currentDay.Date.Add(shiftStart.Value);
+                DateTime dayEnd = currentDay.Date.Add(shiftEnd.Value);
+
+                var daySlots = new List<TimeSlotViewModel>();
+
+                while (dayStart < dayEnd)
+                {
+                    DateTime slotEnd = dayStart.AddMinutes(practice.Duration);
+
+                    if (slotEnd > dayEnd)
+                        break;
+
+                    if (!bookedTimes.Contains(dayStart))
+                    {
+                        daySlots.Add(new TimeSlotViewModel
+                        {
+                            Start = dayStart,
+                            End = slotEnd,
+                            IsBooked = false
+                        });
+                    }
+
+                    dayStart = slotEnd;
+                }
+
+                if (daySlots.Count > 0)
+                {
+                    slots[currentDay.Date] = daySlots;
+                }
+            }
+
+            return new AvailableSlotsViewModel
+            {
+                Practice = practice,
+                StartDate = rangeStart,
                 Slots = slots
             };
         }

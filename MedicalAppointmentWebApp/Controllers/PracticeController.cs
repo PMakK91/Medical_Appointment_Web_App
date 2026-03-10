@@ -53,6 +53,16 @@ namespace MedicalAppointmentWebApp.Controllers
             return RedirectToAction(controllerName: "Practice", actionName: "MyPractices");
         }
 
+        public async Task<IActionResult> AvailableTimeSlotsAllAsync(Guid practiceId)
+        {
+            AvailableSlotsViewModel? availableSlotsViewModel = await practiceService.GetPracticeAvailableSlotsAsync(practiceId);
+            if (availableSlotsViewModel is null)
+            {
+                return BadRequest("Practice was not found.");
+            }
+            return PartialView("_AvailableTimeSlots", availableSlotsViewModel);
+        }
+
         public async Task<IActionResult> AvailableTimeSlotsAsync(Guid id, DateTime? weekStart)
         {
             WeekScheduleViewModel? weekScheduleViewModel = await practiceService.GetPracticeByIdAsync(id, weekStart);
@@ -62,6 +72,7 @@ namespace MedicalAppointmentWebApp.Controllers
             }
             return PartialView("_AvailableTimeSlots", weekScheduleViewModel);
         }
+
 
         [HttpGet("{practiceId:guid}")]
         public async Task<IActionResult> Get(Guid practiceId)
