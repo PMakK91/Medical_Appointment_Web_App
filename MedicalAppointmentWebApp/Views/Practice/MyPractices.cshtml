@@ -1,4 +1,5 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.PracticeSearchViewModel
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.ViewModels.PracticeSearchViewModel
 @{
     ViewData["Title"] = "Ιατρεία";
     Layout = "_Layout";
@@ -36,7 +37,17 @@
                    
 
                         <div class="col-4 d-flex justify-content-end">
-                            <div class="status-circle @(practice.RegistrationStatus == 0 ? "status-orange" : "status-green")"></div>
+                            <div class="status-tag
+                                    @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "tag-green" :
+                                                                        practice.RegistrationStatus == RegistrationFormStatus.Pending ? "tag-orange" :
+                                                                         practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "tag-red" :
+                                                                                                                                         "tag-gray")">
+
+                                @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "Έχει εγκριθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "Έχει απορριφθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Pending ? "Σε εκκρεμότητα" :
+                                                            "Χωρίς κατάσταση")
+                            </div>
                         </div>
 
                     </div>

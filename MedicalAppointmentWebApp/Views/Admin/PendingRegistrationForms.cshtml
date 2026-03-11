@@ -1,4 +1,5 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.ViewModels.DoctorSearchViewModel
 @{
     ViewData["Title"] = "Εκκρεμείς Αιτήσεις Ιατρών";
     Layout = "_Layout";
@@ -35,7 +36,21 @@
                     <div class="row">
 
                         <div class="col-8 fc-blue fs-18 fw-600 text-start">#@doctor.Id.ToString().Substring(0, Math.Min(6, doctor.Id.ToString().Length))</div>
-                        <div class="col-4 d-flex justify-content-end"><div class="status-circle"></div></div>
+                        <div class="col-4 d-flex justify-content-end">
+
+                            <div class="status-tag
+                        @(doctor.RegistrationStatus == RegistrationFormStatus.Accepted ? "tag-green" :
+                                                                                                                 doctor.RegistrationStatus == RegistrationFormStatus.Pending ? "tag-orange" :
+                                                                                                                 doctor.RegistrationStatus == RegistrationFormStatus.Rejected ? "tag-red" :
+                                                                                                                 "tag-gray")">
+
+                                @(doctor.RegistrationStatus == RegistrationFormStatus.Accepted ? "Έχει εγκριθεί" :
+                                                            doctor.RegistrationStatus == RegistrationFormStatus.Rejected ? "Έχει απορριφθεί" :
+                                                            doctor.RegistrationStatus == RegistrationFormStatus.Pending ? "Σε εκκρεμότητα" :
+                                                                                                                                                                                                                                                                            "Χωρίς κατάσταση")
+                            </div>
+
+                        </div>
 
                     </div>
                     <div class="row mt-3 mb-3">

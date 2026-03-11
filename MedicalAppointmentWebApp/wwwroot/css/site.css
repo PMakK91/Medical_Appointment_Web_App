@@ -96,6 +96,10 @@ body {
     font-size: 18px;
 }
 
+.fs-24 {
+    font-size: 24px;
+}
+
 
 .wrapper {
     padding: 16px;
@@ -254,6 +258,7 @@ gmp-place-autocomplete {
         text-decoration: none;
         font-size: 16px;
         font-weight: 400;
+        cursor: pointer;
     }
 
         .login-link:hover, .register-link:hover {
@@ -684,7 +689,7 @@ background: #fff;
 .office-panel {
     border-radius: 12px;
     background: #fff;
-    padding: 58px 0 30px 0;
+    padding: 30px 0 30px 0;
 }
 
 .available-hours {
@@ -753,15 +758,16 @@ background: #fff;
     .schedule-wrap {
         gap: 2%;
     }
+}
     @media screen and (min-width: 1200px) {
         .day-col {
-            min-width: 18.4%;
+            min-width: 18.3%;
         }
 
     }
     @media screen and (min-width: 1400px) {
         .day-col {
-            min-width: 15%;
+            min-width: 18.3%;
         }
     }
 
@@ -773,14 +779,15 @@ background: #fff;
             color: #000000;
             width: 8%;
         }
-    }
-    .day-head {
-        text-align: center;
-        margin-bottom: 20px;
-        background: #f5f5f5;
-        border-radius: 7px;
-        padding: 10px 10px;
-    }
+
+.day-head {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #f5f5f5;
+    border-radius: 7px;
+    padding: 10px 10px;
+    color: #1B1B1B;
+}
 
 
     .slots {
@@ -791,14 +798,15 @@ background: #fff;
         align-items: center;
     }
 
-    .slot-btn {
-        color: #4ea7e7;
-        background: #4ea7e71a;
-        border-radius: 7px;
-        border: 0;
-        width: 100%;
-        padding: 8px 2px;
-    }
+.slot-btn {
+    color: #4ea7e7;
+    background: #4ea7e71a;
+    border-radius: 7px;
+    border: 0;
+    width: 100%;
+    padding: 8px 2px;
+    font-size: 16px;
+}
 
         .slot-btn:hover {
             background: #4ea7e7;
@@ -814,22 +822,57 @@ background: #fff;
  
     /********* DOCTRO PROFILE PAGE *******/
 
+.doctor-profile-info {
+    text-align: left;
+    padding: 32px;
+    background: #ffffff;
+    border-radius: 12px;
+}
 
+.doctor-profile-info .subtitle {
+  margin:0;
+}
 
-.doctor-profile-img {
-    background: #cecece;
-    width: 120px;
-    height: 120px;
-    border-radius: 100%;
-    margin-bottom: 24px;
+.doctor-profile-practices {
+    text-align: left;
+    padding: 32px;
+    background: #ffffff;
+    border-radius: 12px;
+}
+.doctor-profile-practice:not(:last-child) {
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 42px;
+    font-weight: 200;
+    padding-bottom: 50px;
+}
+.doctor-profile-book-appointment {
+    font-size: 18px;
+    color: #fff;
+    background: #4ea7e7;
+    padding: 32px;
+    text-align: left;
+    border-radius: 12px;
 }
 
 
 
-    .office-tabs {
-        display: flex;
-        margin-bottom: -10px;
+    .doctor-profile-img {
+        background: #cecece;
+        width: 120px;
+        height: 120px;
+        border-radius: 100%;
+        margin-bottom: 24px;
     }
+
+
+
+.office-tabs {
+    display: flex;
+    margin-bottom: -10px;
+    margin-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
     .office-tab {
         background: transparent;
@@ -839,7 +882,7 @@ background: #fff;
         padding: 26px;
         font-size: 14px;
         font-weight: 400;
-        color: #CECECE;
+        color: #fff;
         border-radius: 10px 10px 0 0;
         cursor: pointer;
         margin: 4px 0;
@@ -1283,20 +1326,32 @@ background: #fff;
         border-radius: 100%;
     }
 
-    .status-tag {
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px 8px;
-        border-radius: 5px;
-        font-weight: 200;
+/******* STATUS TAGS *********/
+
+.status-tag {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-weight: 200;
+    height: 28px;
+}
+
+    .status-tag.tag-green {
+        background: #cef0cf;
     }
 
-        .status-tag.tag-green {
-            background: #cef0cf;
-        }
+    .status-tag.tag-red {
+        background: #ffe0e0;
+    }
 
-        .status-tag.tag-red {
-            background: #ffe0e0;
-        }
+
+    .status-tag.tag-orange {
+        background: #ffe5ce;
+    }
+
+    .status-tag.tag-grey {
+        background: #f1f1f1;
+    }

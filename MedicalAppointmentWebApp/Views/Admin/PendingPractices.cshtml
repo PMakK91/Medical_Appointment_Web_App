@@ -1,4 +1,5 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.PracticeSearchViewModel
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.ViewModels.PracticeSearchViewModel
 @{
     ViewData["Title"] = "Εκκρεμείς Αιτήσεις Ιατρείων";
     Layout = "_Layout";
@@ -35,22 +36,34 @@
                     <div class="row">
 
                         <div class="col-8 fc-blue fs-18 fw-600 text-start">#@practice.Id.ToString().Substring(0, Math.Min(6, practice.Id.ToString().Length))</div>
-                        <div class="col-4 d-flex justify-content-end"><div class="status-circle"></div></div>
+                        <div class="col-4 d-flex justify-content-end">
+                            <div class="status-tag
+                                @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "tag-green" :
+                                       practice.RegistrationStatus == RegistrationFormStatus.Pending ? "tag-orange" :
+                                        practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "tag-red" : 
+                                                                                                        "tag-gray")">
+
+                                @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "Έχει εγκριθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "Έχει απορριφθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Pending ? "Σε εκκρεμότητα" :
+                                                                                                                            "Χωρίς κατάσταση")
+                            </div>
+                        </div>
 
                     </div>
                     <div class="row mt-4">
 
                         <div class="col-8 fc-black fs-16 fw-400 text-start">
-                       
-                             @practice.Doctor?.FirstName @practice.Doctor?.LastName
-                           
+
+                            @practice.Doctor?.FirstName @practice.Doctor?.LastName
+
                         </div>
                         <div class="col-4 fc-black fs-16 fw-400 text-end">
 
                             #@practice.DoctorId.ToString().Substring(0, Math.Min(6, practice.DoctorId.ToString().Length))
                         </div>
 
-                      
+
 
                     </div>
 
@@ -63,7 +76,7 @@
 
                     <div class="registration-separator"></div>
 
-                   
+
                     <div class="row">
                         <div class="col-5 fs-16 fw-100 fc-grey text-start">@practice.RegistrationDate.ToString("dd-MM-yyyy")</div>
                         <div class="col-7 text-end">
