@@ -65,8 +65,20 @@ namespace MedicalAppointmentWebApp.Controllers
                 return BadRequest("Appointment failed to create");
             }
 
-            return RedirectToAction(controllerName: "Home", actionName: "Index");
+            return RedirectToAction(nameof(AppointmentSubmitted), new { id = appointment.Id });
         }
+
+        public async Task<IActionResult> AppointmentSubmitted(Guid id)
+        {
+            Appointment? appointment = await appointmentService.GetAppointmentByIdAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            return View(appointment);
+        }
+        
 
         public async Task<JsonResult> GetAppointmentsByDayAndPracticeIdAsync(string date, Guid practiceId)
         {

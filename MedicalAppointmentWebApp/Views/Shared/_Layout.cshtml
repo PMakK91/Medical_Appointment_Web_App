@@ -52,7 +52,7 @@
                         @if (User.Identity != null && (User.IsInRole("Doctor") || User.IsInRole("Patient")))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα Ραντεβού Μου</a>
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου</a>
                             </li>
                         }
 
@@ -65,7 +65,7 @@
                                 <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Εγγραφή Γραφείου</a>
                             </li> *@
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Doctor" asp-action="EditProfile">Το Προφίλ Μου</a>
+                                <a class="nav-link text-dark" asp-controller="Doctor" asp-action="EditProfile">Το προφίλ μου</a>
                             </li>
 
                             <li class="nav-item">
@@ -79,10 +79,10 @@
                         @if (User.Identity != null && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις Ιατρών</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingRegistrationForms", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις ιατρών</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingPractices", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις Γραφείων</a>
+                                <a class="nav-link text-dark" href="@Url.Action(action: "PendingPractices", controller: "Admin", new { term = "", page = 1, pageSize = 10 })">Αιτήσεις γραφείων</a>
                             </li>
                         }
 
@@ -119,7 +119,7 @@
 
     <footer class="footer py-4 bg-white">
         <div class=" text-center">
-            <p class="fc-black fs-14 fw-100 mb-1"> &copy; 2026 - MedicalAppointmentWebApp</p>
+            <p class="fc-black fs-14 fw-100 mb-1"> &copy; 2026 - MyDoctorNow</p>
             <a class="fc-blue fs-14 text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Απόρρητο</a>
         </div>
     </footer>

@@ -1,0 +1,86 @@
+﻿@model Appointment
+
+@{
+    ViewData["Title"] = "Επιτυχής κράτηση ραντεβού";
+    Layout = "_Layout";
+}
+
+<div class="wrapper  align-items-center mb-5 mt-4">
+    <div class="mx-auto w-100">
+
+        <svg class="link-success mb-3" width="40" height="40" viewBox="0 0 24 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10"
+                    stroke="currentColor"
+                    stroke-width="2" />
+            <path d="M6 12L10 16L18 8"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="butt"
+                  stroke-linejoin="miter" />
+        </svg>
+        <h1 class="title mb-4">
+          Το ραντεβού σας καταχωρήθηκε επιτυχώς
+        </h1>
+        <p class="subtitle mb-5">
+            Ο ιατρός έχει ενημερωθεί για το ραντεβού σας.<br />
+            Ένα email επιβεβαίωσης με όλες τις λεπτομέρειες θα σταλεί στη διεύθυνση email σας.
+           </p>
+
+
+    
+
+        <div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Αναγνωριστικό</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    #@Model.Id.ToString().Substring(0, 6)
+                </div>
+            </div>
+            
+
+                    <div class="row">
+                        <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                            @Model.Doctor?.FirstName @Model.Doctor?.LastName
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                            @Html.DisplayFor(m => m.Doctor.Specialty)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                            @Model.Practice?.FullAddress
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 text-start fc-grey fs-16 fw-100">Ημέρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Time.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                  
+                    @Model.Time.ToShortTimeString()
+                </div>
+            </div>
+                </div>
+
+
+
+    </div>
+    <div class="register-footer mt-5">
+        <p class="mb-1">Μπορείτε να δείτε και να διαχειριστείτε τα ραντεβού σας εδώ:</p>
+            <a asp-controller="Appointments" asp-action="MyAppointments" class="register-link">Τα ραντεβοού μου</a>
+        </div>
+
+
+</<div>
+    </div>
+
+</div>
+
