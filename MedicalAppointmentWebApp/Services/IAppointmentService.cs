@@ -5,6 +5,7 @@ namespace MedicalAppointmentWebApp.Services
 {
     public interface IAppointmentService
     {
+        Task<Appointment?> GetAppointmentByIdAsync(Guid id);
         Task<AppointmentRequestViewModel?> GetPracticeById(Guid practiceId, AppointmentRequestViewModel request);
         Task<Appointment?> CreateAppointmentAsync(AppointmentRequestViewModel request);
         Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId);

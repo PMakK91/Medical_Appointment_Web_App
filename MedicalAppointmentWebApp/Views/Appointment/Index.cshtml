@@ -1,1 +1,51 @@
-﻿PLHROFORIES SIGEKRIMENOU APPOINTMENT
+﻿@model Appointment
+
+@{
+    ViewData["Title"] = "Πληροφορίες Ραντεβού";
+    Layout = "_Layout";
+}
+<!---GOOGLE MAPS API ----->
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<!-------------->
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Προεπισκόπηση Ραντεβού</h1>
+
+        <div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Doctor?.FirstName @Model.Doctor?.LastName
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Html.DisplayFor(m => m.Doctor.Specialty)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Practice?.FullAddress
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα Ραντεβού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Time.ToShortDateString() @Model.Time.ToShortTimeString()
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-3 mb-3">
+            <gmp-map style="height:200px;" center="@Model.Practice?.Lat,@Model.Practice?.Lon" zoom="15" map-id="@Model.PracticeId">
+                <gmp-advanced-marker position="@Model.Practice?.Lat,@Model.Practice?.Lon" title=""></gmp-advanced-marker>
+
+            </gmp-map>
+        </div>
+    </div>
+</div>
