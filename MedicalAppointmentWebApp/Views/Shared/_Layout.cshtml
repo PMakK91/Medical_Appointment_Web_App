@@ -49,13 +49,6 @@
                             <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = "", page = 1, pageSize = 10 })" class="nav-link text-dark">Doctors</a>
                         </li>
                         -->
-                        @if (User.Identity != null && (User.IsInRole("Doctor") || User.IsInRole("Patient")))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου</a>
-                            </li>
-                        }
-
                         @if (User.Identity != null && User.IsInRole("Doctor"))
                         {
                             @* <li class="nav-item">
@@ -65,16 +58,32 @@
                                 <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Εγγραφή Γραφείου</a>
                             </li> *@
                             <li class="nav-item">
+                                <a class="nav-link text-dark" href="@Url.Action("Calendar", "Doctor")">Ημερολόγιο</a>
+                            </li>
+                                <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Doctor" asp-action="EditProfile">Το προφίλ μου</a>
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="@Url.Action("Calendar", "Doctor")">Ημερολόγιο</a>
-                            </li>
+                          
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("MyPractices", "Practice")">Ιατρεία</a>
                             </li>
                         }
+                        @if (User.Identity != null && User.IsInRole("Patient"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου</a>
+                            </li>
+                        }
+                        @if (User.Identity != null && User.IsInRole("Doctor"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου ως ασθενής</a>
+                            </li>
+                        }
+
+
+                       
 
                         @if (User.Identity != null && User.IsInRole("Admin"))
                         {
@@ -129,7 +138,7 @@
 
   
    
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&libraries=places&language=el&region=GR&loading=async&callback=initOfficeAddressAutocomplete"
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&libraries=places&language=el&region=GR&loading=async&callback=initpracticeAddressAutocomplete"
     async
     defer>
 </script>

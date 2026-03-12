@@ -3,7 +3,6 @@
     public class PracticeEnrollRequest
     {
         public  int Duration { get; set; }
-        public string PlaceId { get; set; }
 
         public double Lon { get; set; }
 
@@ -11,7 +10,7 @@
 
         public string FullAddress { get; set; }
 
-        public  int Phone { get; set; }
+        public  string Phone { get; set; }
 
         public TimeSpan? MondayStart { get; set; }
         public TimeSpan? MondayEnd { get; set; }

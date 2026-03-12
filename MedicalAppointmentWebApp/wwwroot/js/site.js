@@ -240,45 +240,45 @@
 
 
 /****** DAY SCROLLER *******/
-function showOffice(officeId) {
-    document.querySelectorAll(".office-panel").forEach(panel => {
+function showpractice(practiceId) {
+    document.querySelectorAll(".practice-panel").forEach(panel => {
         panel.style.display = "none";
     });
 
-    const panel = document.getElementById("office-" + officeId);
+    const panel = document.getElementById("practice-" + practiceId);
     if (panel) {
         panel.style.display = "block";
-        loadOffice(officeId);
+        loadpractice(practiceId);
     }
 
-    document.querySelectorAll(".office-tab").forEach(button => {
-        button.classList.toggle("active", button.dataset.officeId == officeId);
+    document.querySelectorAll(".practice-tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.practiceId == practiceId);
     });
 }
 
-function loadOffice(practiceId) {
-    const officePanel = $("#office-" + practiceId);
+function loadpractice(practiceId) {
+    const practicePanel = $("#practice-" + practiceId);
 
-    if (!officePanel.length) return;
+    if (!practicePanel.length) return;
 
-    const scheduleWrap = officePanel.find(".schedule-wrap");
-    const alreadyLoaded = officePanel.data("loaded");
+    const scheduleWrap = practicePanel.find(".schedule-wrap");
+    const alreadyLoaded = practicePanel.data("loaded");
 
     if (alreadyLoaded) return;
 
     const url = `/Practice/AvailableTimeSlotsAll?practiceId=${practiceId}`;
 
     scheduleWrap.load(url, function () {
-        officePanel.data("loaded", true);
+        practicePanel.data("loaded", true);
     });
 }
 
 $(document).ready(function () {
-    const firstVisibleOffice = $(".office-panel:visible").first();
+    const firstVisiblepractice = $(".practice-panel:visible").first();
 
-    if (firstVisibleOffice.length) {
-        const firstId = firstVisibleOffice.attr("id").replace("office-", "");
-        loadOffice(firstId);
+    if (firstVisiblepractice.length) {
+        const firstId = firstVisiblepractice.attr("id").replace("practice-", "");
+        loadpractice(firstId);
     }
 
     const observer = new MutationObserver(function (mutations) {
@@ -288,13 +288,13 @@ $(document).ready(function () {
             const element = $(mutation.target);
 
             if (element.is(":visible")) {
-                const practiceId = element.attr("id").replace("office-", "");
-                loadOffice(practiceId);
+                const practiceId = element.attr("id").replace("practice-", "");
+                loadpractice(practiceId);
             }
         });
     });
 
-    $(".office-panel").each(function () {
+    $(".practice-panel").each(function () {
         observer.observe(this, { attributes: true });
     });
 });
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
 /********************** CALENDAR ************************/
 /********************** CALENDAR ************************/
 
-const officeCalendarState = {};
+const practiceCalendarState = {};
 
 /*FETCH PRACTICE*/
 function fetchPracticeInfo(practiceId) {
@@ -358,7 +358,7 @@ function getField(obj, pascalName) {
     return obj[pascalName] ?? obj[camel];
 }
 
-function getOfficeScheduleConfig(practice, dateStr) {
+function getpracticeScheduleConfig(practice, dateStr) {
     if (!practice) return { duration: 30, workingIntervals: [] };
 
     const duration = 30; // or read from practice if needed
@@ -390,8 +390,8 @@ function getOfficeScheduleConfig(practice, dateStr) {
     };
 }
 
-function isOfficeClosed(practice, dateStr) {
-    return getOfficeScheduleConfig(practice, dateStr).workingIntervals.length === 0;
+function ispracticeClosed(practice, dateStr) {
+    return getpracticeScheduleConfig(practice, dateStr).workingIntervals.length === 0;
 }
 
 /** ---------------------------
@@ -402,23 +402,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await Promise.all(
         containers.map(async (calendarContainer) => {
-            const officeId = calendarContainer.dataset.officeId; // Practice.Id GUID
+            const practiceId = calendarContainer.dataset.practiceId; // Practice.Id GUID
 
-            officeCalendarState[officeId] = {
+            practiceCalendarState[practiceId] = {
                 currentDate: new Date(),
                 view: "month",
                 practice: null,
             };
 
             try {
-                officeCalendarState[officeId].practice = await fetchPracticeInfo(officeId);
+                practiceCalendarState[practiceId].practice = await fetchPracticeInfo(practiceId);
 
                 // Debug (uncomment to verify values)
-                // console.log("Loaded practice:", officeId, officeCalendarState[officeId].practice);
-                // console.log("Mon:", getField(officeCalendarState[officeId].practice, "MondayStart"), getField(officeCalendarState[officeId].practice, "MondayEnd"));
-                // console.log("Tue:", getField(officeCalendarState[officeId].practice, "TuesdayStart"), getField(officeCalendarState[officeId].practice, "TuesdayEnd"));
+                // console.log("Loaded practice:", practiceId, practiceCalendarState[practiceId].practice);
+                // console.log("Mon:", getField(practiceCalendarState[practiceId].practice, "MondayStart"), getField(practiceCalendarState[practiceId].practice, "MondayEnd"));
+                // console.log("Tue:", getField(practiceCalendarState[practiceId].practice, "TuesdayStart"), getField(practiceCalendarState[practiceId].practice, "TuesdayEnd"));
             } catch (e) {
-                console.error("Failed to load practice info for:", officeId, e);
+                console.error("Failed to load practice info for:", practiceId, e);
             }
 
             await renderCurrentView(calendarContainer);
@@ -427,8 +427,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function renderCurrentView(container) {
-    const officeId = container.dataset.officeId;
-    const state = officeCalendarState[officeId];
+    const practiceId = container.dataset.practiceId;
+    const state = practiceCalendarState[practiceId];
 
     if (state.view === "month") {
         await generateMonthView(container, state.currentDate);
@@ -439,8 +439,8 @@ async function renderCurrentView(container) {
 
 /**** DAY VIEW ****/
 function generateDayView(calendarContainer, dateObj) {
-    const officeId = calendarContainer.dataset.officeId;
-    const practice = officeCalendarState[officeId]?.practice;
+    const practiceId = calendarContainer.dataset.practiceId;
+    const practice = practiceCalendarState[practiceId]?.practice;
 
     const dayNames = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
     const monthNames = [
@@ -476,7 +476,7 @@ function generateDayView(calendarContainer, dateObj) {
     nextButton.innerHTML = "›";
 
     prevButton.addEventListener("click", () => {
-        const st = officeCalendarState[officeId];
+        const st = practiceCalendarState[practiceId];
         const nd = new Date(st.currentDate);
         nd.setDate(nd.getDate() - 1);
         st.currentDate = nd;
@@ -484,7 +484,7 @@ function generateDayView(calendarContainer, dateObj) {
     });
 
     nextButton.addEventListener("click", () => {
-        const st = officeCalendarState[officeId];
+        const st = practiceCalendarState[practiceId];
         const nd = new Date(st.currentDate);
         nd.setDate(nd.getDate() + 1);
         st.currentDate = nd;
@@ -502,7 +502,7 @@ function generateDayView(calendarContainer, dateObj) {
     backMonthBtn.className = "fs-14 bg-transparent fc-blue mb-3 border-0";
     backMonthBtn.textContent = "‹ Προβολή όλου του μήνα";
     backMonthBtn.addEventListener("click", () => {
-        const st = officeCalendarState[officeId];
+        const st = practiceCalendarState[practiceId];
         st.view = "month";
         void renderCurrentView(calendarContainer);
     });
@@ -512,12 +512,12 @@ function generateDayView(calendarContainer, dateObj) {
 
     const dateStr = formatLocalYYYYMMDD(dateObj);
     dayDiv.dataset.date = dateStr;
-    dayDiv.dataset.officeId = officeId;
+    dayDiv.dataset.practiceId = practiceId;
 
     inner.appendChild(backMonthBtn);
     inner.appendChild(dayDiv);
 
-    fetchAppointmentsForDate(officeId, practice, dateStr, dayDiv);
+    fetchAppointmentsForDate(practiceId, practice, dateStr, dayDiv);
 }
 
 /** ---------------------------
@@ -592,8 +592,8 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
             addButton.addEventListener("click", (e) => {
                 e.stopPropagation();
                 const date = dayDiv.dataset.date;
-                const officeId = dayDiv.dataset.officeId;
-                window.location.href = `/appointments/create?officeId=${officeId}&date=${date}&time=${timeStr}`;
+                const practiceId = dayDiv.dataset.practiceId;
+                window.location.href = `/appointments/create?practiceId=${practiceId}&date=${date}&time=${timeStr}`;
             });
 
             slotDiv.appendChild(addButton);
@@ -609,8 +609,8 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
  *  MONTH VIEW
  *  --------------------------- */
 async function generateMonthView(calendarContainer, dateObj) {
-    const officeId = calendarContainer.dataset.officeId;
-    const practice = officeCalendarState[officeId]?.practice;
+    const practiceId = calendarContainer.dataset.practiceId;
+    const practice = practiceCalendarState[practiceId]?.practice;
 
     const inner = calendarContainer.querySelector(".calendarInnerContainer");
     const navButtons = calendarContainer.querySelector(".nav-buttons-container");
@@ -657,7 +657,7 @@ async function generateMonthView(calendarContainer, dateObj) {
     navButtons.appendChild(nextButton);
 
     prevButton.addEventListener("click", () => {
-        const st = officeCalendarState[officeId];
+        const st = practiceCalendarState[practiceId];
         const d = new Date(st.currentDate);
         d.setMonth(d.getMonth() - 1);
         st.currentDate = d;
@@ -665,7 +665,7 @@ async function generateMonthView(calendarContainer, dateObj) {
     });
 
     nextButton.addEventListener("click", () => {
-        const st = officeCalendarState[officeId];
+        const st = practiceCalendarState[practiceId];
         const d = new Date(st.currentDate);
         d.setMonth(d.getMonth() + 1);
         st.currentDate = d;
@@ -701,14 +701,14 @@ async function generateMonthView(calendarContainer, dateObj) {
     }
 
     const monthFirst = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-    const appointments = await fetchAppointmentsForMonth(officeId, monthFirst);
+    const appointments = await fetchAppointmentsForMonth(practiceId, monthFirst);
 
     for (let day = 1; day <= daysInMonth; day++) {
         const cell = document.createElement("div");
         cell.classList.add("month-cell");
 
         const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        const closed = isOfficeClosed(practice, dateStr);
+        const closed = ispracticeClosed(practice, dateStr);
 
         if (closed) cell.classList.add("month-cell-closed");
 
@@ -718,7 +718,7 @@ async function generateMonthView(calendarContainer, dateObj) {
         cell.appendChild(dayNum);
 
         if (!closed) {
-            const { duration, workingIntervals } = getOfficeScheduleConfig(practice, dateStr);
+            const { duration, workingIntervals } = getpracticeScheduleConfig(practice, dateStr);
 
             const appts = getAppointmentsByDay(appointments, year, month + 1, day);
             const booked = appts.length;
@@ -756,7 +756,7 @@ async function generateMonthView(calendarContainer, dateObj) {
         if (!closed) {
             cell.style.cursor = "pointer";
             cell.addEventListener("click", () => {
-                const st = officeCalendarState[officeId];
+                const st = practiceCalendarState[practiceId];
                 st.currentDate = new Date(`${dateStr}T00:00:00`);
                 st.view = "day";
                 void renderCurrentView(calendarContainer);
@@ -774,26 +774,26 @@ async function generateMonthView(calendarContainer, dateObj) {
 /** ---------------------------
  *  APPOINTMENTS
  *  --------------------------- */
-function fetchAppointmentsForDate(officeId, practice, dateStr, dayDiv) {
-    const { duration, workingIntervals } = getOfficeScheduleConfig(practice, dateStr);
+function fetchAppointmentsForDate(practiceId, practice, dateStr, dayDiv) {
+    const { duration, workingIntervals } = getpracticeScheduleConfig(practice, dateStr);
 
-    fetch(`/Appointment/GetAppointmentsByDayAndPracticeId?date=${dateStr}&practiceId=${officeId}`)
+    fetch(`/Appointment/GetAppointmentsByDayAndPracticeId?date=${dateStr}&practiceId=${practiceId}`)
         .then((response) => response.json())
         .then((appointments) => {
             displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals);
         })
         .catch((e) => {
-            console.error("Failed to fetch appointments for day:", officeId, dateStr, e);
+            console.error("Failed to fetch appointments for day:", practiceId, dateStr, e);
             displayAppointmentsForDate([], dayDiv, duration, workingIntervals);
         });
 }
 
-async function fetchAppointmentsForMonth(officeId, dateStr) {
-    return fetch(`/Appointment/GetAppointmentsByMonthAndPracticeId?date=${dateStr}&practiceId=${officeId}`)
+async function fetchAppointmentsForMonth(practiceId, dateStr) {
+    return fetch(`/Appointment/GetAppointmentsByMonthAndPracticeId?date=${dateStr}&practiceId=${practiceId}`)
         .then((response) => response.json())
         .then((appointments) => appointments)
         .catch((e) => {
-            console.error("Failed to fetch appointments for month:", officeId, dateStr, e);
+            console.error("Failed to fetch appointments for month:", practiceId, dateStr, e);
             return [];
         });
 }
@@ -846,7 +846,7 @@ function getLayoutMode() {
 
 
 
-/****** ADD OFFICE HOURS ********/
+/****** ADD practice HOURS ********/
 
 // Fill Options with hours
 $(".daySelect").each(function () {
@@ -957,12 +957,12 @@ if (textarea) {
 
 /******** GOOGLE PLACES ************/
 
-        window.initOfficeAddressAutocomplete = async function () {
-    console.log("Initializing custom Office Address Autocomplete");
+        window.initpracticeAddressAutocomplete = async function () {
+    console.log("Initializing custom practice Address Autocomplete");
 
     const wrapper = document.querySelector(".address-autocomplete");
-    const input = document.getElementById("officeAddress");
-    const suggestionsEl = document.getElementById("officeSuggestions");
+    const input = document.getElementById("practiceAddress");
+    const suggestionsEl = document.getElementById("practiceSuggestions");
 
     if (!wrapper || !input || !suggestionsEl) {
         console.log("Address autocomplete elements not found, skipping");

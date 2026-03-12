@@ -1,4 +1,5 @@
-﻿@model Doctor
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model Doctor
 
 @{
     ViewData["Title"] = "Ημερολόγιο";
@@ -6,22 +7,22 @@
 }
 
 <div class="wrapper d-flex align-items-center">
-    <div class="mx-auto w-100">
+    <div class="mx-auto w-100 calendar-page">
         <h1 class="title mb-2">Ημερολόγιο</h1>
         <p class="subtitle mb-5"></p>
 
-        <div class="office-tabs mt-5">
+        <div class="practice-tabs mt-5">
            
 
             @{
                 bool first = true;
             }
-            @foreach (var practice in Model.Practices)
+            @foreach (var practice in Model.Practices.Where(p => p.RegistrationStatus == RegistrationFormStatus.Accepted))
             {
                 <button type="button"
-                        class="office-tab @(first ? "active" : "")"
-                        data-office-id="@practice.Id"
-                        onclick="showOffice('@practice.Id')">
+                        class="practice-tab @(first ? "active" : "")"
+                        data-practice-id="@practice.Id"
+                        onclick="showpractice('@practice.Id')">
                     @practice.FullAddress
                 </button>
                 first = false;
@@ -29,13 +30,13 @@
 
         </div>
 
-        @foreach (var office in Model.Practices)
+        @foreach (var practice in Model.Practices.Where(p => p.RegistrationStatus == RegistrationFormStatus.Accepted))
         {
-            <div class="office-panel"
-                 id="office-@office.Id"
-                 style="display:@(office.Equals(Model.Practices.First()) ? "block" : "none")">
+            <div class="practice-panel"
+                 id="practice-@practice.Id"
+                 style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
 
-                <section class="calendarContainer" data-office-id="@office.Id">
+                <section class="calendarContainer" data-practice-id="@practice.Id">
                     <div class="horizontal-nav">
                         <div class="calendar-heading"></div>
                         <div class="nav-buttons-container"></div>

@@ -20,7 +20,6 @@ namespace MedicalAppointmentWebApp.Services
 
             practice.DoctorId = doctor.Id;
             practice.Duration = practiceEnrollRequest.Duration;
-            practice.PlaceId = practiceEnrollRequest.PlaceId;
             practice.FullAddress = practiceEnrollRequest.FullAddress;
             practice.Lon = practiceEnrollRequest.Lon;
             practice.Lat = practiceEnrollRequest.Lat;

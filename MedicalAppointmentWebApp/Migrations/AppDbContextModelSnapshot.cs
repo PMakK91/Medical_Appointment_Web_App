@@ -128,13 +128,9 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("time")
                         .HasColumnName("monday_start");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int")
-                        .HasColumnName("phone");
-
-                    b.Property<string>("PlaceId")
+                    b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("place_id");
+                        .HasColumnName("phone");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2")

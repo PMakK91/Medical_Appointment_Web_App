@@ -10,5 +10,9 @@ namespace MedicalAppointmentWebApp.Services
 
         Task SendEmailAsync(string toEmail, string subject, string htmlMessage);
 
+        Task SendAppointmentBookedEmailtoPatient(string toEmail, Appointment appointment);
+        Task SendAppointmentBookedEmailtoDoctor(string toEmail, Appointment appointment);
+
+
     }
 }

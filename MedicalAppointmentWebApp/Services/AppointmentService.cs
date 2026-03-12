@@ -7,7 +7,7 @@ namespace MedicalAppointmentWebApp.Services
     public class AppointmentService(IAppointmentRepository appointmentRepository,
         IPracticeRepository practiceRepository,
         IDoctorRepository doctorRepository,
-        IUserRepository userRepository) : IAppointmentService
+        IUserRepository userRepository, IEmailService emailService) : IAppointmentService
     {
 
         public async Task<Appointment?> GetAppointmentByIdAsync(Guid id)
@@ -58,6 +58,9 @@ namespace MedicalAppointmentWebApp.Services
 
             appointmentRepository.InsertAppointment(appointment);
             await appointmentRepository.SaveAsync();
+
+            await emailService.SendAppointmentBookedEmailtoPatient(patient.Email, appointment);
+            await emailService.SendAppointmentBookedEmailtoDoctor(doctor.Email, appointment);
 
             return appointment;
         }

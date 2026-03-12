@@ -136,12 +136,12 @@ body {
 
     }
 
-.login-form, .register-form, .office-form {
+.login-form, .register-form, .practice-form {
     max-width: 420px;
     margin: 0 auto;
 }
 
-    .login-label, .register-label, .office-label {
+    .login-label, .register-label, .practice-label {
         display: block;
         text-align: left;
         font-weight: 400;
@@ -160,7 +160,7 @@ body {
     }
 
 
-.login-input, .register-input, .search-input, .office-input, gmp-place-autocomplete {
+.login-input, .register-input, .search-input, .practice-input, gmp-place-autocomplete {
     height: 48px;
     border-radius: 12px;
     border: none;
@@ -190,7 +190,7 @@ gmp-place-autocomplete {
 }
 
 
-    .login-input:focus, .register-input:focus, .search-input:focus, .office-input:focus, gmp-place-autocomplete:focus {
+    .login-input:focus, .register-input:focus, .search-input:focus, .practice-input:focus, gmp-place-autocomplete:focus {
         background: #eeeeee;
         box-shadow: 0 0 0 0.2rem #4ea7e721;
         outline: none;
@@ -382,12 +382,12 @@ background: #fff;
     font-weight: 100;
     color: #1B1B1B;
 }
-#officeAddress::placeholder{
+#practiceAddress::placeholder{
     color: var(--bs-secondary-color);
 
 }
 
-#officeAddress {
+#practiceAddress {
     height: 48px;
     border: 0;
     background: transparent;
@@ -689,7 +689,7 @@ background: #fff;
 /******WEEK SCROLLER*****/
 
 
-.office-panel {
+.practice-panel {
     border-radius: 12px;
     background: #fff;
     padding: 30px 0 30px 0;
@@ -869,7 +869,7 @@ background: #fff;
 
 
 
-.office-tabs {
+.practice-tabs {
     display: flex;
     margin-bottom: -10px;
     margin-top: 30px;
@@ -877,7 +877,7 @@ background: #fff;
     padding-right: 20px;
 }
 
-    .office-tab {
+    .practice-tab {
         background: transparent;
         flex: 1;
         border: 0;
@@ -891,8 +891,12 @@ background: #fff;
         margin: 4px 0;
         padding-bottom: 18px;
     }
+
+.calendar-page .practice-tab {
+    color: #8a8a8a;
+}
         /* active tab */
-        .office-tab.active {
+        .practice-tab.active {
             color: #4EA7E7;
             font-weight: 400;
             background: #fff;
@@ -1180,8 +1184,8 @@ background: #fff;
         color: #888;
         margin: 32px 0;
     }
-    /******ADD OFFICE *******/
-    .office-hours .day-div {
+    /******ADD practice *******/
+    .practice-hours .day-div {
         display: flex;
         gap: 16px;
         margin: 24px auto;
@@ -1194,7 +1198,7 @@ background: #fff;
 
 
 
-    .office-hours .day-name {
+    .practice-hours .day-name {
         font-weight: 600;
         display: flex;
         align-items: center;

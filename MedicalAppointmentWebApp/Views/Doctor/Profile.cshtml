@@ -95,7 +95,7 @@
 
                         <h2 class="fs-24 fw-600">Κλείστε Ραντεβού</h2>
 
-            <div class="office-tabs">
+            <div class="practice-tabs">
 
              
 
@@ -107,9 +107,9 @@
                     @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
                     {
                         <button type="button"
-                                class="office-tab @(firstTab ? "active" : "") "
-                                data-office-id="@practice.Id"
-                                onclick="showOffice('@practice.Id')">
+                                class="practice-tab @(firstTab ? "active" : "") "
+                                data-practice-id="@practice.Id"
+                                onclick="showpractice('@practice.Id')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                  aria-hidden="true">
@@ -136,8 +136,8 @@
 
 
 
-                    <div class="office-panel"
-                         id="office-@practice.Id"
+                    <div class="practice-panel"
+                         id="practice-@practice.Id"
                          style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
 
 

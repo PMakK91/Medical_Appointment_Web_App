@@ -22,9 +22,6 @@ namespace MedicalAppointmentWebApp.Models
         [Column("duration")]
         public int Duration { get; set; }
 
-        [Column("place_id")]
-        public string? PlaceId { get; set; }
-
         [Column("lon")]
         public double Lon { get; set; }
 
@@ -35,7 +32,7 @@ namespace MedicalAppointmentWebApp.Models
         public string? FullAddress { get; set; }
 
         [Column("phone")]
-        public int? Phone { get; set; }
+        public string? Phone { get; set; }
 
         [Column("monday_start", TypeName = "time")]
         public TimeSpan? MondayStart { get; set; }

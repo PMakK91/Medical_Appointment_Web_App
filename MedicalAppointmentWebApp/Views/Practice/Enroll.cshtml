@@ -11,10 +11,10 @@
         <h1 class="title mb-2">Προσθήκη Ιατρείου</h1>
         <p class="subtitle mb-5"></p>
 
-        <form id="officeForm" class="office-form" method="post">
+        <form id="practiceForm" class="practice-form" method="post">
 
             <div class="mb-3">
-                <label class="office-label" for="officeAddress">Διεύθυνση</label>
+                <label class="practice-label" for="practiceAddress">Διεύθυνση</label>
 
 
                 <div class="address-autocomplete" id="address-autocomplete">
@@ -24,44 +24,44 @@
                                 <path fill="#757575" fill-rule="evenodd" clip-rule="evenodd" d="M12 21.75L11.3 21.05C7.5 17.25 4 13.8 4 10.2C4 5.67 7.58 2 12 2C16.42 2 20 5.67 20 10.2C20 13.8 16.5 17.25 12.7 21.05L12 21.75ZM12 4C8.69 4 6 6.78 6 10.2C6 13.1 9 16.15 12 19.25C15 16.15 18 13.1 18 10.2C18 6.78 15.31 4 12 4ZM12 13C13.66 13 15 11.66 15 10C15 8.34 13.66 7 12 7C10.34 7 9 8.34 9 10C9 11.66 10.34 13 12 13ZM12 11C12.55 11 13 10.55 13 10C13 9.45 12.55 9 12 9C11.45 9 11 9.45 11 10C11 10.55 11.45 11 12 11Z" />
                             </svg>
                         </div>
-                        <input id="officeAddress"
+                        <input id="practiceAddress"
                                type="text"
                                placeholder="Τοποθεσία"
                                autocomplete="off" />
                     </div>
 
-                    <div id="officeSuggestions" class="suggestions" hidden></div>
+                    <div id="practiceSuggestions" class="suggestions" hidden></div>
                 </div>
 
 
 
-                <input type="hidden" asp-for="PlaceId" id="PlaceId" />
+
                 <input type="hidden" asp-for="FullAddress" id="FullAddress" />
                 <input type="hidden" asp-for="Lat" id="Lat" />
                 <input type="hidden" asp-for="Lon" id="Lon" />
             </div>
 
             <div class="mb-3">
-                <label class="office-label">Διάρκεια Ραντεβού (λεπτά)</label>
-                <input class="form-control office-input" asp-for="Duration" type="text"
+                <label class="practice-label">Διάρκεια Ραντεβού (λεπτά)</label>
+                <input class="form-control practice-input" asp-for="Duration" type="text"
                        oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,2)"
                        required />
 
             </div>
 
             <div class="mb-3">
-                <label class="office-label">Τηλέφωνο</label>
-                <input class="form-control office-input" asp-for="Phone" type="text"
-                       oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+                <label class="form-label register-label" for="phonePatient">Κινητό Τηλέφωνο:</label>
+                <input asp-for="Phone" type="tel"
+                       class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
+                       autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" minlength="10" maxlength="10"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 ψηφία"
                        required />
-
             </div>
-
           
 
             <h3 class="fs-16 fw-400 fc-black mt-5">Ώρες Λειτουργίας</h3>
 
-            <div class="office-hours">
+            <div class="practice-hours">
 
                 <div class="day-div">
                     <div class="day-name">Δευτέρα</div>
