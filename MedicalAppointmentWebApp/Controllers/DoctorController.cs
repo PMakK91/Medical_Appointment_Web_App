@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MedicalAppointmentWebApp.Controllers
 {
-    public class DoctorController(IDoctorService doctorService) : Controller
+    public class DoctorController(IDoctorService doctorService, IQRcodeService qRcodeService) : Controller
     {
         
         public async Task<IActionResult> Search(DoctorSearchViewModel request)
@@ -98,5 +98,53 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(doctor);
         }
 
+        [AuthorizeRoles(UserRole.Doctor)]
+
+        public IActionResult ScanQR()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
+        public IActionResult ScanQR(IFormFile qrFile)
+        {
+            if (qrFile == null || qrFile.Length == 0)
+            {
+                return BadRequest("No file selected.");
+            }
+
+            try
+            {
+                using (var stream = qrFile.OpenReadStream())
+                {
+                    ViewBag.ScanResult = qRcodeService.ScanQRCode(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                //ViewBag.ScanResult = "Error processing image: " + ex.Message;
+                return BadRequest("Error processing image: " + ex.Message);
+            }
+
+            return RedirectToAction(actionName: "Index", controllerName: "Home");
+        }
+
+        [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
+        public IActionResult ScanQRFromCamera(string base64Image)
+        {
+            if (string.IsNullOrEmpty(base64Image)) return BadRequest("No file selected.");
+
+            string base64Data = base64Image.Substring(base64Image.IndexOf(",") + 1);
+            byte[] binData = Convert.FromBase64String(base64Data);
+
+            using (var stream = new MemoryStream(binData))
+            {
+                ViewBag.ScanResult = qRcodeService.ScanQRCode(stream);
+            }
+
+            return RedirectToAction(actionName: "Index", controllerName: "Home");
+        }
     }
 }
