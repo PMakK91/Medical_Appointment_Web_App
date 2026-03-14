@@ -4,6 +4,7 @@ using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace MedicalAppointmentWebApp.Controllers
 {
     [AuthorizeRoles(UserRole.Doctor, UserRole.Patient)]
-    public class AppointmentController(IAppointmentService appointmentService) : Controller
+    public class AppointmentController(IAppointmentService appointmentService, IQRcodeService qRcodeService) : Controller
     {
         public async Task<IActionResult> IndexAsync(Guid id)
         {
@@ -20,6 +21,10 @@ namespace MedicalAppointmentWebApp.Controllers
             {
                 return NotFound();
             }
+
+            byte[] qrBytes = qRcodeService.GenerateQRCode(id.ToString());
+            string base64 = Convert.ToBase64String(qrBytes);
+            ViewBag.QrCodeImage = $"data:image/png;base64,{base64}";
 
             return View(appointment);
         }
@@ -75,6 +80,10 @@ namespace MedicalAppointmentWebApp.Controllers
             {
                 return NotFound();
             }
+
+            byte[] qrBytes = qRcodeService.GenerateQRCode(id.ToString());
+            string base64 = Convert.ToBase64String(qrBytes);
+            ViewBag.QrCodeImage = $"data:image/png;base64,{base64}";
 
             return View(appointment);
         }

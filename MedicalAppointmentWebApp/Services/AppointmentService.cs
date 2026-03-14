@@ -48,7 +48,13 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
             }
 
-            Appointment? appointment = new Appointment();
+            Appointment? appointment = await appointmentRepository.GetAppointmentByTimeAsync(request.Time, practice.Id);
+            if (appointment != null)
+            {
+                return null;
+            }
+
+            appointment = new Appointment();
 
             appointment.Practice = practice;
             appointment.Doctor = doctor;

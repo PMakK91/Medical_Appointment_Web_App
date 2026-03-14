@@ -68,9 +68,14 @@
                     @Model.Time.ToShortTimeString()
                 </div>
             </div>
-                </div>
 
-
+            <div class="mt-4">
+                @if (ViewBag.QrCodeImage != null)
+                {
+                    <img src="@ViewBag.QrCodeImage" style="width: 80%; height: auto;" />
+                }
+            </div>
+        </div>
 
     </div>
     <div class="register-footer mt-5">
