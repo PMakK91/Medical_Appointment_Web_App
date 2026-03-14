@@ -1,19 +1,165 @@
-﻿@model Doctor
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model Doctor
 
 @{
     ViewData["Title"] = Model.FirstName + " " + Model.LastName;
     Layout = "_Layout";
 }
 
+<!---GOOGLE MAPS API ----->
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<!-------------->
+
 <div class="wrapper d-flex align-items-center">
     <div class="mx-auto w-100">
-        <h1 class="title mb-2">@Model.FirstName @Model.LastName</h1>
-        <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
+
+
+        <div class="row">
+
+            <div class="col-lg-4 col-sm-12">
+
+
+
+        <div class="row">
+
+            <div class="col-12 doctor-profile-info">
+                <img class="doctor-profile-img" src="/Images/@Model.ImageUrl" alt="" />
+                <h1 class="title mb-2 fc-blue">@Model.FirstName @Model.LastName</h1>
+                <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
+                @if (!string.IsNullOrEmpty(Model.Bio))
+                {
+                    <p class="fc-black fs-16 fw-100">@Model.Bio</p>
+                }
+
+            </div>
+
+            <div class="mt-5 doctor-profile-practices">
+
+                <h2 class="fs-24 fw-600 fc-blue mb-5">Ιατρεία:</h2>
+
+                @if (Model.Practices != null && Model.Practices.Any())
+                {
+                    <div class=" mt-4">
+                    
+                        @foreach (var practice in Model.Practices)
+                        {
+                            @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                            {
+                                        <div class="doctor-profile-practice">
+                                <p
+                                        class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                         aria-hidden="true">
+                                        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    @practice.FullAddress
+                                               </p>
+                                        <p class="">
+                                                <svg width="18" height="18"  xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                                                    <path d="M13.054,7.756c0,.552,.448,1,1,1s1.006,.462,1.006,1.031c0,.552,.448,1,1,1s1-.448,1-1c0-1.671-1.349-3.031-3.006-3.031-.552,0-1,.448-1,1Z" />
+                                                    <path d="M13.784,4.687c2.991,0,5.425,2.47,5.425,5.506,0,.552,.448,1,1,1s1-.448,1-1c0-4.139-3.331-7.506-7.425-7.506-.552,0-1,.448-1,1s.448,1,1,1Z" />
+                                                    <path d="M22.772,15.934c-.48-1.47-1.67-2.622-3.182-3.083-1.727-.526-3.596-.082-4.88,1.158l-.18,.174c-.915-.324-2.165-1.159-2.874-1.837-.699-.714-1.539-1.943-1.868-2.846l.167-.17c1.259-1.274,1.708-3.132,1.174-4.85-.467-1.499-1.631-2.676-3.114-3.149-1.694-.542-3.524-.096-4.788,1.162-.373,.326-2.765,2.575-2.116,6.072,.662,3.352,3.052,6.998,5.152,9.149,2.151,2.053,5.834,4.417,9.224,5.071,.414,.075,.81,.108,1.188,.108,2.829,0,4.628-1.875,4.919-2.2,1.276-1.254,1.728-3.074,1.178-4.76Zm-2.598,3.352c-.024,.023-.047,.048-.069,.074-.017,.019-1.666,1.931-4.249,1.46-2.965-.573-6.335-2.761-8.186-4.527-1.808-1.853-4.018-5.182-4.594-8.104-.468-2.52,1.395-4.128,1.47-4.192,.026-.021,.051-.044,.075-.068,.529-.535,1.232-.822,1.953-.822,.278,0,.559,.042,.834,.13,.862,.275,1.54,.962,1.812,1.839,.315,1.01,.051,2.103-.688,2.851l-.569,.577c-.224,.227-.326,.547-.275,.862,.253,1.561,1.692,3.515,2.562,4.403,.875,.838,2.848,2.261,4.416,2.511,.312,.051,.626-.051,.853-.269l.582-.563c.761-.735,1.876-.997,2.907-.683,.889,.271,1.585,.94,1.863,1.79,.315,.965,.048,2.012-.697,2.731Z" />
+                                                </svg>
+
+                                            @practice.Phone
+                                        </p>
+
+                                        <gmp-map style="height:200px;
+                                      
+                                        margin-top:32px;" center="@practice.Lat,@practice.Lon" zoom="15" map-id="@practice.Id">
+                                            <gmp-advanced-marker position="@practice.Lat,@practice.Lon" title=""></gmp-advanced-marker>
+
+                                        </gmp-map>
+                                            <a class="fc-blue d-block login-link fs-16 mt-3" target="_blank"
+                                               href="https://www.google.com/maps?q=@practice.Lat,@practice.Lon">Προβολή μεγαλύτερου χάρτη</a>
+</div>
+                               
+                            }
+                        }
+                    </div>
+
+            }
+            </div>
+
+
+            </div>
+                </div>
+            <div class="col-lg-8 col-sm-12 ps-lg-5 mt-5 mt-lg-0">
+        <div class="row doctor-profile-book-appointment">
+
+        @if (Model.Practices != null && Model.Practices.Any())
+        {
+
+                        <h2 class="fs-24 fw-600">Κλείστε Ραντεβού</h2>
+
+            <div class="practice-tabs">
+
+             
+
+                @{
+                    bool firstTab = true;
+                }
+                @foreach (var practice in Model.Practices)
+                {
+                    @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                    {
+                        <button type="button"
+                                class="practice-tab @(firstTab ? "active" : "") "
+                                data-practice-id="@practice.Id"
+                                onclick="showpractice('@practice.Id')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            @practice.FullAddress
+                        </button>
+
+                        firstTab = false;
+                    }
+                }
+            </div>
+
+            {
+                firstTab = true;
+            }
+
+            @foreach (var practice in Model.Practices)
+            {
+                @if (practice.RegistrationStatus.Equals(RegistrationFormStatus.Accepted))
+                {
 
 
 
 
+                    <div class="practice-panel"
+                         id="practice-@practice.Id"
+                         style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
 
+
+
+
+                        <div class="available-hours">
+                            <button class="nav-btn nav-left" aria-label="Scroll left">‹</button>
+                            <div class="schedule-wrap mt-3">
+                            </div>
+
+                            <button class="nav-btn nav-right" aria-label="Scroll right">›</button>
+                        </div>
+
+
+                      
+                    </div>
+                    firstTab = false;
+                }
+            }
+        }
+            </div>
+        </div>
+    </div>
     </div>
 </div>
-

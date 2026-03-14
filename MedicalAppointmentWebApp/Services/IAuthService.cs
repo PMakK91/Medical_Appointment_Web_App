@@ -1,5 +1,8 @@
 ﻿using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.Security;
+using MedicalAppointmentWebApp.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Client;
 
 namespace MedicalAppointmentWebApp.Services
 {
@@ -11,5 +14,14 @@ namespace MedicalAppointmentWebApp.Services
         Task<User?> LogoutAsync(string refreshToken);
         Task<AuthResponse?> LoginAsync(AuthRequest request);
         Task<AuthResponse?> RefreshTokenAsync(RefreshTokenRequest request);
+
+        Task<AuthResponse?> GoogleLoginAsync(string email);
+        Task<User?> CreateGoogleUserAsync(RegisterRequest request);
+
+        Task<string?> CreateResetPasswordTokenAsync(string email);
+        Task<PasswordResetToken?> ResetPassword(NewPasswordRequestViewModel model);
+
+        string? AmkaCheck(string amka);
+        string? PhoneCheck(string phone);
     }
 }

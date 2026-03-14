@@ -1,0 +1,161 @@
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.ViewModels.PracticeSearchViewModel
+@{
+    ViewData["Title"] = "Ιατρεία";
+    Layout = "_Layout";
+}
+<!---GOOGLE MAPS API ----->
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<!-------------->
+
+
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Τα ιατρεία μου</h1>
+        <p class="subtitle mb-5"></p>
+
+
+        <form method="get" asp-controller="Practice" asp-action="Enroll">
+            <button class="btn primary-btn d-flex justify-content-center align-items-center mx-auto">
+                Προσθήκη ιατρείου
+            </button>
+        </form>
+
+
+        <ul class="admin-registrations-list list-unstyled mx-auto mt-5">
+
+            @foreach (var practice in Model.Practices)
+            {
+                <li class="mb-3">
+                    <div class="row">
+
+                        <h2 class="col-8 fc-blue fs-18 fw-600 text-start">@practice.FullAddress</h2>
+                       
+
+                   
+
+                        <div class="col-4 d-flex justify-content-end">
+                            <div class="status-tag
+                                    @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "tag-green" :
+                                                                        practice.RegistrationStatus == RegistrationFormStatus.Pending ? "tag-orange" :
+                                                                         practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "tag-red" :
+                                                                                                                                         "tag-gray")">
+
+                                @(practice.RegistrationStatus == RegistrationFormStatus.Accepted ? "Έχει εγκριθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Rejected ? "Έχει απορριφθεί" :
+                                                            practice.RegistrationStatus == RegistrationFormStatus.Pending ? "Σε εκκρεμότητα" :
+                                                            "Χωρίς κατάσταση")
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-3 mb-3">
+
+
+                        <gmp-map style="height:200px;" center="@practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" zoom="15" map-id="@practice.Id">
+                            <gmp-advanced-marker position="@practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" title=""></gmp-advanced-marker>
+
+                        </gmp-map>
+
+
+                    </div>
+
+
+                    <h3 class="fc-black fs-16 fw-400 mt-4 mb-3 text-start">Ώρες Λειτουργίας</h3>
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Δευτέρα</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.MondayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.MondayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Τρίτη</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.TuesdayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.TuesdayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Τετάρτη</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.WednesdayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.WednesdayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Πέμπτη</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.ThursdayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.ThursdayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Παρασκευή</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.FridayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.FridayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Σάββατο</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.SaturdayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.SaturdayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3 fs-16 fw-100 fc-black text-start">Κυριακή</div>
+                        <div class="col-9 fs-16 fw-100 fc-black text-start">
+                            @(practice.SundayStart?.ToString(@"hh\:mm") ?? "--:--") - @(practice.SundayEnd?.ToString(@"hh\:mm") ?? "--:--")
+                        </div>
+                    </div>
+
+
+                    <h3 class="fc-black fs-16 fw-400 mt-4 mb-3 text-start">Διάρκεια Ραντεβού</h3>
+                    <div class="col-12 fw-100 fc-black fs-16 text-start">@practice.Duration λεπτά</div>
+
+                    <h3 class="fc-black fs-16 fw-400 mt-4 mb-3 text-start">Τηλέφωνο</h3>
+                    <div class="col-12 fw-100 fc-black fs-16 text-start">@practice.Phone</div>
+
+
+
+                    <div class="row mt-4">
+                        <div class="col-5  ">
+                            <button class="w-100 btn primary-btn delete ">
+                                <?xml version="1.0" encoding="utf-8" ?>
+
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg> Διαγραφή
+                            </button>
+                        </div>
+                        <div class="col-7  ">
+                            <button class=" w-100 btn primary-btn ">
+                                <?xml version="1.0" encoding="utf-8" ?>
+
+
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="Edit / Edit_Pencil_01">
+                                        <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </g>
+                                </svg> Επεξεργασία
+                            </button>
+                        </div>
+                    </div>
+
+
+                </li>
+
+            }
+
+
+        </ul>
+    </div>
+</div>

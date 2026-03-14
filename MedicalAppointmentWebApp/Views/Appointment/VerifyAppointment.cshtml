@@ -1,0 +1,71 @@
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel
+
+@{
+    ViewData["Title"] = "Λεπτομέρειες Ραντεβού";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Προεπισκόπηση Ραντεβού</h1>
+        <p class="subtitle mb-5">Πατήστε το κουμπί "Επιβεβαίωση" για να ολοκληρώσετε την κράτηση</p>
+
+        <div class="registration-info mx-auto">
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Doctor?.FirstName @Model.Doctor?.LastName
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Html.DisplayFor(m => m.Doctor.Specialty)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Practice?.FullAddress
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα Ραντεβού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Time.ToShortDateString() @Model.Time.ToShortTimeString()
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <form method="post" asp-controller="Appointment" asp-action="ConfirmAppointment">
+            <input asp-for="@Model.PracticeId" value="@Model.Practice!.Id" type="hidden" />
+            <input asp-for="@Model.DoctorId" value="@Model.Doctor!.Id" type="hidden" />
+            <input asp-for="@Model.Time" value="@Model.Time" type="hidden" />
+
+            <button type="submit" class="mx-auto btn btn-primary w-100 primary-btn mt-5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                    <path d="M20 6 L9 17 L4 12"></path>
+                </svg>
+                Επιβεβαίωση
+            </button>
+        </form>
+       <!-- <form asp-controller="Appointment" asp-action="RejectAppointment">
+            <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
+                    <path d="M18 6 L6 18"></path>
+                    <path d="M6 6 L18 18"></path>
+                </svg>
+                Απόρριψη
+            </button>
+        </form>
+         -->
+
+    </div>
+</div>

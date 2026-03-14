@@ -2,42 +2,24 @@
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
+using MedicalAppointmentWebApp.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class AdminService(AppDbContext _context): IAdminService
+    public class AdminService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IEmailService emailService) : IAdminService
     {
         public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
         {
-            var query = _context.Doctors.Where(
-                d => d.RegistrationStatus == RegistrationFormStatus.Pending);
-
-            if (!string.IsNullOrWhiteSpace(term))
-            {
-                query = query.Where(d =>
-                (d.FirstName != null && d.FirstName.Contains(term)) ||
-                (d.LastName != null && d.LastName.Contains(term)) ||
-                (d.Email != null && d.Email.Contains(term)) ||
-                (((Specialty)d.Specialty).ToString().Contains(term)));
-            }
-
-            int totalItems = await query.CountAsync();
-
-            IEnumerable<Doctor> doctors = await query
-                .AsNoTracking()
-                .OrderBy(d => d.LastName)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchPendingAsync(term, page, pageSize);
 
             return new DoctorSearchViewModel
             {
-                Doctors = doctors,
+                Doctors = doctorsAndCount.Item1,
                 Term = term,
                 CurrentPage = page,
                 PageSize = pageSize,
-                TotalItems = totalItems
+                TotalItems = doctorsAndCount.Item2
             };
         }
 
@@ -46,29 +28,38 @@ namespace MedicalAppointmentWebApp.Services
             return await ReviewRegistrationAsync(id, RegistrationFormStatus.Accepted);
         }
 
-        public async Task<Doctor?> RejectRegistrationAsync(Guid id)
+        public async Task<Doctor?> RejectRegistrationAsync(Guid id, string reason)
         {
-            return await ReviewRegistrationAsync(id, RegistrationFormStatus.Rejected);
+            return await ReviewRegistrationAsync(id, RegistrationFormStatus.Rejected, reason);
         }
 
-        private async Task<Doctor?> ReviewRegistrationAsync(Guid id, RegistrationFormStatus status)
+        private async Task<Doctor?> ReviewRegistrationAsync(Guid id, RegistrationFormStatus status, string? reason = null)
         {
-            Doctor? doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+            Doctor? doctor = await doctorRepository.GetDoctorByIDAsync(id);
 
             if (doctor is null)
             {
                 return null;
             }
 
+            if (status == RegistrationFormStatus.Accepted)
+            {
+                await emailService.SendAcceptDoctorRegistrationEmail(doctor.Email);
+            }
+            else if (status == RegistrationFormStatus.Rejected)
+            {
+                await emailService.SendRejectDoctorRegistrationEmail(doctor.Email, reason);
+            }
+
             doctor.RegistrationStatus = status;
-            await _context.SaveChangesAsync();
+            await doctorRepository.SaveAsync();
 
             return doctor;
         }
 
         public async Task<Doctor?> ViewRegistrationAsync(Guid id)
         {
-            Doctor? doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+            Doctor? doctor = await doctorRepository.GetDoctorByIDAsync(id);
 
             if (doctor is null)
             {
@@ -76,6 +67,54 @@ namespace MedicalAppointmentWebApp.Services
             }
 
             return doctor;
+        }
+
+        public async Task<PracticeSearchViewModel> SearchPendingPractices(string term, int page = 1, int pageSize = 10)
+        {
+            (IEnumerable<Practice>, int) practicesAndCount = await practiceRepository.SearchPendingAsync(term, page, pageSize);
+
+            return new PracticeSearchViewModel
+            {
+                Practices = practicesAndCount.Item1,
+                Term = term,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = practicesAndCount.Item2
+            };
+        }
+
+        public async Task<Practice?> AcceptPracticeAsync(Guid id)
+        {
+            return await ReviewPracticeAsync(id, RegistrationFormStatus.Accepted);
+        }
+
+        public async Task<Practice?> RejectPracticeAsync(Guid id)
+        {
+            return await ReviewPracticeAsync(id, RegistrationFormStatus.Rejected);
+        }
+
+        private async Task<Practice?> ReviewPracticeAsync(Guid id, RegistrationFormStatus status)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+
+            practice.RegistrationStatus = status;
+            await practiceRepository.SaveAsync();
+
+            return practice;
+        }
+
+        public async Task<Practice?> ViewPracticeByIdAsync(Guid id)
+        {
+            Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return null;
+            }
+            return practice;
         }
     }
 }

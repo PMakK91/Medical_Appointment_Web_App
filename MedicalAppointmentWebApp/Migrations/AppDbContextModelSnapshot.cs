@@ -22,6 +22,171 @@ namespace MedicalAppointmentWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<Guid>("PatientId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("patient_id");
+
+                    b.Property<Guid>("PracticeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("practice_id");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("Status");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("PracticeId");
+
+                    b.ToTable("appointments", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.PasswordResetToken", b =>
+                {
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("token");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_used");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Token");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("doctor_id");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int")
+                        .HasColumnName("duration");
+
+                    b.Property<TimeSpan?>("FridayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("friday_end");
+
+                    b.Property<TimeSpan?>("FridayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("friday_start");
+
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("full_address");
+
+                    b.Property<double>("Lat")
+                        .HasColumnType("float")
+                        .HasColumnName("lat");
+
+                    b.Property<double>("Lon")
+                        .HasColumnType("float")
+                        .HasColumnName("lon");
+
+                    b.Property<TimeSpan?>("MondayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("monday_end");
+
+                    b.Property<TimeSpan?>("MondayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("monday_start");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("phone");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("registration_date");
+
+                    b.Property<int>("RegistrationStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("registration_status");
+
+                    b.Property<TimeSpan?>("SaturdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("saturday_end");
+
+                    b.Property<TimeSpan?>("SaturdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("saturday_start");
+
+                    b.Property<TimeSpan?>("SundayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("sunday_end");
+
+                    b.Property<TimeSpan?>("SundayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("sunday_start");
+
+                    b.Property<TimeSpan?>("ThursdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("thursday_end");
+
+                    b.Property<TimeSpan?>("ThursdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("thursday_start");
+
+                    b.Property<TimeSpan?>("TuesdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("tuesday_end");
+
+                    b.Property<TimeSpan?>("TuesdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("tuesday_start");
+
+                    b.Property<TimeSpan?>("WednesdayEnd")
+                        .HasColumnType("time")
+                        .HasColumnName("wednesday_end");
+
+                    b.Property<TimeSpan?>("WednesdayStart")
+                        .HasColumnType("time")
+                        .HasColumnName("wednesday_start");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("practices", (string)null);
+                });
+
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -59,7 +224,6 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
 
@@ -110,6 +274,10 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("image");
 
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("license_number");
+
                     b.Property<int>("RegistrationStatus")
                         .HasColumnType("int")
                         .HasColumnName("registration_status");
@@ -126,6 +294,55 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.HasBaseType("MedicalAppointmentWebApp.Models.User");
 
                     b.ToTable("patients", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Appointment", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
+                        .WithMany("MedicalAppointments")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", "Patient")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedicalAppointmentWebApp.Models.Practice", "Practice")
+                        .WithMany("Appointments")
+                        .HasForeignKey("PracticeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Practice");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.PasswordResetToken", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.User", "User")
+                        .WithMany("PasswordResetTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.HasOne("MedicalAppointmentWebApp.Models.Doctor", "Doctor")
+                        .WithMany("Practices")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("MedicalAppointmentWebApp.Models.Admin", b =>
@@ -153,6 +370,25 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasForeignKey("MedicalAppointmentWebApp.Models.Patient", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Practice", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.User", b =>
+                {
+                    b.Navigation("Appointments");
+
+                    b.Navigation("PasswordResetTokens");
+                });
+
+            modelBuilder.Entity("MedicalAppointmentWebApp.Models.Doctor", b =>
+                {
+                    b.Navigation("MedicalAppointments");
+
+                    b.Navigation("Practices");
                 });
 #pragma warning restore 612, 618
         }

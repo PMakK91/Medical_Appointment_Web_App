@@ -11,9 +11,11 @@ namespace MedicalAppointmentWebApp.Models.Security
         public int Gender { get; set; }
         public string? Phone { get; set; }
         public DateOnly? BirthDate { get; set; }
-        public required string Password { get; set; }
+        public string? Password { get; set; }
 
         public string? ConfirmPassword { get; set; }
         public Specialty? Specialty { get; set; }
+        public string? LicenseNumber { get; set; }
+        public UserRole UserRole { get; set; }
     }
 }

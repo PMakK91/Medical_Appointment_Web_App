@@ -1,0 +1,52 @@
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model Doctor
+
+@{
+    ViewData["Title"] = "Ημερολόγιο";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100 calendar-page">
+        <h1 class="title mb-2">Ημερολόγιο</h1>
+        <p class="subtitle mb-5"></p>
+
+        <div class="practice-tabs mt-5">
+           
+
+            @{
+                bool first = true;
+            }
+            @foreach (var practice in Model.Practices.Where(p => p.RegistrationStatus == RegistrationFormStatus.Accepted))
+            {
+                <button type="button"
+                        class="practice-tab @(first ? "active" : "")"
+                        data-practice-id="@practice.Id"
+                        onclick="showpractice('@practice.Id')">
+                    @practice.FullAddress
+                </button>
+                first = false;
+            }
+
+        </div>
+
+        @foreach (var practice in Model.Practices.Where(p => p.RegistrationStatus == RegistrationFormStatus.Accepted))
+        {
+            <div class="practice-panel"
+                 id="practice-@practice.Id"
+                 style="display:@(practice.Equals(Model.Practices.First()) ? "block" : "none")">
+
+                <section class="calendarContainer" data-practice-id="@practice.Id">
+                    <div class="horizontal-nav">
+                        <div class="calendar-heading"></div>
+                        <div class="nav-buttons-container"></div>
+                    </div>
+
+                    <div class="calendarInnerContainer"></div>
+                </section>
+            </div>
+        }
+
+    </div>
+</div>
+

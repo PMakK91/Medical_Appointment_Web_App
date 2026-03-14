@@ -167,7 +167,7 @@ $.validator.addMethod( "bankorgiroaccountNL", function( value, element ) {
  * - Next 2 characters - location code (letters and digits)
  *   a. shall not start with '0' or '1'
  *   b. second character must be a letter ('O' is not allowed) or digit ('0' for test (therefore not allowed), '1' denoting passive participant, '2' typically reverse-billing)
- * - Last 3 characters - branch code, optional (shall not start with 'X' except in case of 'XXX' for primary office) (letters and digits)
+ * - Last 3 characters - branch code, optional (shall not start with 'X' except in case of 'XXX' for primary practice) (letters and digits)
  */
 $.validator.addMethod( "bic", function( value, element ) {
     return this.optional( element ) || /^([A-Z]{6}[A-Z2-9][A-NP-Z1-9])(X{3}|[A-WY-Z0-9][A-Z0-9]{2})?$/.test( value.toUpperCase() );

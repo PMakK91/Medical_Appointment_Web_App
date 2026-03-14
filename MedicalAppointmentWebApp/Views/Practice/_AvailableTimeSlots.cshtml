@@ -1,0 +1,32 @@
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.AvailableSlotsViewModel
+
+@using System.Globalization
+@foreach (var dayEntry in Model.Slots.OrderBy(x => x.Key))
+{
+    var day = dayEntry.Key;
+    var daySlots = dayEntry.Value;
+    if (daySlots.Any())
+    {
+        <div class="day-col">
+            <div class="day-head">
+                <div class="day-name fs-14"> @day.ToString("ddd", new CultureInfo("el-GR"))</div>
+                <div class="day-date fs-14">@day.ToString("dd/MM")</div>
+            </div>
+
+            <div class="slots">
+                @foreach (var slot in daySlots)
+                {
+                    <button class="slot-btn"
+                            type="button"
+                            onclick="window.location.href='@Url.Action("VerifyAppointment", "Appointment", new MedicalAppointmentWebApp.Models.ViewModels.AppointmentRequestViewModel
+                            {
+                                PracticeId = Model.Practice.Id,
+                                Time = slot.Start
+                            })'">
+            @slot.Start.ToString("HH:mm")
+        </button>
+                }
+            </div>
+        </div>
+    }
+}
