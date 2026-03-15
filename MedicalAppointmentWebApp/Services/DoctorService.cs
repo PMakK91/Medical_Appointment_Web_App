@@ -3,6 +3,7 @@ using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -54,7 +55,15 @@ namespace MedicalAppointmentWebApp.Services
                 if (errorMessage != null) return errorMessage;
             }
 
+            doctor.Email = request.Email ?? doctor.Email;
+            doctor.Phone = request.Phone ?? doctor.Phone;
             doctor.Bio = request.Bio ?? "";
+            if (request.Password != null)
+            {
+                string hashedPassword = new PasswordHasher<Doctor>().HashPassword(doctor, request.Password);
+                doctor.Password = hashedPassword;
+            }
+
             await doctorRepository.SaveAsync();
             
 

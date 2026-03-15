@@ -575,10 +575,18 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
                     : "Appointment";
             slotDiv.appendChild(name);
 
+            const statusInfo = getStatusInfo(appt.status);
+
+            const statusTag = document.createElement("div");
+            statusTag.classList.add("status-tag", statusInfo.class);
+            statusTag.textContent = statusInfo.text;
+
+            slotDiv.appendChild(statusTag);
+
             slotDiv.style.cursor = "pointer";
             slotDiv.addEventListener("click", (e) => {
                 e.stopPropagation();
-                window.location.href = `/appointments/details/${appt.id}`;
+                window.location.href = `/Appointment/Index/${appt.id}`;
             });
         } else {
             slotDiv.classList.add("available");
@@ -596,7 +604,7 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
                 window.location.href = `/appointments/create?practiceId=${practiceId}&date=${date}&time=${timeStr}`;
             });
 
-            slotDiv.appendChild(addButton);
+            //slotDiv.appendChild(addButton);
         }
 
         slotsContainer.appendChild(slotDiv);
@@ -604,6 +612,21 @@ function displayAppointmentsForDate(appointments, dayDiv, duration, workingInter
 
     dayDiv.appendChild(slotsContainer);
 }
+function getStatusInfo(status) {
+    switch (status) {
+        case 0:
+            return { text: "Προγραμματισμένο", class: "tag-green" };
+        case 1:
+            return { text: "Ολοκληρωμένο", class: "tag-blue" };
+        case 2:
+            return { text: "Ακυρωμένο", class: "tag-red" };
+        case 3:
+            return { text: "Απών", class: "tag-gray" };
+        default:
+            return { text: "", class: "" };
+    }
+}
+
 
 /** ---------------------------
  *  MONTH VIEW

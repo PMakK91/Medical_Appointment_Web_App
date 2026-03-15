@@ -54,7 +54,9 @@ namespace MedicalAppointmentWebApp.Controllers
             EditDoctorProfileViewModel model = new EditDoctorProfileViewModel
             {
                 Doctor = doctor,
-                Bio = doctor.Bio
+                Bio = doctor.Bio,
+                Phone = doctor.Phone,
+                Email = doctor.Email
             };
 
             return View(model);

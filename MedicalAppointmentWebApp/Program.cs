@@ -87,6 +87,7 @@ builder.Services.AddAuthorization();
 
 // Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IPracticeService, PracticeService>();

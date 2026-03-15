@@ -1,1 +1,212 @@
-﻿
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.EditPatientProfileViewModel
+@{
+    ViewData["Title"] = "Το προφίλ μου";
+    Layout = "_Layout";
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+        <h1 class="title mb-2">Το προφίλ μου</h1>
+        <p class="subtitle mb-5">Εδώ μπορείτε να δείτε και να επεξεργαστείτε τις πληροφορίες σας</p>
+
+        <form asp-controller="User"
+              asp-action="EditProfile"
+              method="post"
+              id="profile-form"
+              class="register-form"
+              autocomplete="off">
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label edit-profile-label mb-0">Φύλο:</label>
+
+                </div>
+
+                <div class="d-flex gap-3" id="gender-group">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="1"
+                               id="genderMalePatient" />
+                        <label class="form-check-label" for="genderMalePatient">
+                            Άντρας
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="radio"
+                               asp-for="Gender"
+                               value="2"
+                               id="genderFemalePatient" />
+                        <label class="form-check-label" for="genderFemalePatient">
+                            Γυναίκα
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Όνομα:</label>
+
+                <input asp-for="FirstName"
+                       type="text"
+                       class="form-control register-input editable-field"
+                      
+
+                       required />
+
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Επώνυμο:</label>
+
+                <input asp-for="LastName"
+                       type="text"
+                       class="form-control register-input editable-field"
+                      
+
+                       required />
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Ημερομηνία Γέννησης:</label>
+
+                <input asp-for="BirthDate"
+                       type="date"
+                       class="form-control register-input editable-field"
+                       required />
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Κινητό Τηλέφωνο:</label>
+
+                <input asp-for="Phone"
+                       type="tel"
+                       class="form-control register-input editable-field"
+                      
+                       inputmode="tel"
+                       pattern="[0-9]{10}"
+                       minlength="10"
+                       maxlength="10"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 ψηφία"
+                       required />
+
+
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">ΑΜΚΑ:</label>
+
+                <input asp-for="Amka"
+                       type="text"
+                       class="form-control register-input editable-field"
+                       pattern="[0-9]{11}"
+                       minlength="11"
+                       maxlength="11"
+                       inputmode="numeric"
+                       title="Ο ΑΜΚΑ πρέπει να αποτελείται από 11 ψηφία"
+                       required />
+
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Email:</label>
+
+
+                <input asp-for="Email"
+                       type="email"
+                       class="form-control register-input editable-field"
+                      
+                       maxlength="254"
+                       required />
+
+
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label edit-profile-label">Κωδικός:</label>
+                <p class="label-description mt-0">
+                    Συμπληρώστε αυτό το πεδίο μόνο εάν θέλετε να αλλάξετε τον κωδικό πρόσβασής σας
+                </p>
+
+                <div class="password-wrapper">
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control register-input editable-field"
+                        
+                            />
+
+                    <button type="button"
+                            class="password-toggle"
+                            aria-label="Εμφάνιση / απόκρυψη κωδικού">
+                        <svg class="eye-icon eye-open"
+                             width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"
+                                  stroke="currentColor"
+                                  stroke-width="2" />
+                            <circle cx="12"
+                                    cy="12"
+                                    r="3"
+                                    stroke="currentColor"
+                                    stroke-width="2" />
+                        </svg>
+
+                        <svg class="eye-icon eye-closed d-none"
+                             width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3l18 18"
+                                  stroke="currentColor"
+                                  stroke-width="2" />
+                            <path d="M10.6 10.6A3 3 0 0012 15a3 3 0 002.4-4.4"
+                                  stroke="currentColor"
+                                  stroke-width="2" />
+                            <path d="M1 12s4-7 11-7c2 0 3.8.5 5.4 1.4M23 12s-4 7-11 7c-2 0-3.8-.5-5.4-1.4"
+                                  stroke="currentColor"
+                                  stroke-width="2" />
+                        </svg>
+                    </button>
+                </div>
+
+
+
+
+            </div>
+            <button type="submit" class="w-100 mx-auto mt-3 btn primary-btn">
+                Αποθήκευση
+            </button>
+            <div class="form-error mt-3 d-none" id="patientFormError"></div>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="mt-4 alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="mt-4 alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+   
+        </form>
+    </div>
+    </div>

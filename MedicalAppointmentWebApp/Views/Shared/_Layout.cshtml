@@ -74,6 +74,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="User" asp-action="EditProfile">Το προφίλ μου</a>
+                            </li>
                         }
                         @if (User.Identity != null && User.IsInRole("Doctor"))
                         {
@@ -105,6 +108,7 @@
                                     <button class="nav-link text-dark" type="submit">Αποσύνδεση</button>
                                 </form>
                             </li>
+                           
                         }
                         else
                         {

@@ -48,6 +48,43 @@ namespace MedicalAppointmentWebApp.Controllers
             return View(appointmentInfoViewModel);
         }
 
+        public async Task<IActionResult> CancelAppointment(Guid id)
+        {
+            Appointment? appointment = await appointmentService.CancelAppointmentAsync(id);
+
+            if (appointment is null)
+            {
+                return BadRequest("Appointment not found");
+            }
+
+            return RedirectToAction("MyAppointments", "Appointment");
+        }
+
+        public async Task<IActionResult> CompleteAppointment(Guid id)
+        {
+            Appointment? appointment = await appointmentService.CompleteAppointmentAsync(id);
+
+            if (appointment is null)
+            {
+                return BadRequest("Appointment not found");
+            }
+
+            return RedirectToAction(nameof(Index), new { id = appointment.Id });
+        }
+
+        public async Task<IActionResult> NoShowAppointment(Guid id)
+        {
+            Appointment? appointment = await appointmentService.NoShowAppointmentAsync(id);
+
+            if (appointment is null)
+            {
+                return BadRequest("Appointment not found");
+            }
+
+            return RedirectToAction(nameof(Index), new { id = appointment.Id });
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> ConfirmAppointment(AppointmentRequestViewModel request)
         {

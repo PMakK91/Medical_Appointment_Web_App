@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Data;
+using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -50,14 +51,14 @@ namespace MedicalAppointmentWebApp.Repositories
                     PatientFirstName = a.Patient.FirstName,
                     PatientLastName = a.Patient.LastName
                 })
-                .Where(a => a.PracticeId == practiceId && a.Time.Date.Equals(day.Date))
+                .Where(a => a.PracticeId == practiceId && a.Time.Date.Equals(day.Date) && a.Status != AppointmentStatus.Canceled)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsInfoByMonthAndPracticeIdAsync(DateTime date, Guid practiceId)
         {
             return await context.Appointments
-                .Where(a => a.PracticeId == practiceId && a.Time.Month.Equals(date.Month) && a.Time.Year.Equals(date.Year))
+                .Where(a => a.PracticeId == practiceId && a.Time.Month.Equals(date.Month) && a.Time.Year.Equals(date.Year) && a.Status != AppointmentStatus.Canceled)
                 .ToListAsync();
         }
 
@@ -65,6 +66,17 @@ namespace MedicalAppointmentWebApp.Repositories
         {
             context.Appointments.Add(appointment);
         }
+        public void UpdateAppointmentStatus(Guid appointmentId, AppointmentStatus status)
+        {
+            var appointment = context.Appointments.Find(appointmentId);
+
+            if (appointment != null)
+            {
+                appointment.Status = status;
+                Save();
+            }
+        }
+
 
         public void Save()
         {

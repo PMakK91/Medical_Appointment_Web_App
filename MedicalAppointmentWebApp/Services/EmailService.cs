@@ -65,7 +65,7 @@ namespace MedicalAppointmentWebApp.Services
 
 
 
-        public async Task SendAppointmentBookedEmailtoPatient(string patientEmail, Appointment appointment)
+        public async Task SendAppointmentBookedEmailtoPatient(Appointment appointment)
         {
 
             var htmlBody = $@"
@@ -80,10 +80,10 @@ namespace MedicalAppointmentWebApp.Services
             <br />
             <p>Η ομάδα του MyDoctorNow</p>";
 
-            await SendEmailAsync(patientEmail, "Το Ραντεβού σας", htmlBody);
+            await SendEmailAsync(appointment.Patient.Email, "Το Ραντεβού σας", htmlBody);
         }
 
-        public async Task SendAppointmentBookedEmailtoDoctor(string doctorEmail, Appointment appointment)
+        public async Task SendAppointmentBookedEmailtoDoctor(Appointment appointment)
         {
 
             var htmlBody = $@"
@@ -102,10 +102,49 @@ namespace MedicalAppointmentWebApp.Services
             <br />
             <p>Η ομάδα του MyDoctorNow</p>";
 
-            await SendEmailAsync(doctorEmail, "Νέο Ραντεβού", htmlBody);
+            await SendEmailAsync(appointment.Doctor.Email, "Νέο Ραντεβού", htmlBody);
         }
 
 
+        public async Task SendAppointmentCanceledEmailtoPatient(Appointment appointment)
+        {
+
+            var htmlBody = $@"
+            <h2>Το ραντεβού σας με τον Ιατρό {appointment.Doctor.FirstName}  {appointment.Doctor.LastName} ακυρώθηκε</h2>
+             <p>Ειδικότητα Ιατρού: {appointment.Doctor.Specialty.GetDisplayName()}</p>
+            <p>Αναγνωριστικό Ραντεβού: {appointment.Id}</p>
+            <p>Ημέρα: {appointment.Time.ToString("dd/MM/yyyy")}</p>
+            <p>Ώρα: {appointment.Time.ToString("HH:mm")}</p>
+            <p>Διεύθυνση Ιατρείου: {appointment.Practice.FullAddress}</p>
+            <p>Τηλέφωνο Ιατρείου: {appointment.Practice.Phone}</p>
+
+            <br />
+            <p>Η ομάδα του MyDoctorNow</p>";
+
+            await SendEmailAsync(appointment.Patient.Email, "Ακύρωση Ραντεβού", htmlBody);
+        }
+
+        public async Task SendAppointmentCanceledEmailtoDoctor(Appointment appointment)
+        {
+
+            var htmlBody = $@"
+            <h2>Το ραντεβού σας με {appointment.Patient.FirstName}  {appointment.Patient.LastName} ακυρώθηκε</h2>
+            
+            <p>Αναγνωριστικό Ραντεβού: {appointment.Id}</p>
+            <p>AMKA Ασθενή: {appointment.Patient.Amka}</p>
+
+            <p>Ημέρα: {appointment.Time.ToString("dd/MM/yyyy")}</p>
+            <p>Ώρα: {appointment.Time.ToString("HH:mm")}</p>
+            <p>Ιατρείο: {appointment.Practice.FullAddress}</p>
+            <p>Email Ασθενή: {appointment.Patient.Email}</p>
+            <p>Τηλέφωνο Ασθενή: {appointment.Patient.Phone}</p>
+
+
+            <br />
+            <p>Η ομάδα του MyDoctorNow</p>";
+
+            await SendEmailAsync(appointment.Doctor.Email, "Ακύρωση Ραντεβού", htmlBody);
+        }
 
         public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
         {
