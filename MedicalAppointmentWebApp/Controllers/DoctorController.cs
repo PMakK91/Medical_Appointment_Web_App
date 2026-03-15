@@ -20,7 +20,12 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             DoctorSearchViewModel model = await doctorService.SearchAllActiveDoctorsAsync(
-                request.Term!, request.Lon, request.Lat, request.CurrentPage, request.PageSize);
+                request.Term!,
+                request.Lon,
+                request.Lat,
+                request.CurrentPage,
+                request.PageSize,
+                request.SortBy);
 
             return View(model);
         }

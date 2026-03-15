@@ -41,16 +41,16 @@ namespace MedicalAppointmentWebApp.Repositories
         public async Task<IEnumerable<AppointmentWithPatientInfoViewModel>> GetAppointmentsInfoByDayAndPracticeIdAsync(DateTime day, Guid practiceId)
         {
             return await context.Appointments.Select(a => new AppointmentWithPatientInfoViewModel
-                {
-                    Id = a.Id,
-                    DoctorId = a.DoctorId,
-                    PracticeId = a.PracticeId,
-                    Time = a.Time,
-                    Status = a.Status,
-                    PatientId = a.PatientId,
-                    PatientFirstName = a.Patient.FirstName,
-                    PatientLastName = a.Patient.LastName
-                })
+            {
+                Id = a.Id,
+                DoctorId = a.DoctorId,
+                PracticeId = a.PracticeId,
+                Time = a.Time,
+                Status = a.Status,
+                PatientId = a.PatientId,
+                PatientFirstName = a.Patient.FirstName,
+                PatientLastName = a.Patient.LastName
+            })
                 .Where(a => a.PracticeId == practiceId && a.Time.Date.Equals(day.Date) && a.Status != AppointmentStatus.Canceled)
                 .ToListAsync();
         }
@@ -108,5 +108,126 @@ namespace MedicalAppointmentWebApp.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public async Task<DateTime?> GetFirstAvailableSlotForDoctorAsync(Guid doctorId)
+        {
+            var practices = await context.Practices
+                .Where(p => p.DoctorId == doctorId)
+                .ToListAsync();
+
+            DateTime? earliest = null;
+
+            foreach (var practice in practices)
+            {
+                DateTime? slot = await GetFirstAvailableSlotForPracticeAsync(practice.Id);
+
+                if (slot.HasValue && (!earliest.HasValue || slot.Value < earliest.Value))
+                {
+                    earliest = slot;
+                }
+            }
+
+            return earliest;
+        }
+
+
+
+        public async Task<DateTime?> GetFirstAvailableSlotForPracticeAsync(Guid practiceId)
+        {
+            Practice? practice = await context.Practices.AsNoTracking().FirstOrDefaultAsync(p => p.Id == practiceId);
+
+            if (practice == null)
+            {
+                return null;
+            }
+
+            int durationMinutes = practice.Duration;
+            DateTime now = DateTime.Now;
+
+
+            // Εξετάζουμε τις επόμενες 60 ημέρες, ξεκινώντας από σήμερα.
+            // offset = 0 => σήμερα,  offset = 1 => αύριο ...
+
+            for (int offset = 0; offset < 60; offset++)
+            {
+                DateTime date = now.Date.AddDays(offset);
+
+                // Βρίσκουμε το ωράριο του practice για τη συγκεκριμένη ημέρα της εβδομάδας.
+                (TimeSpan? start, TimeSpan? end) = GetWorkingHours(practice, date.DayOfWeek);
+
+                // Αν ειναι κλειστό το ιατρείο προχωράμε στην επόμενη ημέρα
+                if (!start.HasValue || !end.HasValue)
+                {
+                    continue;
+                }
+
+                // Μετατρέπουμε το ωράριο της ημέρας σε πλήρες DateTime προσθέτοντας στην ημερομηνία του iteration την ώρα από το WorkingHours.
+                // Δηλαδή από 01/01/2026 θα γίνει 01/01/2026 9:00
+                DateTime dayStart = date.Add(start.Value);
+                DateTime dayEnd = date.Add(end.Value);
+
+                // Ξεκινάμε να ελέγχουμε από το πρώτο slot της ημέρας.
+                DateTime slotStart = dayStart;
+
+                // Αν είμαστε ήδη μέσα στην ημέρα, βρίσκουμε το πρώτο επόμενο slot που πρέπει να ελέξγουμε, για να μην εξετάσουμε slots που έχουν περάσει σήμερα.
+                if (date.Date == now.Date && now > slotStart)
+                {
+                    slotStart = RoundUpToNextSlot(now, dayStart, durationMinutes);
+                }
+
+                // Ξεκινώντας από το πρώτο επόμενο slot, ελέγχουμε ανά duration, εάν υπάρχει ραντεβού στη βάση.
+                // Μόλις βρούμε slot χωρίς ραντεβού, σταματάμε και επιστρέφουμε αυτό το slot.
+                while (slotStart.AddMinutes(durationMinutes) <= dayEnd)
+                {
+                    bool hasAppointment = await context.Appointments.AnyAsync(a =>
+                        a.PracticeId == practiceId &&
+                        a.Time == slotStart);
+
+                    if (!hasAppointment)
+                    {
+                        return slotStart;
+                    }
+
+                    slotStart = slotStart.AddMinutes(durationMinutes);
+                }
+            }
+
+            return null;
+        }
+        private static DateTime RoundUpToNextSlot(DateTime current, DateTime dayStart, int durationMinutes)
+        {
+            // Αν είναι ακόμα πριν ξεκινήσει το ωράριο της βάρδιας, το πρώτο πιθανό slot είναι ακριβώς στην ώρα έναρξης.
+            if (current <= dayStart)
+            {
+                return dayStart;
+            }
+
+            // Αν όχι, μιλάμε για σήμερα
+            // Υπολογίζουμε πόσα λεπτά έχουν περάσει από την αρχή της βάρδιας.
+            double minutesSinceStart = (current - dayStart).TotalMinutes;
+
+            // Υπολογίζουμε πόσα slots έχουν περάσει από την αρχή της βάρδιας (με ceiling γιατι αν εχει επράσει έστω και λίγο ένα slot, δεν ειναι υποψήφιο) 
+            int slotsPassed = (int)Math.Ceiling(minutesSinceStart / durationMinutes);
+
+            // Προσθέτουμε στην αρχή της βάρδιας τόσα durationMinutes όσα τα slots που έχουν περάσει
+            return dayStart.AddMinutes(slotsPassed * durationMinutes);
+        }
+
+
+        private static (TimeSpan? Start, TimeSpan? End) GetWorkingHours(Practice practice, DayOfWeek dayOfWeek)
+        {
+            return dayOfWeek switch
+            {
+                DayOfWeek.Monday => (practice.MondayStart, practice.MondayEnd),
+                DayOfWeek.Tuesday => (practice.TuesdayStart, practice.TuesdayEnd),
+                DayOfWeek.Wednesday => (practice.WednesdayStart, practice.WednesdayEnd),
+                DayOfWeek.Thursday => (practice.ThursdayStart, practice.ThursdayEnd),
+                DayOfWeek.Friday => (practice.FridayStart, practice.FridayEnd),
+                DayOfWeek.Saturday => (practice.SaturdayStart, practice.SaturdayEnd),
+                DayOfWeek.Sunday => (practice.SundayStart, practice.SundayEnd),
+                _ => (null, null)
+            };
+        }
+
     }
 }

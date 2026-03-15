@@ -19,5 +19,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
         void Save();
         Task SaveAsync();
+        Task<DateTime?> GetFirstAvailableSlotForPracticeAsync(Guid practiceId);
+        Task<DateTime?> GetFirstAvailableSlotForDoctorAsync(Guid doctorId);
     }
 }
