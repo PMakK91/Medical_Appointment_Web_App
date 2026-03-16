@@ -14,5 +14,8 @@ namespace MedicalAppointmentWebApp.Services
         Task<IEnumerable<Appointment>> GetAppointmentsByMonthAndPracticeIdAsync(DateTime date, Guid practiceId);
         Task<Appointment?> ArriveAtAppointmentAsync(Guid appointmentId);
         Task ChangeAppointmentStatusAsync(Appointment appointment, AppointmentStatus appointmentStatus);
+        Task<Appointment?> CancelAppointmentAsync(Guid appointmentId);
+        Task<Appointment?> NoShowAppointmentAsync(Guid id);
+        Task<Appointment?> CompleteAppointmentAsync(Guid id);
     }
 }

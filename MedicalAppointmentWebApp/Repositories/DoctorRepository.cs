@@ -37,17 +37,24 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.FirstOrDefaultAsync(d => d.Email!.Equals(email));
         }
 
-        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int page, int pageSize)
+        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int page, int pageSize , string sortBy)
         {
-            return await SearchAsync(term, lon, lat, page, pageSize, RegistrationFormStatus.Accepted);
+            return await SearchAsync(term, lon, lat, page, pageSize, RegistrationFormStatus.Accepted , sortBy);
         }
 
         public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchPendingAsync(string term, int page, int pageSize)
         {
-            return await SearchAsync(term, null, null, page, pageSize, RegistrationFormStatus.Pending);
+            return await SearchAsync(term, null, null, page, pageSize, RegistrationFormStatus.Pending , "name");
         }
 
-        private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(string term, double? lon, double? lat, int page, int pageSize, RegistrationFormStatus status)
+        private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(
+    string? term,
+    double? lon,
+    double? lat,
+    int page,
+    int pageSize,
+    RegistrationFormStatus status,
+    string? sortBy)
         {
             IQueryable<Doctor> query = context.Doctors
                 .Where(d => d.RegistrationStatus == status);
@@ -58,14 +65,14 @@ namespace MedicalAppointmentWebApp.Repositories
                     (d.FirstName != null && d.FirstName.Contains(term)) ||
                     (d.LastName != null && d.LastName.Contains(term)) ||
                     (d.Email != null && d.Email.Contains(term)) ||
-                    (d.Specialty.ToString().Contains(term))
+                    d.Specialty.ToString().Contains(term)
                 );
             }
 
             if (lon != null && lat != null)
             {
                 double maxDistanceKm = 10.0;
-                double R = 6371.0; // radius of earth in km
+                double R = 6371.0;
 
                 var doctorIds = await context.Practices
                     .Where(p =>
@@ -85,11 +92,19 @@ namespace MedicalAppointmentWebApp.Repositories
                 query = query.Where(d => doctorIds.Contains(d.Id));
             }
 
+            query = sortBy switch
+            {
+                "name_asc" => query.OrderBy(d => d.FirstName).ThenBy(d => d.LastName),
+                "name_desc" => query.OrderByDescending(d => d.FirstName).ThenByDescending(d => d.LastName),
+                "specialty_asc" => query.OrderBy(d => d.Specialty).ThenBy(d => d.LastName),
+                "specialty_desc" => query.OrderByDescending(d => d.Specialty).ThenBy(d => d.LastName),
+                _ => query.OrderBy(d => d.LastName).ThenBy(d => d.FirstName)
+            };
+
             int totalCount = await query.CountAsync();
 
             IEnumerable<Doctor> doctors = await query
                 .AsNoTracking()
-                .OrderBy(d => d.LastName)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

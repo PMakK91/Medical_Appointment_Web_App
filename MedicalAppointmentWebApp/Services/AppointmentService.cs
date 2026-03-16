@@ -66,11 +66,52 @@ namespace MedicalAppointmentWebApp.Services
             appointmentRepository.InsertAppointment(appointment);
             await appointmentRepository.SaveAsync();
 
-            await emailService.SendAppointmentBookedEmailtoPatient(patient.Email, appointment);
-            await emailService.SendAppointmentBookedEmailtoDoctor(doctor.Email, appointment);
+            await emailService.SendAppointmentBookedEmailtoPatient(appointment);
+            await emailService.SendAppointmentBookedEmailtoDoctor(appointment);
 
             return appointment;
         }
+
+
+        public async Task<Appointment?> CancelAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.Canceled);
+
+            await emailService.SendAppointmentCanceledEmailtoPatient(appointment);
+            await emailService.SendAppointmentCanceledEmailtoDoctor(appointment);
+
+            return appointment;
+        }
+
+        public async Task<Appointment?> CompleteAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.Completed);
+            return appointment;
+        }
+
+
+        public async Task<Appointment?> NoShowAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.No_Show);
+            return appointment;
+        }
+
+
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {

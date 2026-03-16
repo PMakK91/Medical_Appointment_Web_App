@@ -1,4 +1,5 @@
-﻿using MedicalAppointmentWebApp.Models;
+﻿using MedicalAppointmentWebApp.Data.Enums;
+using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 
 namespace MedicalAppointmentWebApp.Repositories
@@ -14,8 +15,11 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<IEnumerable<Appointment>> GetAppointmentsInfoByMonthAndPracticeIdAsync(DateTime date, Guid practiceId);
 
         void InsertAppointment(Appointment appointment);
+        void UpdateAppointmentStatus(Guid appointmentId, AppointmentStatus status);
 
         void Save();
         Task SaveAsync();
+        Task<DateTime?> GetFirstAvailableSlotForPracticeAsync(Guid practiceId);
+        Task<DateTime?> GetFirstAvailableSlotForDoctorAsync(Guid doctorId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 
 namespace MedicalAppointmentWebApp.Repositories
 {

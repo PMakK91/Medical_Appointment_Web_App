@@ -49,6 +49,19 @@
         Αναζήτηση
     </button>
 
+    
+        <div class="mt-2">
+    <select asp-for="SortBy" class="form-select" onchange="this.form.submit()">
+        <option value="">Ταξινόμηση</option>
+        <option value="name_asc">Όνομα Α-Ω</option>
+        <option value="name_desc">Όνομα Ω-Α</option>
+        <option value="specialty_asc">Ειδικότητα Α-Ω</option>
+        <option value="specialty_desc">Ειδικότητα Ω-Α</option>
+    </select>
+</div>
+
+
+
 </form>
 
 
@@ -58,41 +71,57 @@
 
         <h1 class="title mb-2">Αποτελέσματα Αναζήτησης</h1>
         <p class="subtitle mb-5"></p>
-        <ul class="doctor-result-list list-unstyled mx-auto">
-            @foreach (var doctor in Model.Doctors)
-            {
-
-                <li class="doctor-profile mb-3" onclick="location.href = '@Url.Action(action: "Profile", controller: "Doctor", new { doctor_id = doctor.Id })'">
-
-                    <div class="row">
-                        <div class="col-3">
-                            @if (@doctor?.ImageUrl is null)
-                            {
-                                <img class="rounded-circle object-fit-cover doctor-image"
-                                     style="width:64px; height:64px;"
-                                     src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg?s=612x612&w=0&k=20&c=BpR0FVaEa5F24GIw7K8nMWiiGmbb8qmhfkpXcp1dhQg="
-                                     alt="Profile">
-                            }
-                            else
-                            {
-                                <img class="rounded-circle object-fit-cover doctor-image" style="width:64px; height:64px;" src="/Images/@doctor.ImageUrl" />
-                            }
-                        </div>
-                        <div class="col-9 text-start">
-                            <p class="fc-black fs-16 fw-400 mb-0">@doctor.FirstName @doctor.LastName</p>
-                            <p class="fc-grey fs-16 fw-100">@Model.GetDisplayName(doctor)</p>
-                        </div>
-                    </div>
 
 
 
 
-                </li>
-
-            }
 
 
-        </ul>
+<ul class="doctor-result-list list-unstyled mx-auto">
+@foreach (var item in Model.Doctors)
+{
+    var doctor = item.Doctor;
+
+    <li class="doctor-profile mb-3"
+        onclick="location.href='@Url.Action("Profile","Doctor", new { doctor_id = doctor.Id })'">
+
+        <div class="row">
+            <div class="col-3">
+                @if (doctor?.ImageUrl is null)
+                {
+                    <img class="rounded-circle object-fit-cover doctor-image"
+                         style="width:64px; height:64px;"
+                         src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg"
+                         alt="Profile">
+                }
+                else
+                {
+                    <img class="rounded-circle object-fit-cover doctor-image"
+                         style="width:64px; height:64px;"
+                         src="/Images/@doctor.ImageUrl" />
+                }
+            </div>
+
+            <div class="col-9 text-start">
+                <p class="fc-black fs-16 fw-400 mb-0">@doctor.FirstName @doctor.LastName</p>
+                <p class="fc-grey fs-16 fw-100">@Model.GetDisplayName(doctor)</p>
+
+                @if (item.FirstAvailableSlot.HasValue)
+                {
+                    <p>Πρώτο διαθέσιμο ραντεβού:
+                        @item.FirstAvailableSlot.Value.ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                }
+                else
+                {
+                    <p>Δεν υπάρχει διαθέσιμο ραντεβού</p>
+                }
+            </div>
+        </div>
+
+    </li>
+}
+</ul>
 
 
         <div aria-label="Page navigation">
