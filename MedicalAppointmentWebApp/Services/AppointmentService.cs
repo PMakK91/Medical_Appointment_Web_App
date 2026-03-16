@@ -1,4 +1,5 @@
-﻿using MedicalAppointmentWebApp.Models;
+﻿using MedicalAppointmentWebApp.Data.Enums;
+using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
 
@@ -84,6 +85,23 @@ namespace MedicalAppointmentWebApp.Services
         public async Task<IEnumerable<Appointment>> GetAppointmentsByMonthAndPracticeIdAsync(DateTime date, Guid practiceId)
         {
             return await appointmentRepository.GetAppointmentsInfoByMonthAndPracticeIdAsync(date, practiceId);
+        }
+
+        public async Task<Appointment?> ArriveAtAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+                return null;
+
+            await ChangeAppointmentStatusAsync(appointment, AppointmentStatus.Completed);
+
+            return appointment;
+        }
+
+        public async Task ChangeAppointmentStatusAsync(Appointment appointment, AppointmentStatus appointmentStatus)
+        {
+            appointment.Status = appointmentStatus;
+            await appointmentRepository.SaveAsync();
         }
     }
 }
