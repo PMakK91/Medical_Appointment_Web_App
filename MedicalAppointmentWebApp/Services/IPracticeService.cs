@@ -10,11 +10,8 @@ namespace MedicalAppointmentWebApp.Services
         Task<WeekScheduleViewModel?> GetPracticeByIdAsync(Guid id, DateTime? weekStart);
         Task<PracticeSearchViewModel> GetPracticesWithDoctorIdAsync(Guid doctorId, string term, int page, int pageSize);
 
+        Task<string?> DeletePracticeAsync(Guid id);
+
         Task<AvailableSlotsViewModel?> GetPracticeAvailableSlotsAsync(Guid id);
-
-
-
-
-
     }
 }

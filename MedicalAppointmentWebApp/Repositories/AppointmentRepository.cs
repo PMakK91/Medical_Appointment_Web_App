@@ -62,6 +62,14 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Appointment>> GetAllByPracticeAfterTodayAsync(Guid practiceId)
+        {
+            return await context.Appointments
+                .Include(a => a.Patient)
+                .Where(a => a.PracticeId == practiceId && a.Status == AppointmentStatus.Scheduled && a.Time > DateTime.Today)
+                .ToListAsync();
+        }
+
         public void InsertAppointment(Appointment appointment)
         {
             context.Appointments.Add(appointment);

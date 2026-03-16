@@ -74,6 +74,14 @@ namespace MedicalAppointmentWebApp.Controllers
             return PartialView("_AvailableTimeSlots", weekScheduleViewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            string? message = await practiceService.DeletePracticeAsync(id);
+            
+            ViewBag.Message = message;
+            return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+        }
 
         [HttpGet("{practiceId:guid}")]
         public async Task<IActionResult> Get(Guid practiceId)

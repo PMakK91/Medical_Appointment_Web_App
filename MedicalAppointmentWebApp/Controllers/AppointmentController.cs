@@ -49,6 +49,7 @@ namespace MedicalAppointmentWebApp.Controllers
             {
                 return BadRequest("Practice not found");
             }
+
             appointmentInfoViewModel.Time = request.Time;
             return View(appointmentInfoViewModel);
         }
@@ -100,6 +101,10 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             request.PatientId = Guid.Parse(userId);
+            if (request.PatientId == request.DoctorId)
+            {
+                return BadRequest("Δεν μπορείτε να κλείσετε ραντεβού στο γραφείο σας.");
+            }
 
             Appointment? appointment = await appointmentService.CreateAppointmentAsync(request);
             if (appointment is null)

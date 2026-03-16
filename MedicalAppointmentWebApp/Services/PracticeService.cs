@@ -5,7 +5,10 @@ using MedicalAppointmentWebApp.Repositories;
 
 namespace MedicalAppointmentWebApp.Services
 {
-    public class PracticeService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IAppointmentRepository appointmentRepository) : IPracticeService
+    public class PracticeService(IDoctorRepository doctorRepository, 
+        IPracticeRepository practiceRepository, 
+        IAppointmentRepository appointmentRepository,
+        IEmailService emailService) : IPracticeService
     {
 
         public async Task<Practice?> EnrollPracticeAsync(Guid doctorId, PracticeEnrollRequest practiceEnrollRequest)
@@ -88,6 +91,30 @@ namespace MedicalAppointmentWebApp.Services
 
             return await BuildWeekScheduleAsync(practice, StartOfWeek((DateTime)weekStart));
         }
+
+        public async Task<string?> DeletePracticeAsync(Guid id)
+        {
+            Practice? practice = await GetPracticeByIdAsync(id);
+            if (practice is null)
+                return "Αποτυχία διαγραφής Γραφείου.";
+
+            List<Appointment> appointments = await appointmentRepository.GetAllByPracticeAfterTodayAsync(practice.Id);
+
+            foreach (Appointment appointment in appointments)
+            {
+                appointment.Status = AppointmentStatus.Canceled;
+                await emailService.SendAppointmentCanceledEmailtoPatient(appointment);
+            }
+
+            practice.RegistrationStatus = RegistrationFormStatus.Rejected;
+            practice.IsDeleted = true;
+            practice.DeletedTime = DateTime.UtcNow;
+            await practiceRepository.SaveAsync();
+
+            return "Το Γραφείο σας διαγράφηκε με επιτυχία.";
+        }
+
+
         public async Task<AvailableSlotsViewModel?> GetPracticeAvailableSlotsAsync(Guid id)
         {
             Practice? practice = await practiceRepository.GetPracticeByIdAsync(id);
@@ -101,7 +128,6 @@ namespace MedicalAppointmentWebApp.Services
 
             return await BuildCalendarAsync(practice, startDate);
         }
-
 
         private async Task<WeekScheduleViewModel> BuildWeekScheduleAsync(Practice practice, DateTime weekStart)
         {
