@@ -24,157 +24,164 @@
 
             <div class="row">
                 <div class="col-6 text-start fc-grey fs-16 fw-100">Αναγνωριστικό</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    #@Model.Id.ToString().Substring(0, 6)
-                </div>
+                #@Model.Id.ToString().Substring(0, 6)
             </div>
-            </div>
+        </div>
+    </div>
 
 
 
        
 
 
-        <div class="registration-info mx-auto mt-3">
+    <div class="registration-info mx-auto mt-3">
 
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Κατάσταση</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    <div class="status-tag  w-auto d-inline-block
+        <div class="row">
+            <div class="col-6 text-start fc-grey fs-16 fw-100">Κατάσταση</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+            <div class="status-tag  w-auto d-inline-block
                 @(Model.Status == AppointmentStatus.Scheduled ? "tag-green" :
-                                                                                                                                Model.Status == AppointmentStatus.Completed ? "tag-blue" :
-                                                                                                                                Model.Status == AppointmentStatus.Canceled ? "tag-red" :
-                                                                                                                   "tag-gray")">
+                                                                                                                                                                          Model.Status == AppointmentStatus.Completed ? "tag-blue" :
+                                                                                                                                                                          Model.Status == AppointmentStatus.Canceled ? "tag-red" :
+                                                                                                                                                             "tag-gray")">
 
-                        @(Model.Status == AppointmentStatus.Scheduled ? "Προγραμματισμένο" :
-                                                Model.Status == AppointmentStatus.Completed ? "Ολοκληρωμένο" :
-                                                Model.Status == AppointmentStatus.Canceled ? "Ακυρωμένο" :
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "Απών")
-                    </div>
-                </div>
+                @(Model.Status == AppointmentStatus.Scheduled ? "Προγραμματισμένο" :
+                                        Model.Status == AppointmentStatus.Completed ? "Ολοκληρωμένο" :
+                                        Model.Status == AppointmentStatus.Canceled ? "Ακυρωμένο" :
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Απών")
             </div>
         </div>
+    </div>
+</div>
+
+<div class="registration-info mx-auto  mt-3">
+
+    <div class="row">
+        <div class="col-6 text-start fc-grey fs-16 fw-100">Ημέρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+        @Model.Time.ToString("dd/MM/yyyy")
+    </div>
+</div>
+<div class="row">
+    <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+
+    @Model.Time.ToShortTimeString()
+</div>
+</div>
+</div>
+
+<div class="registration-info mx-auto  mt-3">
+
+    <div class="row">
+        <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ασθενή</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+        @Model.Patient?.FirstName @Model.Patient?.LastName
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 text-start fc-grey fs-16 fw-100">ΑΜΚΑ Ασθενή</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+    @Model.Patient?.Amka
+</div>
+</div>
+</div>
+<div class="registration-info mx-auto  mt-3">
+
+    <div class="row mt-3">
+        <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+        @Model.Doctor?.FirstName @Model.Doctor?.LastName
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+    @Html.DisplayFor(m => m.Doctor.Specialty)
+</div>
+</div>
 
 
 
-        <div class="registration-info mx-auto  mt-3">
 
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ημέρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Time.ToString("dd/MM/yyyy")
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+<a class="fc-blue d-block login-link fs-16 mt-3"
+       asp-controller="Doctor"
+       asp-action="Profile"
+       asp-route-doctor_id="@Model.Doctor?.Id">
+    Προβολή προφίλ
+</a>
 
-                    @Model.Time.ToShortTimeString()
-                </div>
-            </div>
-        </div>
-
-        <div class="registration-info mx-auto  mt-3">
-
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ασθενή</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Patient?.FirstName @Model.Patient?.LastName
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">ΑΜΚΑ Ασθενή</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Patient?.Amka
-                </div>
-            </div>
-        </div>
-        <div class="registration-info mx-auto  mt-3">
-
-            <div class="row mt-3">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ονοματεπώνυμο Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Doctor?.FirstName @Model.Doctor?.LastName
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ειδικότητα Ιατρού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Html.DisplayFor(m => m.Doctor.Specialty)
-                </div>
-            </div>
-
-
-
-
-            <a class="fc-blue d-block login-link fs-16 mt-3"
-               asp-controller="Doctor"
-               asp-action="Profile"
-               asp-route-doctor_id="@Model.Doctor?.Id">
-                Προβολή προφίλ
-            </a>
-
-            </div>
+</div>
 
   
   
 
 
-        <div class="registration-info mx-auto  mt-3">
+<div class="registration-info mx-auto  mt-3">
 
-      
-         
+	  
+		 
 
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Τηλέφωνο</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Practice?.Phone
-                </div>
-            </div>
+<div class="row">
+<div class="col-6 text-start fc-grey fs-16 fw-100">Τηλέφωνο</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+@Model.Practice?.Phone
+</div>
+</div>
 
-            <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Practice?.FullAddress
-                </div>
-            </div>
-            <div class="row mt-3">
+<div class="row">
+<div class="col-6 text-start fc-grey fs-16 fw-100">Διεύθυνση Ιατρείου</div> <div class="text-start fc-black fs-16 fw-100 col-6">
+@Model.Practice?.FullAddress
+</div>
+</div>
+<div class="row mt-3">
 
 
-            <gmp-map style="height:200px;" center="@Model.Practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@Model.Practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" zoom="15" map-id="@Model.Practice.Id">
-                <gmp-advanced-marker position="@Model.Practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@Model.Practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" title=""></gmp-advanced-marker>
+<gmp-map style="height:200px;" center="@Model.Practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@Model.Practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" zoom="15" map-id="@Model.Practice.Id">
+<gmp-advanced-marker position="@Model.Practice.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture),@Model.Practice.Lon.ToString(System.Globalization.CultureInfo.InvariantCulture)" title=""></gmp-advanced-marker>
 
-            </gmp-map>
-                <a class="fc-blue d-block login-link fs-16 mt-3" target="_blank"
-                   href="https://www.google.com/maps?q=@Model.Practice.Lat,@Model.Practice.Lon">Προβολή μεγαλύτερου χάρτη</a>
-            </div>
+</gmp-map>
+<a class="fc-blue d-block login-link fs-16 mt-3" target="_blank"
+href="https://www.google.com/maps?q=@Model.Practice.Lat,@Model.Practice.Lon">Προβολή μεγαλύτερου χάρτη</a>
+</div>
 
-          
+		  
+</div>
+
+
+
+@if (User.IsInRole("Doctor"))
+{
+    <div class="registration-info mx-auto mt-3">
+        <div class="">
+            @if (ViewBag.QrCodeImage != null)
+            {
+                <img src="@ViewBag.QrCodeImage" style="width: 200px; height: auto;" />
+            }
         </div>
-        @if (Model.Status == AppointmentStatus.Scheduled)
+    </div>
+}
+    
+
+
+@if (Model.Status == AppointmentStatus.Scheduled)
 {
     <div class="row mt-4 ">
+       
 
-        <div class="registration-info mx-auto  mt-3">
-            <div class="mt-4">
-                @if (ViewBag.QrCodeImage != null)
-                {
-                    <img src="@ViewBag.QrCodeImage" style="width: 80%; height: auto;" />
-                }
-            </div>
-        </div>
+        <form asp-controller="Appointment"
+              asp-action="CancelAppointment"
+              asp-route-id="@Model.Id"
+              method="post">
 
-                <form asp-controller="Appointment"
-                      asp-action="CancelAppointment"
-                      asp-route-id="@Model.Id"
-                      method="post">
-
-                    <button type="submit" class="w-100 btn primary-btn delete mx-auto">
-                        <svg style="margin-right: 5px;" fill="currentColor" height="10px" width="10px" version="1.1"
-                             id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                             viewBox="0 0 460.775 460.775" xml:space="preserve">
-                        <path d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55
-     c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55
-     c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505
-     c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55
-     l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719
-     c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z" />
-                    </svg>
-                        Ακύρωση
-                    </button>
-                </form>
+            <button type="submit" class="w-100 btn primary-btn delete mx-auto">
+                <svg style="margin-right: 5px;" fill="currentColor" height="10px" width="10px" version="1.1"
+                     id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     viewBox="0 0 460.775 460.775" xml:space="preserve">
+                    <path d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55
+                    c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55
+                    c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505
+                    c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55
+                    l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719
+                    c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z" />
+                </svg>
+                Ακύρωση
+            </button>
+        </form>
 
         @if (User.IsInRole("Doctor") && Model.Time < DateTime.Now)
         {
@@ -184,37 +191,34 @@
                   method="post">
 
                 <button type="submit" class="mt-2 w-100 btn primary-btn delete mx-auto">
-                            <svg  style="margin-right: 5px;" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 16L20 21M20 16L15 21M4 21C4 17.134 7.13401 14 11 14M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
+                    <svg style="margin-right: 5px;" width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 16L20 21M20 16L15 21M4 21C4 17.134 7.13401 14 11 14M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                     Ασθενής Απών
                 </button>
             </form>
 
-                    <form asp-controller="Appointment"
-                          asp-action="CompleteAppointment"
-                          asp-route-id="@Model.Id"
-                          method="post">
+            <form asp-controller="Appointment"
+                  asp-action="CompleteAppointment"
+                  asp-route-id="@Model.Id"
+                  method="post">
 
-                        <button type="submit" class="mt-2 w-100 btn primary-btn  mx-auto">
-                            <svg  style="margin-right: 5px;" width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Ολοκληρώθηκε
-                        </button>
-                    </form>
+                <button type="submit" class="mt-2 w-100 btn primary-btn  mx-auto">
+                    <svg style="margin-right: 5px;" width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Ολοκληρώθηκε
+                </button>
+            </form>
 
         }
-
-
-
 
 
     </div>
 }
 
-            </div>
-        </div>
+</div>
+</div>
 
 
 
