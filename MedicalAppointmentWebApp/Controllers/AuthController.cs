@@ -30,7 +30,6 @@ namespace MedicalAppointmentWebApp.Controllers
             string? amkaCheck = authService.AmkaCheck(request.Amka!);
             if (amkaCheck != null)
             {
-                //ModelState.AddModelError("", amkaCheck);
                 TempData["ErrorMessage"] = amkaCheck;
                 return View("Register");
             }
@@ -38,7 +37,6 @@ namespace MedicalAppointmentWebApp.Controllers
             string? phoneCheck = authService.PhoneCheck(request.Phone!);
             if (phoneCheck != null)
             {
-                //ModelState.AddModelError("", phoneCheck);
                 TempData["ErrorMessage"] = phoneCheck;
                 return View("Register");
             }
@@ -46,7 +44,6 @@ namespace MedicalAppointmentWebApp.Controllers
             Patient? patient = await authService.PatientRegisterAsync(request);
             if (patient == null)
             {
-                //ModelState.AddModelError("", "Το email χρησιμοποιείται ήδη");
                 TempData["ErrorMessage"] = "Το email χρησιμοποιείται ήδη.";
                 return View("Register");
             }

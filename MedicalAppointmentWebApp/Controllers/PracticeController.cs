@@ -75,6 +75,61 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> EditAsync(Guid id)
+        {
+            Practice? practice = await practiceService.GetPracticeByIdAsync(id);
+            if (practice is null)
+            {
+                return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+            }
+
+            return View(new EditPracticeViewModel
+            {
+                Practice = practice
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditVerificationAsync(EditPracticeViewModel editPracticeViewModel)
+        {
+            Practice? practice = await practiceService.GetPracticeByIdAsync(editPracticeViewModel.PracticeId);
+            if (practice is null)
+            {
+                ViewBag.ErrorMessage = "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν βρέθηκε.";
+                return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+            }
+
+            editPracticeViewModel.Practice = practice;
+            editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
+
+            return View(editPracticeViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPracticeAsync(EditPracticeViewModel editPracticeViewModel)
+        {
+            Practice? practice = await practiceService.GetPracticeByIdAsync(editPracticeViewModel.PracticeId);
+            if (practice is null)
+            {
+                ViewBag.ErrorMessage = "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν βρέθηκε.";
+                return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+            }
+
+            editPracticeViewModel.Practice = practice;
+            editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
+
+            string? errorMessage = await practiceService.UpdatePracticeInfoAsync(editPracticeViewModel);
+            if (errorMessage != null)
+            {
+                ViewBag.ErrorMessage = errorMessage;
+                return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+            }
+
+            ViewBag.SuccessMessage = "Επιτυχία αλλαγής στοιχείων γραφείου.";
+            return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             string? message = await practiceService.DeletePracticeAsync(id);

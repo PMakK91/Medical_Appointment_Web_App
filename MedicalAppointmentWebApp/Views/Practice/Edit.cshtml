@@ -1,0 +1,88 @@
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.EditPracticeViewModel
+
+@{
+    ViewData["Title"] = "Ενημέρωση Ιατρείου";
+    Layout = "_Layout";
+}
+
+@{
+    var days = new[]
+    {
+        new { Name = "Δευτέρα", StartProp = nameof(Model.MondayStart), EndProp = nameof(Model.MondayEnd), StartValue = Model.Practice?.MondayStart, EndValue = Model.Practice?.MondayEnd },
+        new { Name = "Τρίτη", StartProp = nameof(Model.TuesdayStart), EndProp = nameof(Model.TuesdayEnd), StartValue = Model.Practice?.TuesdayStart, EndValue = Model.Practice?.TuesdayEnd },
+        new { Name = "Τετάρτη", StartProp = nameof(Model.WednesdayStart), EndProp = nameof(Model.WednesdayEnd), StartValue = Model.Practice?.WednesdayStart, EndValue = Model.Practice?.WednesdayEnd },
+        new { Name = "Πέμπτη", StartProp = nameof(Model.ThursdayStart), EndProp = nameof(Model.ThursdayEnd), StartValue = Model.Practice?.ThursdayStart, EndValue = Model.Practice?.ThursdayEnd },
+        new { Name = "Παρασκευή", StartProp = nameof(Model.FridayStart), EndProp = nameof(Model.FridayEnd), StartValue = Model.Practice?.FridayStart, EndValue = Model.Practice?.FridayEnd },
+        new { Name = "Σάββατο", StartProp = nameof(Model.SaturdayStart), EndProp = nameof(Model.SaturdayEnd), StartValue = Model.Practice?.SaturdayStart, EndValue = Model.Practice?.SaturdayEnd },
+        new { Name = "Κυριακή", StartProp = nameof(Model.SundayStart), EndProp = nameof(Model.SundayEnd), StartValue = Model.Practice?.SundayStart, EndValue = Model.Practice?.SundayEnd }
+    };
+}
+
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+
+        <h1 class="title mb-2">Ενημέρωση Ιατρείου</h1>
+        <p class="subtitle mb-5"></p>
+
+        <form id="practiceForm" class="practice-form" asp-action="EditVerification" asp-controller="Practice" method="post">
+
+            <input type="hidden" asp-for="PracticeId" value="@Model.Practice?.Id" />
+
+            <div class="mb-3">
+                <label class="practice-label">Διάρκεια Ραντεβού (λεπτά)</label>
+                <input class="form-control practice-input" asp-for="Duration" type="text"
+                       value = "@Model.Practice?.Duration"
+                       oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,2)"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label register-label" for="phonePatient">Κινητό Τηλέφωνο:</label>
+                <input asp-for="Phone" type="tel"
+                       value="@Model.Practice?.Phone"
+                       class="form-control register-input" aria-label="Κινητό Τηλέφωνο"
+                       autocomplete="tel" inputmode="tel" pattern="[0-9]{10}" minlength="10" maxlength="10"
+                       title="Το τηλέφωνο απαιτείται να έχει 10 ψηφία"
+                       required />
+            </div>
+
+
+            <h3 class="fs-16 fw-400 fc-black mt-5">Ώρες Λειτουργίας</h3>
+
+            <div class="practice-hours">
+                @foreach (var day in days)
+                {
+                    <div class="day-div">
+                        <div class="day-name">@day.Name</div>
+                        <div class="state">
+                            <button type="button" class="toggle off"></button>
+                            <div class="status-text">Κλειστά</div>
+                        </div>
+                        <div class="ranges">
+                            <div class="range">
+                                <select name="@day.StartProp" class="daySelect">
+                                    @if (day.StartValue.HasValue) {
+                                        <option value="@day.StartValue.Value.ToString(@"hh\:mm")" selected>@day.StartValue.Value.ToString(@"hh\:mm")</option>
+                                    }
+                                </select>
+                            </div>
+                            -
+                            <div class="range">
+                                <select name="@day.EndProp" class="daySelect">
+                                    @if (day.EndValue.HasValue) {
+                                        <option value="@day.EndValue.Value.ToString(@"hh\:mm")" selected>@day.EndValue.Value.ToString(@"hh\:mm")</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="submit" class="btn w-100 primary-btn mt-4 mb-5">
+                Αποθήκευση
+            </button>
+
+        </form>
+    </div>
+</div>

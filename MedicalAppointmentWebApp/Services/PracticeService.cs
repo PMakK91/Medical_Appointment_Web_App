@@ -92,6 +92,47 @@ namespace MedicalAppointmentWebApp.Services
             return await BuildWeekScheduleAsync(practice, StartOfWeek((DateTime)weekStart));
         }
 
+        public async Task<IEnumerable<Appointment>> GetAppointmentsAffectedByChangeAsync(EditPracticeViewModel editPracticeViewModel)
+        {
+            return await appointmentRepository.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
+        }
+
+        public async Task<string?> UpdatePracticeInfoAsync(EditPracticeViewModel editPracticeViewModel)
+        {
+            Practice? practice = await GetPracticeByIdAsync(editPracticeViewModel.PracticeId);
+            if (practice is null)
+            {
+                return "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν βρέθηκε";
+            }
+
+            foreach (Appointment appointment in editPracticeViewModel.Appointments)
+            {
+                appointment.Status = AppointmentStatus.Canceled;
+                await emailService.SendAppointmentCanceledEmailtoPatient(appointment);
+            }
+
+            practice.Duration = editPracticeViewModel.Duration;
+            practice.Phone = editPracticeViewModel.Phone;
+
+            practice.MondayStart = editPracticeViewModel.MondayStart;
+            practice.MondayEnd = editPracticeViewModel.MondayEnd;
+            practice.TuesdayStart = editPracticeViewModel.TuesdayStart;
+            practice.TuesdayEnd = editPracticeViewModel.TuesdayEnd;
+            practice.WednesdayStart = editPracticeViewModel.WednesdayStart;
+            practice.WednesdayEnd = editPracticeViewModel.WednesdayEnd;
+            practice.ThursdayStart = editPracticeViewModel.ThursdayStart;
+            practice.ThursdayEnd = editPracticeViewModel.ThursdayEnd;
+            practice.FridayStart = editPracticeViewModel.FridayStart;
+            practice.FridayEnd = editPracticeViewModel.FridayEnd;
+            practice.SaturdayStart = editPracticeViewModel.SaturdayStart;
+            practice.SaturdayEnd = editPracticeViewModel.SaturdayEnd;
+            practice.SundayStart = editPracticeViewModel.SundayStart;
+            practice.SundayEnd = editPracticeViewModel.SundayEnd;
+            await practiceRepository.SaveAsync();
+
+            return null;
+        }
+
         public async Task<string?> DeletePracticeAsync(Guid id)
         {
             Practice? practice = await GetPracticeByIdAsync(id);

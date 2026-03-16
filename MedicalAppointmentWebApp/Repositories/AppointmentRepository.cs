@@ -70,6 +70,30 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Appointment>> GetAppointmentsAffectedByChangeAsync(EditPracticeViewModel editPracticeViewModel)
+        {
+            List<int> allowedDays = new List<int>();
+            if (editPracticeViewModel.MondayStart == null) allowedDays.Add(1);
+            if (editPracticeViewModel.TuesdayStart == null) allowedDays.Add(2);
+            if (editPracticeViewModel.WednesdayStart == null) allowedDays.Add(3);
+            if (editPracticeViewModel.ThursdayStart == null) allowedDays.Add(4);
+            if (editPracticeViewModel.FridayStart == null) allowedDays.Add(5);
+            if (editPracticeViewModel.SaturdayStart == null) allowedDays.Add(6);
+            if (editPracticeViewModel.SundayStart == null) allowedDays.Add(0);
+
+            var appointments = await context.Appointments
+                .Include(a => a.Patient)
+                .Where(a =>
+                    a.PracticeId == editPracticeViewModel.PracticeId &&
+                    a.Time > DateTime.Today)
+                .ToListAsync();
+
+            return appointments
+                .Where(a => allowedDays.Contains((int)a.Time.DayOfWeek))
+                .ToList();
+        }
+
+
         public void InsertAppointment(Appointment appointment)
         {
             context.Appointments.Add(appointment);

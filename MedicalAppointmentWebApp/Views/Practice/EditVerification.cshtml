@@ -1,0 +1,38 @@
+﻿@model MedicalAppointmentWebApp.Models.ViewModels.EditPracticeViewModel
+
+@{
+    ViewData["Title"] = "Ενημέρωση Ιατρείου";
+    Layout = "_Layout";
+}
+<p>Εάν προχωρήσετε με την αλλαγή στοιχείων του γραφείου σας <u>θα ακυρωθούν</u>: @Model.Appointments.Count() προγραμματισμένα ραντεβού</p>
+
+<form asp-action="EditPractice" asp-controller="Practice" method="post">
+    <input type="hidden" asp-for="PracticeId" value="@Model.PracticeId" />
+    <input type="hidden" asp-for="Duration" value="@Model.Duration" />
+    <input type="hidden" asp-for="Phone" value="@Model.Phone" />
+
+    <input type="hidden" asp-for="MondayStart" value="@Model.MondayStart" />
+    <input type="hidden" asp-for="MondayEnd" value="@Model.MondayEnd" />
+
+    <input type="hidden" asp-for="TuesdayStart" value="@Model.TuesdayStart" />
+    <input type="hidden" asp-for="TuesdayEnd" value="@Model.TuesdayEnd" />
+
+    <input type="hidden" asp-for="WednesdayStart" value="@Model.WednesdayStart" />
+    <input type="hidden" asp-for="WednesdayEnd" value="@Model.WednesdayEnd" />
+
+    <input type="hidden" asp-for="ThursdayStart" value="@Model.ThursdayStart" />
+    <input type="hidden" asp-for="ThursdayEnd" value="@Model.ThursdayEnd" />
+
+    <input type="hidden" asp-for="FridayStart" value="@Model.FridayStart" />
+    <input type="hidden" asp-for="FridayEnd" value="@Model.FridayEnd" />
+
+    <input type="hidden" asp-for="SaturdayStart" value="@Model.SaturdayStart" />
+    <input type="hidden" asp-for="SaturdayEnd" value="@Model.SaturdayEnd" />
+
+    <input type="hidden" asp-for="SundayStart" value="@Model.SundayStart" />
+    <input type="hidden" asp-for="SundayEnd" value="@Model.SundayEnd" />
+
+    <button type="submit" class="btn w-100 primary-btn mt-4 mb-5">
+        Αποθήκευση Αλλαγών
+    </button>
+</form>
