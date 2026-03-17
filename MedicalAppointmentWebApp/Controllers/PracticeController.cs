@@ -128,6 +128,11 @@ namespace MedicalAppointmentWebApp.Controllers
 
             editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
 
+            if (!editPracticeViewModel.Appointments.Any())
+            {
+                return await EditPracticeAsync(editPracticeViewModel);
+            }
+
             return View(editPracticeViewModel);
         }
 
