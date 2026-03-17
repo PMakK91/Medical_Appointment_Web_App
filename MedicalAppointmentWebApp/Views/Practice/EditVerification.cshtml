@@ -1,11 +1,45 @@
-﻿@model MedicalAppointmentWebApp.Models.ViewModels.EditPracticeViewModel
+﻿@using MedicalAppointmentWebApp.Data.Enums
+@model MedicalAppointmentWebApp.Models.ViewModels.EditPracticeViewModel
 
 @{
     ViewData["Title"] = "Ενημέρωση Ιατρείου";
     Layout = "_Layout";
 }
-<p>Εάν προχωρήσετε με την αλλαγή στοιχείων του γραφείου σας <u>θα ακυρωθούν</u>: @Model.Appointments.Count() προγραμματισμένα ραντεβού</p>
 
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
+
+        <h1 class="title mb-2">Ενημέρωση Ιατρείου</h1> 
+
+        <div class="alert-danger mt-5 mb-5 subtitle"><b>ΠΡΟΣΟΧΗ!</b> <br>Εάν προχωρήσετε με τη συγκεκριμένη αλλαγή θα ακυρωθούν τα παρακάτω @Model.Appointments.Count() ραντεβού και οι ασθενείς θα ειδοποιηθούν μέσω email:</div>
+
+        <ul class="my-appointments-list list-unstyled mx-auto">
+        @foreach (var ap in Model.Appointments)
+        {
+       <li class="mb-3">
+                        <div class="row">
+                           
+                        <div class="col-8">
+                            <div class="text-start">
+                                <div class="d-inline fc-black fs-16 fw-600 ">@ap.Time.ToString("dd/MM/yyyy")</div>
+                                <div class="d-inline fc-black fs-16 fw-200 ms-2">@ap.Time.ToString("HH:mm")</div>
+                            </div>
+                               
+                            <div class=" mt-1 fc-black fs-16 fw-200 text-start"> @ap.Patient?.FirstName @ap.Patient?.LastName</div>
+                          
+                        </div>
+                            
+                        <div class="col-4 text-end p-1">
+                            <a class=" btn primary-btn " asp-controller="Appointment" asp-action="Index" asp-route-id="@ap.Id">Λεπτομέρειες</a>
+                        </div>
+
+                    </div>
+
+
+                    </li>
+
+            }
+        </ul>
 <form asp-action="EditPractice" asp-controller="Practice" method="post">
     <input type="hidden" asp-for="PracticeId" value="@Model.PracticeId" />
     <input type="hidden" asp-for="Duration" value="@Model.Duration" />
@@ -32,7 +66,10 @@
     <input type="hidden" asp-for="SundayStart" value="@Model.SundayStart" />
     <input type="hidden" asp-for="SundayEnd" value="@Model.SundayEnd" />
 
-    <button type="submit" class="btn w-100 primary-btn mt-4 mb-5">
+    <button type="submit" class="btn w-100 primary-btn mt-4 mb-5 mx-auto">
         Αποθήκευση Αλλαγών
     </button>
+
 </form>
+
+</div></div>
