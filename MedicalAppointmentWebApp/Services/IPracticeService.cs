@@ -12,7 +12,7 @@ namespace MedicalAppointmentWebApp.Services
 
         Task<IEnumerable<Appointment>> GetAppointmentsAffectedByChangeAsync(EditPracticeViewModel editPracticeViewModel);
         Task<string?> UpdatePracticeInfoAsync(EditPracticeViewModel editPracticeViewModel);
-        Task<string?> DeletePracticeAsync(Guid id);
+        Task<string?> DeletePracticeAsync(Guid id, Guid doctorId);
 
         Task<AvailableSlotsViewModel?> GetPracticeAvailableSlotsAsync(Guid id);
     }

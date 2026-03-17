@@ -133,11 +133,14 @@ namespace MedicalAppointmentWebApp.Services
             return null;
         }
 
-        public async Task<string?> DeletePracticeAsync(Guid id)
+        public async Task<string?> DeletePracticeAsync(Guid id, Guid doctorId)
         {
             Practice? practice = await GetPracticeByIdAsync(id);
             if (practice is null)
                 return "Αποτυχία διαγραφής Γραφείου.";
+
+            if (practice.DoctorId != doctorId)
+                return "Το γραφείο δεν σας ανήκει.";
 
             List<Appointment> appointments = await appointmentRepository.GetAllByPracticeAfterTodayAsync(practice.Id);
 

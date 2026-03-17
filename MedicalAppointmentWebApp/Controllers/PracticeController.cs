@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Data.Enums;
+using MedicalAppointmentWebApp.Filters;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
@@ -14,7 +15,7 @@ namespace MedicalAppointmentWebApp.Controllers
     [Route("[controller]/[action]")]
     public class PracticeController(IPracticeService practiceService) : Controller
     {
-        [Authorize(Roles = nameof(UserRole.Doctor))]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> MyPracticesAsync(string term, int page = 1, int pageSize = 10)
         {
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -28,14 +29,14 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
 
-        [Authorize(Roles = nameof(UserRole.Doctor))]
+        [AuthorizeRoles(UserRole.Doctor)]
         public IActionResult Enroll()
         {
             return View();
         }
 
-        [Authorize(Roles = nameof(UserRole.Doctor))]
         [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> EnrollAsync(PracticeEnrollRequest practiceEnrollRequest)
         {
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -75,12 +76,24 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> EditAsync(Guid id)
         {
             Practice? practice = await practiceService.GetPracticeByIdAsync(id);
             if (practice is null)
             {
                 return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
+            }
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
+            if (practice.DoctorId != Guid.Parse(userId))
+            {
+                ViewBag.ErrorMessage = "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν σας ανήκει.";
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
             }
 
             return View(new EditPracticeViewModel
@@ -90,6 +103,7 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> EditVerificationAsync(EditPracticeViewModel editPracticeViewModel)
         {
             Practice? practice = await practiceService.GetPracticeByIdAsync(editPracticeViewModel.PracticeId);
@@ -100,12 +114,25 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             editPracticeViewModel.Practice = practice;
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
+            if (practice.DoctorId != Guid.Parse(userId))
+            {
+                ViewBag.ErrorMessage = "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν σας ανήκει.";
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
+            }
+
             editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
 
             return View(editPracticeViewModel);
         }
 
         [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> EditPracticeAsync(EditPracticeViewModel editPracticeViewModel)
         {
             Practice? practice = await practiceService.GetPracticeByIdAsync(editPracticeViewModel.PracticeId);
@@ -116,6 +143,18 @@ namespace MedicalAppointmentWebApp.Controllers
             }
 
             editPracticeViewModel.Practice = practice;
+
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
+            if (practice.DoctorId != Guid.Parse(userId))
+            {
+                ViewBag.ErrorMessage = "Το γραφείου που προσπαθείτε να τροποποιήσετε δεν σας ανήκει.";
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
+            }
+
             editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
 
             string? errorMessage = await practiceService.UpdatePracticeInfoAsync(editPracticeViewModel);
@@ -130,15 +169,23 @@ namespace MedicalAppointmentWebApp.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            string? message = await practiceService.DeletePracticeAsync(id);
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+            {
+                return RedirectToAction(controllerName: "Auth", actionName: "Login");
+            }
+            
+            string? message = await practiceService.DeletePracticeAsync(id, Guid.Parse(userId));
             
             ViewBag.Message = message;
             return RedirectToAction(actionName: "MyPractices", controllerName: "Practice");
         }
 
         [HttpGet("{practiceId:guid}")]
+        [AuthorizeRoles(UserRole.Doctor)]
         public async Task<IActionResult> Get(Guid practiceId)
         {
             var p = await practiceService.GetPracticeByIdAsync(practiceId);
