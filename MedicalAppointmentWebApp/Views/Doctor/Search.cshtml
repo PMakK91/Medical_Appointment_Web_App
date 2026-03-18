@@ -28,14 +28,15 @@
                         <input id="practiceAddress"
                                type="text"
                                placeholder="Τοποθεσία"
-                               autocomplete="off" />
+                               autocomplete="off" 
+                               asp-for="FullAddress"/>
                     </div>
 
                     <div id="practiceSuggestions" class="suggestions" hidden></div>
                 </div>
 
 
-        <input type="hidden" asp-for="FullAddress" id="FullAddress" />
+
         <input type="hidden" asp-for="Lat" id="Lat" />
         <input type="hidden" asp-for="Lon" id="Lon" />
     </div>
