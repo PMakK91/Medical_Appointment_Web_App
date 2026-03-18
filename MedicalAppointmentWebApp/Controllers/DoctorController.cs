@@ -11,7 +11,7 @@ namespace MedicalAppointmentWebApp.Controllers
 {
     public class DoctorController(IDoctorService doctorService) : Controller
     {
-        
+
         public async Task<IActionResult> Search(DoctorSearchViewModel request)
         {
             if (request is null)
@@ -23,6 +23,8 @@ namespace MedicalAppointmentWebApp.Controllers
                 request.Term!,
                 request.Lon,
                 request.Lat,
+                request.UserLon,
+                request.UserLat,
                 request.CurrentPage,
                 request.PageSize,
                 request.SortBy);

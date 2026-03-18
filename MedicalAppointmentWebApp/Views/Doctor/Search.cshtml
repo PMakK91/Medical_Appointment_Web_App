@@ -7,7 +7,7 @@
     Layout = "_Layout";
 }
 
-<form method="get" action="@Url.Action(action: "Search", controller: "Doctor")" class="mx-auto mb-5 search-form">
+<form  id="searchForm" method="get" action="@Url.Action(action: "Search", controller: "Doctor")" class="mx-auto mb-5 search-form">
 
     <div class="position-relative mb-1">
         <svg class="position-absolute top-50 start-0 translate-middle-y ms-3" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,18 +49,6 @@
         Αναζήτηση
     </button>
 
-    
-        <div class="mt-2">
-    <select asp-for="SortBy" class="form-select" onchange="this.form.submit()">
-        <option value="">Ταξινόμηση</option>
-        <option value="name_asc">Όνομα Α-Ω</option>
-        <option value="name_desc">Όνομα Ω-Α</option>
-        <option value="specialty_asc">Ειδικότητα Α-Ω</option>
-        <option value="specialty_desc">Ειδικότητα Ω-Α</option>
-    </select>
-</div>
-
-
 
 </form>
 
@@ -70,10 +58,24 @@
 
 
         <h1 class="title mb-2">Αποτελέσματα Αναζήτησης</h1>
-        <p class="subtitle mb-5"></p>
+      
 
 
 
+
+                <div class="mt-2 mb-5">
+    <select asp-for="SortBy" form="searchForm" class="form-select sort" onchange="this.form.submit()">
+        <option value="">Ταξινόμηση</option>
+        <option value="name_asc">Όνομα Α-Ω</option>
+        <option value="name_desc">Όνομα Ω-Α</option>
+        <option value="specialty_asc">Ειδικότητα Α-Ω</option>
+        <option value="specialty_desc">Ειδικότητα Ω-Α</option>
+        <option value="first_available">Πρώτο διαθέσιμο ραντεβού</option>
+
+
+        
+    </select>
+</div>
 
 
 
@@ -91,7 +93,7 @@
                 {
                     <img class="rounded-circle object-fit-cover doctor-image"
                          style="width:64px; height:64px;"
-                         src="https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg"
+                         src="/Images/placeholder-doctor-image.png"
                          alt="Profile">
                 }
                 else
@@ -108,14 +110,18 @@
 
                 @if (item.FirstAvailableSlot.HasValue)
                 {
-                    <p>Πρώτο διαθέσιμο ραντεβού:
+                    <p class="fs-14 fc-black fw-100 mb-1">Πρώτο διαθέσιμο ραντεβού: </p>
+                        <p class="fs-14 fc-blue fw-400">
                         @item.FirstAvailableSlot.Value.ToString("dd/MM/yyyy HH:mm")
                     </p>
+
+                    <p class="fs-14 fc-black fw-100 mb-1">Διεύθυνση: </p>
+                        <p class="fs-14 fc-blue fw-400">
+                        @item.Practice.FullAddress
+                    </p>
                 }
-                else
-                {
-                    <p>Δεν υπάρχει διαθέσιμο ραντεβού</p>
-                }
+               
+
             </div>
         </div>
 

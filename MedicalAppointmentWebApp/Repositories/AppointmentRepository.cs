@@ -109,28 +109,49 @@ namespace MedicalAppointmentWebApp.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task<DateTime?> GetFirstAvailableSlotForDoctorAsync(Guid doctorId)
+        public async Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(
+          Guid doctorId, double? lon, double? lat)
         {
-            var practices = await context.Practices
-                .Where(p => p.DoctorId == doctorId)
-                .ToListAsync();
+            double maxDistanceKm = 10.0;
+            double R = 6371.0;
+
+            IQueryable<Practice> practicesQuery = context.Practices
+                .Where(p => p.DoctorId == doctorId);
+
+            // Apply geo filter only if lon/lat are provided
+            if (lon.HasValue && lat.HasValue)
+            {
+                practicesQuery = practicesQuery
+                    .Where(p =>
+                        R * 2 * Math.Asin(
+                            Math.Sqrt(
+                                Math.Pow(Math.Sin(((p.Lat - lat.Value) * Math.PI / 180) / 2), 2) +
+                                Math.Cos(lat.Value * Math.PI / 180) *
+                                Math.Cos(p.Lat * Math.PI / 180) *
+                                Math.Pow(Math.Sin(((p.Lon - lon.Value) * Math.PI / 180) / 2), 2)
+                            )
+                        ) <= maxDistanceKm
+                    );
+            }
+
+            var practices = await practicesQuery.ToListAsync();
 
             DateTime? earliest = null;
+            Practice? selectedPractice = null;
 
             foreach (var practice in practices)
             {
-                DateTime? slot = await GetFirstAvailableSlotForPracticeAsync(practice.Id);
+                var slot = await GetFirstAvailableSlotForPracticeAsync(practice.Id);
 
                 if (slot.HasValue && (!earliest.HasValue || slot.Value < earliest.Value))
                 {
                     earliest = slot;
+                    selectedPractice = practice;
                 }
             }
 
-            return earliest;
+            return (earliest, selectedPractice);
         }
-
-
 
         public async Task<DateTime?> GetFirstAvailableSlotForPracticeAsync(Guid practiceId)
         {

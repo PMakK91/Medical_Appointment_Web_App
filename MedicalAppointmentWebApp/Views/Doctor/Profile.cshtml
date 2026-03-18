@@ -24,7 +24,20 @@
         <div class="row">
 
             <div class="col-12 doctor-profile-info">
-                <img class="doctor-profile-img" src="/Images/@Model.ImageUrl" alt="" />
+
+
+                        @if (Model.ImageUrl is null)
+                        {
+                            <img class="doctor-profile-img" id="previewImage"
+                                 src="/Images/placeholder-doctor-image.png"
+                                 alt="Profile">
+                        }
+                        else
+                        {
+                            <img class="doctor-profile-img" id="previewImage" src="/Images/@Model.ImageUrl" alt="Profile">
+                        }
+
+
                 <h1 class="title mb-2 fc-blue">@Model.FirstName @Model.LastName</h1>
                 <p class="subtitle mb-5">@Html.DisplayFor(m => m.Specialty)</p>
                 @if (!string.IsNullOrEmpty(Model.Bio))
