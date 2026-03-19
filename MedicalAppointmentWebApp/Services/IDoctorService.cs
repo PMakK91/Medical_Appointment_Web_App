@@ -5,7 +5,16 @@ namespace MedicalAppointmentWebApp.Services
 {
     public interface IDoctorService
     {
-        Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(string term, double? lon, double? lat, int page = 1, int pageSize = 10, string? sortBy = null);
+        Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(
+            string term,
+            double? lon,
+            double? lat,
+            double? userLon,
+            double? userLat,
+            int page,
+            int pageSize,
+            string? sortBy); 
+        
         Task<Doctor?> GetDoctorById(Guid id);
 
         Task<string?> UpdateDoctorInfo(Guid doctorId, EditDoctorProfileViewModel request);

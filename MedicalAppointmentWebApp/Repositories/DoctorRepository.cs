@@ -2,11 +2,15 @@
 using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Operation.Distance;
 
 namespace MedicalAppointmentWebApp.Repositories
 {
-    public class DoctorRepository(AppDbContext context) : IDoctorRepository, IDisposable
+    public class DoctorRepository(AppDbContext context, IAppointmentRepository appointmentRepository) : IDoctorRepository, IDisposable
     {
+
+
+
         public async Task<IEnumerable<Doctor>> GetDoctorsAsync()
         {
             return await context.Doctors.ToListAsync();
@@ -56,9 +60,12 @@ namespace MedicalAppointmentWebApp.Repositories
             RegistrationFormStatus status,
             string? sortBy)
         {
+
             IQueryable<Doctor> query = context.Doctors
+                .Include(d => d.Practices)
                 .Where(d => d.RegistrationStatus == status);
 
+            // SEARCH TERM
             if (!string.IsNullOrWhiteSpace(term))
             {
                 query = query.Where(d =>
@@ -69,6 +76,7 @@ namespace MedicalAppointmentWebApp.Repositories
                 );
             }
 
+            // FILTER BY SEARCH AREA
             if (lon != null && lat != null)
             {
                 double maxDistanceKm = 10.0;
@@ -93,6 +101,42 @@ namespace MedicalAppointmentWebApp.Repositories
                 query = query.Where(d => doctorIds.Contains(d.Id));
             }
 
+
+
+            // SORT BY FIRST AVAILABLE
+            if (sortBy == "first_available")
+            {
+                var doctorsList = await query
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var doctorsWithAvailability = new List<(Doctor Doctor, DateTime? FirstAvailable, Practice Practice)>();
+
+                foreach (var doctor in doctorsList)
+                {
+                    var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id, lon, lat);
+
+                    doctorsWithAvailability.Add((doctor, result.Slot, result.Practice));
+                }
+
+                var sortedDoctors = doctorsWithAvailability
+                    .OrderBy(x => x.FirstAvailable ?? DateTime.MaxValue)
+                    .ThenBy(x => x.Doctor.LastName)
+                    .ThenBy(x => x.Doctor.FirstName)
+                    .ToList();
+
+                int totalCount = sortedDoctors.Count;
+
+                var pagedDoctors = sortedDoctors
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(x => x.Doctor)
+                    .ToList();
+
+                return (pagedDoctors, totalCount);
+            }
+
+            // NORMAL SORTING
             query = sortBy switch
             {
                 "name_asc" => query.OrderBy(d => d.FirstName).ThenBy(d => d.LastName),
@@ -102,17 +146,18 @@ namespace MedicalAppointmentWebApp.Repositories
                 _ => query.OrderBy(d => d.LastName).ThenBy(d => d.FirstName)
             };
 
-            int totalCount = await query.CountAsync();
+            int total = await query.CountAsync();
 
-            IEnumerable<Doctor> doctors = await query
+            var doctors = await query
                 .AsNoTracking()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (Doctors: doctors, TotalCount: totalCount);
-        }
 
+            
+            return (doctors, total);
+        }
 
         public void Save()
         {

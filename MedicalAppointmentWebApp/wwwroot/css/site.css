@@ -27,7 +27,14 @@ html {
   text-align: start;
 }
 
-
+.form-select.sort {
+    max-width: 420px;
+    margin: auto;
+    background-color: #eaeaea;
+    border: 0;
+    font-size: 14px;
+    font-weight: 200;
+}
 
 /********** CUSTOM CSS ***********/
 body {
@@ -840,12 +847,13 @@ background: #fff;
     text-align: left;
     padding: 32px;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 12px; 
+    font-weight: 400;
 }
 .doctor-profile-practice:not(:last-child) {
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 42px;
-    font-weight: 200;
+   
     padding-bottom: 50px;
 }
 .doctor-profile-book-appointment {

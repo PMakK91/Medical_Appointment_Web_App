@@ -22,6 +22,6 @@ namespace MedicalAppointmentWebApp.Repositories
         void Save();
         Task SaveAsync();
         Task<DateTime?> GetFirstAvailableSlotForPracticeAsync(Guid practiceId);
-        Task<DateTime?> GetFirstAvailableSlotForDoctorAsync(Guid doctorId);
+        Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(Guid doctorId, double? lon, double? lat);
     }
 }
