@@ -34,6 +34,7 @@ html {
     border: 0;
     font-size: 14px;
     font-weight: 200;
+    height: 48px;
 }
 
 /********** CUSTOM CSS ***********/
@@ -1390,3 +1391,118 @@ background: #fff;
     .status-tag.tag-blue {
         background: #aedafa;
     }
+
+
+    /************FILTERS*************/
+
+.filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); 
+    z-index: 9;
+}
+
+.filters-toggler {
+    border-radius: 6px;
+    border: 0;
+    background: #4ea7e7;
+    color: #fff;
+    width: 55px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filters-panel {
+    background :#fff ;
+    width: 80vw;
+    max-width: 420px;
+    position: fixed;
+    z-index: 10;
+    padding: 38px;
+    left: 0;
+    box-shadow: 0px 23px 63px 5px #00000045;
+    border: 1px solid #a3a3a3;
+    height: 100vh;
+    top: 0;
+}
+
+.filters-overlay,
+.filters-panel {
+    display: none;
+}
+    .filters-panel.active {
+        display: block;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+.filters-overlay.active {
+    display: block;
+}
+
+
+/*** SLIDER ***/
+#radius {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+    background: #ddd;
+    transition: background 0.3s ease;
+}
+
+    #radius::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+    #radius::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #4ea7e7;
+        cursor: pointer;
+        margin-top: -7px; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+    }
+
+        #radius::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+    #radius::-moz-range-track {
+        height: 6px;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+    #radius::-moz-range-thumb {
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #4ea7e7;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+    }
+
+        #radius::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+    #radius:active::-webkit-slider-thumb {
+        transform: scale(1.3);
+    }
+
+    #radius:active::-moz-range-thumb {
+   
