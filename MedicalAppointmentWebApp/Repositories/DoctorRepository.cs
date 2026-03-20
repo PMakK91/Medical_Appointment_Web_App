@@ -26,6 +26,16 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.Where(d => d.RegistrationStatus.Equals(RegistrationFormStatus.Accepted)).ToListAsync();
         }
 
+
+        public async Task<bool> AnyDoctorWithEmailOrAmkaOrLicenseAsync(string email, string amka, string license)
+        {
+            return await context.Doctors.AnyAsync(d =>
+                (d.Email != null && d.Email.Equals(email)) ||
+                (d.Amka != null && d.Amka.Equals(amka)) ||
+                (d.LicenseNumber != null && d.LicenseNumber.Equals(license)));
+        }
+
+
         public void InsertDoctor(Doctor doctor)
         {
             context.Doctors.Add(doctor);

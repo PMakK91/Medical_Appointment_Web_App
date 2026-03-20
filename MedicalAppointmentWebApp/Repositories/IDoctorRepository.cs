@@ -7,6 +7,9 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<IEnumerable<Doctor>> GetDoctorsAsync();
         Task<IEnumerable<Doctor>> GetPendingDoctorsAsync();
         Task<IEnumerable<Doctor>> GetAcceptedDoctorsAsync();
+
+        Task<bool> AnyDoctorWithEmailOrAmkaOrLicenseAsync(string email, string amka, string license);
+
         void InsertDoctor(Doctor doctor);
         Task<Doctor?> GetDoctorByIDAsync(Guid doctorId);
         Task<Doctor?> GetDoctorByEmailAsync(string email);
