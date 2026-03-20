@@ -1204,3 +1204,42 @@ if (textarea) {
 
     resetSession();
 };
+
+
+/*********** RANGE SELECTOR **************/
+
+const slider = document.getElementById("radius");
+
+function updateSlider() {
+    const min = slider.min || 0;
+    const max = slider.max || 100;
+    const val = slider.value;
+
+    const percent = (val - min) / (max - min) * 100;
+
+    slider.style.background =
+        `linear-gradient(to right, #4ea7e7 ${percent}%, #ddd ${percent}%)`;
+}
+
+slider.addEventListener("input", updateSlider);
+document.addEventListener("DOMContentLoaded", updateSlider);
+
+/*********** FILTERS **************/
+function openFilters() {
+    $('.filters-overlay').fadeIn(200);
+
+    $('.filters-panel').show('slide', {
+        direction: 'left'
+    }, 300);
+}
+
+function closeFilters() {
+    $('.filters-panel').hide('slide', {
+        direction: 'left'
+    }, 300);
+
+    $('.filters-overlay').fadeOut(200);
+}
+
+$('.filters-toggler').on('click', openFilters);
+$('.filters-overlay').on('click', closeFilters);
