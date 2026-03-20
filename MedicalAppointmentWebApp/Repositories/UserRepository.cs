@@ -19,7 +19,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
         public async Task<bool> AnyUserWithEmailOrAmkaAsync(string email, string amka)
         {
-            return await context.Users.AnyAsync(u => u.Email != null && u.Email.Equals(email) && u.Amka != null && u.Amka.Equals(amka));
+            return await context.Users.AnyAsync(u => (u.Email != null && u.Email.Equals(email)) || (u.Amka != null && u.Amka.Equals(amka)));
         }
 
 

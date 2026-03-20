@@ -15,22 +15,29 @@ namespace MedicalAppointmentWebApp.Services
     {
 
 
-        public async Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(  string? term, double? lon,  double? lat, double? userLon, double? userLat, int page = 1, int pageSize = 10,  string? sortBy = null)
+        public async Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(
+            string? term, 
+            double? lon,  
+            double? lat, 
+            int gender,
+            float? areaDistance, 
+            int page = 1, 
+            int pageSize = 10,  
+            string? sortBy = null)
         {
-            (IEnumerable<Doctor> doctors, int totalCount) =  await doctorRepository.SearchActiveAsync(term, lon, lat, page, pageSize, sortBy);
+            (IEnumerable<Doctor> doctors, int totalCount) =  await doctorRepository.SearchActiveAsync(term!, lon, lat, gender, areaDistance, page, pageSize, sortBy);
 
             List<DoctorSearchResultItemViewModel> doctorItems = new();
 
             foreach (var doctor in doctors)
             {
-
                 var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id , lon, lat);
 
                 doctorItems.Add(new DoctorSearchResultItemViewModel
                 {
                     Doctor = doctor,
                     FirstAvailableSlot = result.Slot,
-                    Practice = result.Practice
+                    Practice = result.Practice!
                 });
             }
 
@@ -40,6 +47,8 @@ namespace MedicalAppointmentWebApp.Services
                 Term = term,
                 Lon = lon,
                 Lat = lat,
+                Gender = gender,
+                AreaDistance = areaDistance,
                 CurrentPage = page,
                 PageSize = pageSize,
                 TotalItems = totalCount,

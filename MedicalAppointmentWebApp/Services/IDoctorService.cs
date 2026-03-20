@@ -9,8 +9,8 @@ namespace MedicalAppointmentWebApp.Services
             string term,
             double? lon,
             double? lat,
-            double? userLon,
-            double? userLat,
+            int gender,
+            float? areaDistance,
             int page,
             int pageSize,
             string? sortBy); 
