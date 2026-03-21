@@ -141,14 +141,13 @@ namespace MedicalAppointmentWebApp.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(
-          Guid doctorId, double? lon, double? lat)
+        public async Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(Guid doctorId, double? lon, double? lat)
         {
             double maxDistanceKm = 10.0;
-            double R = 6371.0;
+            double R = 6371.0; // radius of earth in km
 
             IQueryable<Practice> practicesQuery = context.Practices
-                .Where(p => p.DoctorId == doctorId);
+                .Where(p => p.DoctorId == doctorId && p.RegistrationStatus == RegistrationFormStatus.Accepted);
 
             // Apply geo filter only if lon/lat are provided
             if (lon.HasValue && lat.HasValue)

@@ -15,9 +15,8 @@ namespace MedicalAppointmentWebApp.Models.ViewModels
 
 
         public string? SortBy { get; set; }
-
-        public double? UserLat { get; set; }
-        public double? UserLon { get; set; }
+        public int Gender { get; set; }
+        public float? AreaDistance { get; set; }
 
 
         public int CurrentPage { get; set; } = 1;

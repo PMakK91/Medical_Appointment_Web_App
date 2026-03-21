@@ -23,8 +23,8 @@ namespace MedicalAppointmentWebApp.Controllers
                 request.Term!,
                 request.Lon,
                 request.Lat,
-                request.UserLon,
-                request.UserLat,
+                request.Gender,
+                request.AreaDistance,
                 request.CurrentPage,
                 request.PageSize,
                 request.SortBy);

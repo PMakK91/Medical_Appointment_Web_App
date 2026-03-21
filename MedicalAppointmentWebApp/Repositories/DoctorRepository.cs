@@ -26,6 +26,16 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.Where(d => d.RegistrationStatus.Equals(RegistrationFormStatus.Accepted)).ToListAsync();
         }
 
+
+        public async Task<bool> AnyDoctorWithEmailOrAmkaOrLicenseAsync(string email, string amka, string license)
+        {
+            return await context.Doctors.AnyAsync(d =>
+                (d.Email != null && d.Email.Equals(email)) ||
+                (d.Amka != null && d.Amka.Equals(amka)) ||
+                (d.LicenseNumber != null && d.LicenseNumber.Equals(license)));
+        }
+
+
         public void InsertDoctor(Doctor doctor)
         {
             context.Doctors.Add(doctor);
@@ -41,20 +51,22 @@ namespace MedicalAppointmentWebApp.Repositories
             return await context.Doctors.FirstOrDefaultAsync(d => d.Email!.Equals(email));
         }
 
-        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int page, int pageSize , string sortBy)
+        public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchActiveAsync(string term, double? lon, double? lat, int gender, float? areaDistance, int page, int pageSize , string? sortBy)
         {
-            return await SearchAsync(term, lon, lat, page, pageSize, RegistrationFormStatus.Accepted , sortBy);
+            return await SearchAsync(term, lon, lat, gender, areaDistance, page, pageSize, RegistrationFormStatus.Accepted , sortBy);
         }
 
         public async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchPendingAsync(string term, int page, int pageSize)
         {
-            return await SearchAsync(term, null, null, page, pageSize, RegistrationFormStatus.Pending , "name");
+            return await SearchAsync(term, null, null, 0, null, page, pageSize, RegistrationFormStatus.Pending , "name");
         }
 
         private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(
             string? term,
             double? lon,
             double? lat,
+            int gender,
+            float? areaDistance,
             int page,
             int pageSize,
             RegistrationFormStatus status,
@@ -64,6 +76,12 @@ namespace MedicalAppointmentWebApp.Repositories
             IQueryable<Doctor> query = context.Doctors
                 .Include(d => d.Practices)
                 .Where(d => d.RegistrationStatus == status);
+
+            // FILTER BY GENDER
+            if (gender == 1 || gender == 2)
+            {
+                query = query.Where(d => d.Gender == gender);
+            }
 
             // SEARCH TERM
             if (!string.IsNullOrWhiteSpace(term))
@@ -79,8 +97,8 @@ namespace MedicalAppointmentWebApp.Repositories
             // FILTER BY SEARCH AREA
             if (lon != null && lat != null)
             {
-                double maxDistanceKm = 10.0;
-                double R = 6371.0;
+                double maxDistanceKm = areaDistance ?? 10.0;
+                double R = 6371.0; // radius of earth in km
 
                 var doctorIds = await context.Practices
                     .Where(p =>
@@ -116,7 +134,7 @@ namespace MedicalAppointmentWebApp.Repositories
                 {
                     var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id, lon, lat);
 
-                    doctorsWithAvailability.Add((doctor, result.Slot, result.Practice));
+                    doctorsWithAvailability.Add((doctor!, result.Slot!, result.Practice!));
                 }
 
                 var sortedDoctors = doctorsWithAvailability
@@ -154,8 +172,6 @@ namespace MedicalAppointmentWebApp.Repositories
                 .Take(pageSize)
                 .ToListAsync();
 
-
-            
             return (doctors, total);
         }
 
