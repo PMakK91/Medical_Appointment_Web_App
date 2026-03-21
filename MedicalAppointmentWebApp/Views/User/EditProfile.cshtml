@@ -130,6 +130,8 @@
 
             </div>
 
+            @if (!string.IsNullOrEmpty(Model.Password))
+            {
             <div class="mb-3">
                 <label class="form-label edit-profile-label">Κωδικός:</label>
                 <p class="label-description mt-0">
@@ -180,11 +182,9 @@
                         </svg>
                     </button>
                 </div>
-
-
-
-
             </div>
+            }
+
             <button type="submit" class="w-100 mx-auto mt-3 btn primary-btn">
                 Αποθήκευση
             </button>

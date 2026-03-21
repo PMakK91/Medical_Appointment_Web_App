@@ -34,6 +34,16 @@ namespace MedicalAppointmentWebApp.Models
         [Column("phone")]
         public string? Phone { get; set; }
 
+
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("deleted_time")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Deleted Time")]
+        public DateTime? DeletedTime { get; set; }
+
+
         [Column("monday_start", TypeName = "time")]
         public TimeSpan? MondayStart { get; set; }
 
@@ -75,6 +85,7 @@ namespace MedicalAppointmentWebApp.Models
 
         [Column("sunday_end", TypeName = "time")]
         public TimeSpan? SundayEnd { get; set; }
+
 
         [Column("registration_status")]
         public RegistrationFormStatus RegistrationStatus { get; set; }

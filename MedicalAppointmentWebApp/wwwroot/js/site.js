@@ -887,59 +887,114 @@ $(".daySelect").each(function () {
     }
 
 });
-
-// Default toggle κλειστά
-$(".day-div").each(function () {
-    const $d = $(this);
-
-    $d.find(".toggle")
-        .removeClass("on")
-        .addClass("off");
-
-    $d.find(".ranges").hide();
-
-    $d.find(".daySelect")
-        .prop("disabled", true)
-        .val("");
-
-    $d.find(".status-text").text("Κλειστά");
-});
-
-// Toggle ανοιχτά/κλειστά
 $(function () {
 
+    // Default toggle
     $(".day-div").each(function () {
+
         const $day = $(this);
-        $day.find(".ranges").hide();
-        $day.find(".daySelect").prop("disabled", true);
+        const $toggle = $day.find(".toggle");
+        const $ranges = $day.find(".ranges");
+        const $statusText = $day.find(".status-text");
+        const $selects = $day.find(".daySelect");
+        const $start = $selects.first();
+
+        if ($start.val()) {
+            // Open day if start value exists
+            $toggle.removeClass("off").addClass("on");
+            $statusText.text("Ανοιχτά");
+            $ranges.show();
+            $selects.prop("disabled", false);
+        } else {
+            // Keep closed
+            $toggle.removeClass("on").addClass("off");
+            $statusText.text("Κλειστά");
+            $ranges.hide();
+            $selects.prop("disabled", true);
+        }
+
     });
 
+    // Toggle ανοιχτά / κλειστά
     $(".toggle").on("click", function () {
-
+    
         const $toggle = $(this);
         const $dayDiv = $toggle.closest(".day-div");
         const $ranges = $dayDiv.find(".ranges");
         const $statusText = $dayDiv.find(".status-text");
         const $selects = $dayDiv.find(".daySelect");
-
+    
         if ($toggle.hasClass("off")) {
             $toggle.removeClass("off").addClass("on");
             $statusText.text("Ανοιχτά");
-
+    
             $ranges.stop(true, true).slideDown(200);
             $selects.prop("disabled", false);
-
+    
         } else {
             $toggle.removeClass("on").addClass("off");
             $statusText.text("Κλειστά");
-
+    
             $ranges.stop(true, true).slideUp(200);
             $selects.prop("disabled", true).val("");
         }
-
+    
     });
 
 });
+
+//// Default toggle κλειστά
+//$(".day-div").each(function () {
+//    const $d = $(this);
+
+//    $d.find(".toggle")
+//        .removeClass("on")
+//        .addClass("off");
+
+//    $d.find(".ranges").hide();
+
+//    $d.find(".daySelect")
+//        .prop("disabled", true)
+//        .val("");
+
+//    $d.find(".status-text").text("Κλειστά");
+//});
+
+//// Toggle ανοιχτά/κλειστά
+//$(function () {
+
+//    $(".day-div").each(function () {
+//        const $day = $(this);
+//        $day.find(".ranges").hide();
+//        $day.find(".daySelect").prop("disabled", true);
+//    });
+
+//    $(".toggle").on("click", function () {
+
+//        const $toggle = $(this);
+//        const $dayDiv = $toggle.closest(".day-div");
+//        const $ranges = $dayDiv.find(".ranges");
+//        const $statusText = $dayDiv.find(".status-text");
+//        const $selects = $dayDiv.find(".daySelect");
+
+//        if ($toggle.hasClass("off")) {
+//            $toggle.removeClass("off").addClass("on");
+//            $statusText.text("Ανοιχτά");
+
+//            $ranges.stop(true, true).slideDown(200);
+//            $selects.prop("disabled", false);
+
+//        } else {
+//            $toggle.removeClass("on").addClass("off");
+//            $statusText.text("Κλειστά");
+
+//            $ranges.stop(true, true).slideUp(200);
+//            $selects.prop("disabled", true).val("");
+//        }
+
+//    });
+
+//});
 
 /******* EDIT PROFILE *********/
 

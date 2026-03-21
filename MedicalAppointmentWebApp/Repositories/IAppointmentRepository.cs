@@ -13,6 +13,8 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<IEnumerable<Appointment>> GetAppointmentsByDayAndPracticeIdAsync(DateTime day, Guid practiceId);
         Task<IEnumerable<AppointmentWithPatientInfoViewModel>> GetAppointmentsInfoByDayAndPracticeIdAsync(DateTime day, Guid practiceId);
         Task<IEnumerable<Appointment>> GetAppointmentsInfoByMonthAndPracticeIdAsync(DateTime date, Guid practiceId);
+        Task<List<Appointment>> GetAllByPracticeAfterTodayAsync(Guid practiceId);
+        Task<IEnumerable<Appointment>> GetAppointmentsAffectedByChangeAsync(EditPracticeViewModel editPracticeViewModel);
 
         void InsertAppointment(Appointment appointment);
         void UpdateAppointmentStatus(Guid appointmentId, AppointmentStatus status);

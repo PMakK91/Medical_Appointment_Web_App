@@ -52,13 +52,13 @@ namespace MedicalAppointmentWebApp.Repositories
         }
 
         private async Task<(IEnumerable<Doctor> Doctors, int TotalCount)> SearchAsync(
-    string? term,
-    double? lon,
-    double? lat,
-    int page,
-    int pageSize,
-    RegistrationFormStatus status,
-    string? sortBy)
+            string? term,
+            double? lon,
+            double? lat,
+            int page,
+            int pageSize,
+            RegistrationFormStatus status,
+            string? sortBy)
         {
 
             IQueryable<Doctor> query = context.Doctors
@@ -84,6 +84,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
                 var doctorIds = await context.Practices
                     .Where(p =>
+                        p.RegistrationStatus == RegistrationFormStatus.Accepted &&
                         R * 2 * Math.Asin(
                             Math.Sqrt(
                                 Math.Pow(Math.Sin(((p.Lat - lat.Value) * Math.PI / 180) / 2), 2) +

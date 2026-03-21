@@ -34,7 +34,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Doctor?> DoctorRegisterAsync(RegisterRequest request)
         {
-            if (await userRepository.AnyUserWithEmailAsync(request.Email))
+            if (await userRepository.AnyUserWithEmailOrAmkaAsync(request.Email, request.Amka!))
             {
                 return null;
             }
@@ -67,7 +67,7 @@ namespace MedicalAppointmentWebApp.Services
 
         public async Task<Patient?> PatientRegisterAsync(RegisterRequest request)
         {
-            if (await userRepository.AnyUserWithEmailAsync(request.Email))
+            if (await userRepository.AnyUserWithEmailOrAmkaAsync(request.Email, request.Amka!))
             {
                 return null;
             }

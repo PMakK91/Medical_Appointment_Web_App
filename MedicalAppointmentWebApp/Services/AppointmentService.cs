@@ -49,7 +49,13 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
             }
 
-            Appointment? appointment = new Appointment();
+            Appointment? appointment = await appointmentRepository.GetAppointmentByTimeAsync(request.Time, practice.Id);
+            if (appointment != null)
+            {
+                return null;
+            }
+
+            appointment = new Appointment();
 
             appointment.Practice = practice;
             appointment.Doctor = doctor;
@@ -120,6 +126,23 @@ namespace MedicalAppointmentWebApp.Services
         public async Task<IEnumerable<Appointment>> GetAppointmentsByMonthAndPracticeIdAsync(DateTime date, Guid practiceId)
         {
             return await appointmentRepository.GetAppointmentsInfoByMonthAndPracticeIdAsync(date, practiceId);
+        }
+
+        public async Task<Appointment?> ArriveAtAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+                return null;
+
+            await ChangeAppointmentStatusAsync(appointment, AppointmentStatus.Completed);
+
+            return appointment;
+        }
+
+        public async Task ChangeAppointmentStatusAsync(Appointment appointment, AppointmentStatus appointmentStatus)
+        {
+            appointment.Status = appointmentStatus;
+            await appointmentRepository.SaveAsync();
         }
     }
 }
