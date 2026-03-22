@@ -969,6 +969,17 @@ if (textarea) {
 
 /******** GOOGLE PLACES ************/
 
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("address-autocomplete")) {
+        const script = document.createElement("script");
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&libraries=places&language=el&region=GR&loading=async&callback=initpracticeAddressAutocomplete";
+        script.async = true;
+        script.defer = true;
+
+        document.head.appendChild(script);
+    }
+});
+
         window.initpracticeAddressAutocomplete = async function () {
     console.log("Initializing custom practice Address Autocomplete");
 
@@ -1141,22 +1152,25 @@ if (textarea) {
 
 
 /*********** RANGE SELECTOR **************/
+document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById("radius");
 
-const slider = document.getElementById("radius");
+    if (!slider) return;
 
-function updateSlider() {
-    const min = slider.min || 0;
-    const max = slider.max || 100;
-    const val = slider.value;
+    function updateSlider() {
+        const min = Number(slider.min) || 0;
+        const max = Number(slider.max) || 100;
+        const val = Number(slider.value);
 
-    const percent = (val - min) / (max - min) * 100;
+        const percent = ((val - min) / (max - min)) * 100;
 
-    slider.style.background =
-        `linear-gradient(to right, #4ea7e7 ${percent}%, #ddd ${percent}%)`;
-}
+        slider.style.background =
+            `linear-gradient(to right, #4ea7e7 ${percent}%, #ddd ${percent}%)`;
+    }
 
-slider.addEventListener("input", updateSlider);
-document.addEventListener("DOMContentLoaded", updateSlider);
+    slider.addEventListener("input", updateSlider);
+    updateSlider();
+});
 
 /*********** FILTERS **************/
 function openFilters() {

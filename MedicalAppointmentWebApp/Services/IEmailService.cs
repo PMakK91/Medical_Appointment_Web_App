@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using System.Drawing;
 
 namespace MedicalAppointmentWebApp.Services
 {
@@ -8,7 +9,7 @@ namespace MedicalAppointmentWebApp.Services
         Task SendAcceptDoctorRegistrationEmail(string email);
         Task SendRejectDoctorRegistrationEmail(string email, string reason);
 
-        Task SendEmailAsync(string toEmail, string subject, string htmlMessage);
+        Task SendEmailAsync(string toEmail, string subject, string htmlMessage , Image? attachment);
 
         Task SendAppointmentBookedEmailtoPatient(Appointment appointment);
         Task SendAppointmentBookedEmailtoDoctor(Appointment appointment);

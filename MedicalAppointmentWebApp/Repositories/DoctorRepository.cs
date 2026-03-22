@@ -86,11 +86,17 @@ namespace MedicalAppointmentWebApp.Repositories
             // SEARCH TERM
             if (!string.IsNullOrWhiteSpace(term))
             {
-                query = query.Where(d =>
+                List<Specialty> specialties = Enum.GetValues(typeof(Specialty))
+                    .Cast<Specialty>()
+                    .Where(s => RemoveTones(s.GetDisplayName()).ToLower().Contains(RemoveTones(term).ToLower()))
+                    .ToList();
+
+                query = query
+                    .Where(d =>
                     (d.FirstName != null && d.FirstName.Contains(term)) ||
                     (d.LastName != null && d.LastName.Contains(term)) ||
                     (d.Email != null && d.Email.Contains(term)) ||
-                    d.Specialty.ToString().Contains(term)
+                    specialties.Contains(d.Specialty)
                 );
             }
 
@@ -173,6 +179,28 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToListAsync();
 
             return (doctors, total);
+        }
+
+        private static string RemoveTones(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            return text
+                .Replace("ά", "α")
+                .Replace("έ", "ε")
+                .Replace("ή", "η")
+                .Replace("ί", "ι")
+                .Replace("ό", "ο")
+                .Replace("ύ", "υ")
+                .Replace("ώ", "ω")
+                .Replace("Ά", "Α")
+                .Replace("Έ", "Ε")
+                .Replace("Ή", "Η")
+                .Replace("Ί", "Ι")
+                .Replace("Ό", "Ο")
+                .Replace("Ύ", "Υ")
+                .Replace("Ώ", "Ω");
         }
 
         public void Save()

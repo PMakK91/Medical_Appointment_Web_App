@@ -43,6 +43,7 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
             }
 
+
             User? patient = await userRepository.FindUserByIdAsync(request.PatientId);
             if (patient is null)
             {
@@ -66,8 +67,9 @@ namespace MedicalAppointmentWebApp.Services
             appointmentRepository.InsertAppointment(appointment);
             await appointmentRepository.SaveAsync();
 
-            await emailService.SendAppointmentBookedEmailtoPatient(appointment);
             await emailService.SendAppointmentBookedEmailtoDoctor(appointment);
+            await emailService.SendAppointmentBookedEmailtoPatient(appointment);
+           
 
             return appointment;
         }
