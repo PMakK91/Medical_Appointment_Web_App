@@ -132,7 +132,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
                 foreach (var doctor in doctorsList)
                 {
-                    var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id, lon, lat);
+                    var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id, lon, lat , areaDistance);
 
                     doctorsWithAvailability.Add((doctor!, result.Slot!, result.Practice!));
                 }

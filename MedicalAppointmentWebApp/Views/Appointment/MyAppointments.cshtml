@@ -45,7 +45,19 @@
                         </div>
                         <div class="row mt-4">
                             <div class="col-2 pe-0">
-                                <img class="doctor-image" src="/Images/@ap.Doctor.ImageUrl" alt="Profile"> 
+
+                                @if (ap.Doctor.ImageUrl is null)
+                                {
+                                    <img class="doctor-image" id="previewImage"
+                                         src="/Images/placeholder-doctor-image.png"
+                                         alt="Profile">
+                                }
+                                else
+                                {
+                                    <img class="doctor-image" id="previewImage" src="/Images/@ap.Doctor.ImageUrl" alt="Profile">
+                                }
+
+
                                 </div>
 
                                 <div class="col-10">

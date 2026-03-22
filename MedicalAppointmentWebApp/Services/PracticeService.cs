@@ -253,6 +253,9 @@ namespace MedicalAppointmentWebApp.Services
             DateTime rangeStart = startDate.Date;
             DateTime rangeEnd = rangeStart.AddMonths(2);
 
+            // Prefer local/server time consistently, unless everything in DB is UTC.
+            DateTime now = DateTime.Now;
+
             IEnumerable<Appointment> appointments =
                 await appointmentRepository.GetAllByPracticeAndTimeFrameAsync(
                     rangeStart,
@@ -267,7 +270,7 @@ namespace MedicalAppointmentWebApp.Services
 
             for (DateTime currentDay = rangeStart; currentDay < rangeEnd; currentDay = currentDay.AddDays(1))
             {
-                if (currentDay.Date < DateTime.UtcNow.Date)
+                if (currentDay.Date < now.Date)
                     continue;
 
                 TimeSpan? shiftStart = currentDay.DayOfWeek switch
@@ -308,6 +311,13 @@ namespace MedicalAppointmentWebApp.Services
 
                     if (slotEnd > dayEnd)
                         break;
+
+                    // Hide slots that already started/passed today
+                    if (dayStart <= now)
+                    {
+                        dayStart = slotEnd;
+                        continue;
+                    }
 
                     if (!bookedTimes.Contains(dayStart))
                     {

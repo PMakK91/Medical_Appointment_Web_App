@@ -31,7 +31,7 @@ namespace MedicalAppointmentWebApp.Services
 
             foreach (var doctor in doctors)
             {
-                var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id , lon, lat);
+                var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id , lon, lat, areaDistance);
 
                 doctorItems.Add(new DoctorSearchResultItemViewModel
                 {

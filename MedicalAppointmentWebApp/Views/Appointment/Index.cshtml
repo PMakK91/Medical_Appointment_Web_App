@@ -144,7 +144,7 @@ href="https://www.google.com/maps?q=@Model.Practice.Lat,@Model.Practice.Lon">Î Ï
 
 
 
-@if (User.IsInRole("Doctor"))
+@if (User.IsInRole("Patient")  && Model.Time > DateTime.Now && Model.Status == AppointmentStatus.Scheduled)
 {
     <div class="registration-info mx-auto mt-3">
         <div class="">

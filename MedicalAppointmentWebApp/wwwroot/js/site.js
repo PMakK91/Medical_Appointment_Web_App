@@ -103,7 +103,7 @@
             const to = getField(toForm, name);
             if (!from || !to) return;
 
-            // ΜΗΝ αντιγράφεις κενές τιμές (για να μην "σβήνει" το άλλο form)
+            // Not copying empties
             if (from.value == null || from.value === '') return;
 
             if (to.value !== from.value) {
@@ -134,7 +134,7 @@
         wireSync(patientForm, doctorForm);
         wireSync(doctorForm, patientForm);
 
-        // ✅ Initial sync: από το ορατό form προς το κρυφό
+        // Initial sync
         const source = isVisible(patientForm) ? patientForm : doctorForm;
         const target = source === patientForm ? doctorForm : patientForm;
         fieldsToSync.forEach(name => syncValue(source, target, name));
@@ -200,7 +200,7 @@
 
             $search.on("input", filter);
 
-            // Item click (use delegation in case items change later)
+            // Item click
             $list.on("click", ".dropdown-item", function () {
                 const $it = $(this);
 
@@ -331,12 +331,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-/********************** CALENDAR ************************/
+
 /********************** CALENDAR ************************/
 
 const practiceCalendarState = {};
 
-/*FETCH PRACTICE*/
+/*** Fetch Practice ***/
 function fetchPracticeInfo(practiceId) {
     return fetch(`/Practice/Get/${practiceId}`).then(async (response) => {
         if (!response.ok) {
@@ -347,62 +347,14 @@ function fetchPracticeInfo(practiceId) {
     });
 }
 
-/* Schedule helpers */
-function toHHmm(t) {
-    return typeof t === "string" && t.length >= 5 ? t.slice(0, 5) : null; // "HH:mm:ss" -> "HH:mm"
-}
 
-function getField(obj, pascalName) {
-    if (!obj) return undefined;
-    const camel = pascalName.charAt(0).toLowerCase() + pascalName.slice(1);
-    return obj[pascalName] ?? obj[camel];
-}
-
-function getpracticeScheduleConfig(practice, dateStr) {
-    if (!practice) return { duration: 30, workingIntervals: [] };
-
-    const duration = 30; // or read from practice if needed
-
-    const d = new Date(`${dateStr}T00:00:00`);
-    const dow = (d.getDay() + 6) % 7; // 0=Mon ... 6=Sun
-
-    const dayName = [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-    ][dow];
-
-    const startKey = `${dayName}Start`;
-    const endKey = `${dayName}End`;
-
-    const start = toHHmm(getField(practice, startKey));
-    const end = toHHmm(getField(practice, endKey));
-
-    if (!start || !end) return { duration, workingIntervals: [] };
-
-    return {
-        duration,
-        workingIntervals: [{ start, end }],
-    };
-}
-
-function ispracticeClosed(practice, dateStr) {
-    return getpracticeScheduleConfig(practice, dateStr).workingIntervals.length === 0;
-}
-
-/** ---------------------------
- *  INIT
- *  --------------------------- */
+/*** Initialise ***/
 document.addEventListener("DOMContentLoaded", async () => {
     const containers = Array.from(document.querySelectorAll(".calendarContainer"));
 
     await Promise.all(
         containers.map(async (calendarContainer) => {
-            const practiceId = calendarContainer.dataset.practiceId; // Practice.Id GUID
+            const practiceId = calendarContainer.dataset.practiceId;
 
             practiceCalendarState[practiceId] = {
                 currentDate: new Date(),
@@ -412,12 +364,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             try {
                 practiceCalendarState[practiceId].practice = await fetchPracticeInfo(practiceId);
-
-                // Debug (uncomment to verify values)
-                // console.log("Loaded practice:", practiceId, practiceCalendarState[practiceId].practice);
-                // console.log("Mon:", getField(practiceCalendarState[practiceId].practice, "MondayStart"), getField(practiceCalendarState[practiceId].practice, "MondayEnd"));
-                // console.log("Tue:", getField(practiceCalendarState[practiceId].practice, "TuesdayStart"), getField(practiceCalendarState[practiceId].practice, "TuesdayEnd"));
-            } catch (e) {
+                } catch (e) {
                 console.error("Failed to load practice info for:", practiceId, e);
             }
 
@@ -520,9 +467,7 @@ function generateDayView(calendarContainer, dateObj) {
     fetchAppointmentsForDate(practiceId, practice, dateStr, dayDiv);
 }
 
-/** ---------------------------
- *  DAY RENDERER
- *  --------------------------- */
+/** Day **/
 function displayAppointmentsForDate(appointments, dayDiv, duration, workingIntervals) {
     if (!dayDiv) return;
     if (!Array.isArray(appointments)) appointments = [];
@@ -628,9 +573,7 @@ function getStatusInfo(status) {
 }
 
 
-/** ---------------------------
- *  MONTH VIEW
- *  --------------------------- */
+/*** Month ***/
 async function generateMonthView(calendarContainer, dateObj) {
     const practiceId = calendarContainer.dataset.practiceId;
     const practice = practiceCalendarState[practiceId]?.practice;
@@ -794,9 +737,7 @@ async function generateMonthView(calendarContainer, dateObj) {
     inner.appendChild(grid);
 }
 
-/** ---------------------------
- *  APPOINTMENTS
- *  --------------------------- */
+/** APPOINTMENTS **/
 function fetchAppointmentsForDate(practiceId, practice, dateStr, dayDiv) {
     const { duration, workingIntervals } = getpracticeScheduleConfig(practice, dateStr);
 
@@ -866,10 +807,55 @@ function getLayoutMode() {
 }
 
 
+function toHHmm(t) {
+    return typeof t === "string" && t.length >= 5 ? t.slice(0, 5) : null;
+}
+
+function getField(obj, pascalName) {
+    if (!obj) return undefined;
+    const camel = pascalName.charAt(0).toLowerCase() + pascalName.slice(1);
+    return obj[pascalName] ?? obj[camel];
+}
+
+function getpracticeScheduleConfig(practice, dateStr) {
+    if (!practice) return { duration: 30, workingIntervals: [] };
+
+    const duration = practice.duration;
+
+    const d = new Date(`${dateStr}T00:00:00`);
+    const dow = (d.getDay() + 6) % 7; // 0=Mon,6=Sun
+
+    const dayName = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ][dow];
+
+    const startKey = `${dayName}Start`;
+    const endKey = `${dayName}End`;
+
+    const start = toHHmm(getField(practice, startKey));
+    const end = toHHmm(getField(practice, endKey));
+
+    if (!start || !end) return { duration, workingIntervals: [] };
+
+    return {
+        duration,
+        workingIntervals: [{ start, end }],
+    };
+}
+
+function ispracticeClosed(practice, dateStr) {
+    return getpracticeScheduleConfig(practice, dateStr).workingIntervals.length === 0;
+}
 
 
 
-/****** ADD practice HOURS ********/
+/*********** ENROLL HOURS *************/
 
 // Fill Options with hours
 $(".daySelect").each(function () {
@@ -943,58 +929,6 @@ $(function () {
 
 });
 
-//// Default toggle κλειστά
-//$(".day-div").each(function () {
-//    const $d = $(this);
-
-//    $d.find(".toggle")
-//        .removeClass("on")
-//        .addClass("off");
-
-//    $d.find(".ranges").hide();
-
-//    $d.find(".daySelect")
-//        .prop("disabled", true)
-//        .val("");
-
-//    $d.find(".status-text").text("Κλειστά");
-//});
-
-//// Toggle ανοιχτά/κλειστά
-//$(function () {
-
-//    $(".day-div").each(function () {
-//        const $day = $(this);
-//        $day.find(".ranges").hide();
-//        $day.find(".daySelect").prop("disabled", true);
-//    });
-
-//    $(".toggle").on("click", function () {
-
-//        const $toggle = $(this);
-//        const $dayDiv = $toggle.closest(".day-div");
-//        const $ranges = $dayDiv.find(".ranges");
-//        const $statusText = $dayDiv.find(".status-text");
-//        const $selects = $dayDiv.find(".daySelect");
-
-//        if ($toggle.hasClass("off")) {
-//            $toggle.removeClass("off").addClass("on");
-//            $statusText.text("Ανοιχτά");
-
-//            $ranges.stop(true, true).slideDown(200);
-//            $selects.prop("disabled", false);
-
-//        } else {
-//            $toggle.removeClass("on").addClass("off");
-//            $statusText.text("Κλειστά");
-
-//            $ranges.stop(true, true).slideUp(200);
-//            $selects.prop("disabled", true).val("");
-//        }
-
-//    });
-
-//});
 
 /******* EDIT PROFILE *********/
 

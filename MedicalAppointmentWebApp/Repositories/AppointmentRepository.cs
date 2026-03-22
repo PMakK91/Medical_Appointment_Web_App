@@ -15,7 +15,7 @@ namespace MedicalAppointmentWebApp.Repositories
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {
-            return await context.Appointments.Include(a => a.Practice).Include(a => a.Doctor).Where(a => a.PatientId == patientId).ToListAsync();
+            return await context.Appointments.Include(a => a.Practice).Include(a => a.Doctor).Where(a => a.PatientId == patientId).OrderBy(a => a.Time).ToListAsync();
         }
 
         public async Task<Appointment?> GetAppointmentByTimeAsync(DateTime time, Guid practiceId)
@@ -141,9 +141,9 @@ namespace MedicalAppointmentWebApp.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(Guid doctorId, double? lon, double? lat)
+        public async Task<(DateTime? Slot, Practice? Practice)> GetFirstAvailableSlotForDoctorAsync(Guid doctorId, double? lon, double? lat, float? areaDistance)
         {
-            double maxDistanceKm = 10.0;
+            double maxDistanceKm = areaDistance ?? 10.0;
             double R = 6371.0; // radius of earth in km
 
             IQueryable<Practice> practicesQuery = context.Practices

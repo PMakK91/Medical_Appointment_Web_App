@@ -131,12 +131,12 @@
        <input asp-for="AreaDistance"  form="searchForm" id="radius"
        type="range"
        min="1"
-       max="50"
+       max="350"
        step="1"
        oninput="radiusValue.innerText = this.value" />
        </div>
             <div class="text-start mt-2">
-<span class="fc-black fs-14 " id="radiusValue"></span><span class="fc-black fs-14 fw-200"> χλμ</span>
+<span class="fc-black fs-14 " id="radiusValue"> @(Model.AreaDistance ?? 10)</span><span class="fc-black fs-14 fw-200"> χλμ</span>
 </div>
     </div>
 
