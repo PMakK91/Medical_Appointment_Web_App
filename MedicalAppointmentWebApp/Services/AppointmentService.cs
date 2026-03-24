@@ -2,6 +2,7 @@
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
@@ -64,12 +65,14 @@ namespace MedicalAppointmentWebApp.Services
             appointment.Time = request.Time;
             appointment.Status = Data.Enums.AppointmentStatus.Scheduled;
 
-            appointmentRepository.InsertAppointment(appointment);
-            await appointmentRepository.SaveAsync();
+            appointment = await appointmentRepository.TryInsertAppointmentAsync(appointment);
+            if (appointment is null)
+            {
+                return null;
+            }
 
             await emailService.SendAppointmentBookedEmailtoDoctor(appointment);
             await emailService.SendAppointmentBookedEmailtoPatient(appointment);
-           
 
             return appointment;
         }

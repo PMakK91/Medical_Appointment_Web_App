@@ -93,6 +93,31 @@ namespace MedicalAppointmentWebApp.Repositories
                 .ToList();
         }
 
+        public async Task<Appointment?> TryInsertAppointmentAsync(Appointment appointment)
+        {
+            using var transaction = await context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
+
+            var exists = await context.Appointments.AnyAsync(a => a.PracticeId == appointment.PracticeId && a.Time == appointment.Time);
+
+            if (exists)
+            {
+                return null;
+            }
+
+            context.Appointments.Add(appointment);
+
+            try
+            {
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return appointment;
+            }
+            catch (DbUpdateException)
+            {
+                await transaction.RollbackAsync();
+                return null;
+            }
+        }
 
         public void InsertAppointment(Appointment appointment)
         {

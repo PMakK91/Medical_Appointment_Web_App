@@ -16,6 +16,7 @@ namespace MedicalAppointmentWebApp.Repositories
         Task<List<Appointment>> GetAllByPracticeAfterTodayAsync(Guid practiceId);
         Task<IEnumerable<Appointment>> GetAppointmentsAffectedByChangeAsync(EditPracticeViewModel editPracticeViewModel);
 
+        Task<Appointment?> TryInsertAppointmentAsync(Appointment appointment);
         void InsertAppointment(Appointment appointment);
         void UpdateAppointmentStatus(Guid appointmentId, AppointmentStatus status);
 
