@@ -9,11 +9,15 @@ namespace MedicalAppointmentWebApp.Services
 {
     public class AdminService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IEmailService emailService) : IAdminService
     {
-        public async Task<DoctorSearchViewModel> GetPendingRegistrations(string term, int page = 1, int pageSize = 10)
+        public async Task<DoctorRegistrationSearchViewModel> GetPendingRegistrations(
+          string term,
+          int page = 1,
+          int pageSize = 10)
         {
-            (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchPendingAsync(term, page, pageSize);
+            (IEnumerable<Doctor>, int) doctorsAndCount =
+                await doctorRepository.SearchPendingAsync(term, page, pageSize);
 
-            return new DoctorSearchViewModel
+            return new DoctorRegistrationSearchViewModel
             {
                 Doctors = doctorsAndCount.Item1,
                 Term = term,
@@ -116,5 +120,6 @@ namespace MedicalAppointmentWebApp.Services
             }
             return practice;
         }
+
     }
 }

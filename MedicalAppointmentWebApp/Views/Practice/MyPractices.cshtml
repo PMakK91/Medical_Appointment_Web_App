@@ -17,17 +17,14 @@
         <p class="subtitle mb-5"></p>
 
 
-        <form method="get" asp-controller="Practice" asp-action="Enroll">
-            <button class="btn primary-btn d-flex justify-content-center align-items-center mx-auto">
-                Προσθήκη ιατρείου
-            </button>
-        </form>
 
 
         <ul class="admin-registrations-list list-unstyled mx-auto mt-5">
 
             @foreach (var practice in Model.Practices)
             {
+                @if (!practice.IsDeleted)
+                {
                 <li class="mb-3">
                     <div class="row">
 
@@ -124,38 +121,48 @@
 
                     <div class="row mt-4">
                         <div class="col-5  ">
-                            <button class="w-100 btn primary-btn delete ">
-                                <?xml version="1.0" encoding="utf-8" ?>
+                            <form asp-action="Delete" asp-controller="Practice" asp-route-id="@practice.Id" method="post">
+                                <button class="w-100 btn primary-btn delete ">
+                                    <?xml version="1.0" encoding="utf-8" ?>
 
-                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg> Διαγραφή
-                            </button>
+                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M6 7H12H18V18C18 19.6569 16.6569 21 15 21H9C7.34315 21 6 19.6569 6 18V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg> Διαγραφή
+                                </button>
+                            </form>
                         </div>
                         <div class="col-7  ">
-                            <button class=" w-100 btn primary-btn ">
-                                <?xml version="1.0" encoding="utf-8" ?>
+                            <form asp-action="Edit" asp-controller="Practice" asp-route-id="@practice.Id" method="post">
+                                <button class=" w-100 btn primary-btn ">
+                                    <?xml version="1.0" encoding="utf-8" ?>
 
-
-                                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="Edit / Edit_Pencil_01">
-                                        <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </g>
-                                </svg> Επεξεργασία
-                            </button>
+                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Edit / Edit_Pencil_01">
+                                            <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </g>
+                                    </svg> Επεξεργασία
+                                </button>
+                            </form>
                         </div>
                     </div>
 
 
                 </li>
-
+                }
             }
 
 
         </ul>
+
+        <form method="get" asp-controller="Practice" asp-action="Enroll">
+            <button class="mt-5 btn w-100 primary-btn d-flex justify-content-center align-items-center mx-auto">
+                Προσθήκη ιατρείου
+            </button>
+        </form>
+
     </div>
 </div>

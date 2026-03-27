@@ -1,5 +1,6 @@
 ﻿using MedicalAppointmentWebApp.Data;
 using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Net.NetworkInformation;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -56,7 +57,6 @@ namespace MedicalAppointmentWebApp.Repositories
 
             return (Practices: practices, TotalCount: totalCount);
         }
-
 
         public async Task<List<Practice>> GetPracticesByDoctorIdAsync(Guid doctorId)
         {

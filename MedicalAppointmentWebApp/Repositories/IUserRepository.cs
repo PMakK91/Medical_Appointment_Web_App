@@ -1,4 +1,5 @@
 ﻿using MedicalAppointmentWebApp.Models;
+using MedicalAppointmentWebApp.Models.ViewModels;
 
 namespace MedicalAppointmentWebApp.Repositories
 {
@@ -6,6 +7,7 @@ namespace MedicalAppointmentWebApp.Repositories
     {
         Task<bool> AnyUserWithEmailAsync(string email);
         Task<bool> AnyUserWithAmkaAsync(string amka);
+        Task<bool> AnyUserWithEmailOrAmkaAsync(string email, string amka);
 
         Task<User?> FindUserByIdAsync(Guid id);
         Task<User?> GetUserByEmailAsync(string email);

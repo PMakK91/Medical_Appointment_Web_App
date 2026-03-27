@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Scan QR Code";
+}
+
+@{
+    ViewData["Title"] = "QR Scanner";
+}
+
+<div class="container-fluid p-3">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card overflow-hidden">
+                <div class="card-header text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-camera"></i>Κάμερα</h5>
+                </div>
+                <div class="card-body p-0 position-relative" style="min-height: 300px;">
+                    <video id="webcam" autoplay playsinline class="w-100" style="height: 350px; object-fit: cover;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+
+                    <div class="position-absolute top-50 start-50 translate-middle border border-info opacity-50"
+                         style="width: 200px; height: 200px; border-width: 2px !important; border-style: dashed !important;">
+                    </div>
+                </div>
+                <div class="card-footer py-3">
+                    <form id="cameraForm" asp-controller="Doctor" asp-action="ScanQRFromCamera" method="post">
+                        <input type="hidden" name="base64Image" id="base64Image" />
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-secondary" onclick="startCamera()">
+                                <i class="bi bi-power"></i> Ενεργοποίηση Κάμερας
+                            </button>
+                            <button type="button" id="btnScan" class="btn btn-primary" onclick="submitCameraScan()" disabled>
+                                <i class="bi bi-qr-code-scan"></i> Σκανάρισμα
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mb-4 text-muted">
+        <hr class="d-inline-block w-25"> <span class="align-middle">Ή</span> <hr class="d-inline-block w-25">
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header text-center py-3">
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Ανέβασμα Αρχείου</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Doctor" asp-action="ScanQR" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input type="file" name="qrFile" id="qrFile" class="form-control form-control-lg" accept="image/*" required />
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Ανέβασμα & Έλεγχος</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+
+    async function startCamera() {
+        try {
+            // "environment" tells mobile phones to use the back camera
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+            video.srcObject = stream;
+            document.getElementById('btnScan').disabled = false;
+        } catch (err) {
+            alert("Σφάλμα πρόσβασης στην κάμερα: " + err.message);
+        }
+    }
+
+    function submitCameraScan() {
+        const context = canvas.getContext('2d');
+        // Capture at full video resolution for better QR recognition
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        document.getElementById('base64Image').value = dataUrl;
+
+        // Show a "loading" state on the button
+        const btn = document.getElementById('btnScan');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Επεξεργασία...';
+
+        document.getElementById('cameraForm').submit();
+    }
+</script>

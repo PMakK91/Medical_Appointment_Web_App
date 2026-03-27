@@ -92,6 +92,10 @@ namespace MedicalAppointmentWebApp.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deleted_time");
+
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("doctor_id");
@@ -111,6 +115,10 @@ namespace MedicalAppointmentWebApp.Migrations
                     b.Property<string>("FullAddress")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("full_address");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deleted");
 
                     b.Property<double>("Lat")
                         .HasColumnType("float")

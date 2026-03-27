@@ -27,7 +27,15 @@ html {
   text-align: start;
 }
 
-
+.form-select.sort {
+    max-width: 420px;
+    margin: auto;
+    background-color: #eaeaea;
+    border: 0;
+    font-size: 14px;
+    font-weight: 200;
+    height: 48px;
+}
 
 /********** CUSTOM CSS ***********/
 body {
@@ -141,16 +149,16 @@ body {
     margin: 0 auto;
 }
 
-    .login-label, .register-label, .practice-label {
-        display: block;
-        text-align: left;
-        font-weight: 400;
-        margin-bottom: 8px;
-        font-size: 14px;
-        padding-left: 16px;
-    }
+.login-label, .register-label, .practice-label, .edit-profile-label {
+    display: block;
+    text-align: left;
+    font-weight: 400;
+    margin-bottom: 8px;
+    font-size: 14px;
+    padding-left: 16px;
+}
 
-    .login-label-description, .register-label-description {
+   .label-description {
         color: #676767;
         font-size: 12px;
         font-weight: 100;
@@ -175,8 +183,8 @@ body {
     border-radius: 12px;
     border: none;
     background: #EAEAEA;
-    padding: 12px 16px;
-    font-size: 14px;
+    padding: 16px 20px;
+    font-size: 16px;
     font-weight: 100;
     overflow: hidden;
     resize: none;
@@ -316,7 +324,7 @@ background: #fff;
     position: relative;
     margin: 18px 0 18px 0;
     height: 1px;
-    background: #eeeeee;
+    background: #eaeaea;
 }
 
     .registration-separator {
@@ -840,12 +848,13 @@ background: #fff;
     text-align: left;
     padding: 32px;
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 12px; 
+    font-weight: 400;
 }
 .doctor-profile-practice:not(:last-child) {
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 42px;
-    font-weight: 200;
+   
     padding-bottom: 50px;
 }
 .doctor-profile-book-appointment {
@@ -1122,11 +1131,13 @@ background: #fff;
         justify-content: space-between;
     }
 
-    .slot.not-available {
-        background: #4ea7e7;
-        border: 0;
-        color: #fff;
-    }
+.slot.not-available {
+    background: #4ea7e7;
+    border: 0;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+}
     /********* RESPONSIVE **********/
     @media (max-width: 1023px) and (min-width: 768px) {
         .month-grid {
@@ -1331,12 +1342,20 @@ background: #fff;
     .image-wrapper:hover .overlay {
         opacity: 1;
     }
-    /********MY APPOINTMENTS *****/
 
-    .my-appointments-list .doctor-image {
-        width: 100%;
-        border-radius: 100%;
-    }
+/**********EDIT PROFILE PATIENT ************/
+
+
+
+
+
+
+/********MY APPOINTMENTS *****/
+
+.my-appointments-list .doctor-image {
+    width: 100%;
+    border-radius: 100%;
+}
 
 /******* STATUS TAGS *********/
 
@@ -1349,6 +1368,7 @@ background: #fff;
     border-radius: 5px;
     font-weight: 200;
     height: 28px;
+    color: #1B1B1B;
 }
 
     .status-tag.tag-green {
@@ -1364,6 +1384,125 @@ background: #fff;
         background: #ffe5ce;
     }
 
-    .status-tag.tag-grey {
+    .status-tag.tag-gray {
         background: #f1f1f1;
     }
+
+    .status-tag.tag-blue {
+        background: #aedafa;
+    }
+
+
+    /************FILTERS*************/
+
+.filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); 
+    z-index: 9;
+}
+
+.filters-toggler {
+    border-radius: 6px;
+    border: 0;
+    background: #4ea7e7;
+    color: #fff;
+    width: 55px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filters-panel {
+    background :#fff ;
+    width: 80vw;
+    max-width: 420px;
+    position: fixed;
+    z-index: 10;
+    padding: 38px;
+    left: 0;
+    box-shadow: 0px 23px 63px 5px #00000045;
+    border: 1px solid #a3a3a3;
+    height: 100vh;
+    top: 0;
+}
+
+.filters-overlay,
+.filters-panel {
+    display: none;
+}
+    .filters-panel.active {
+        display: block;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+.filters-overlay.active {
+    display: block;
+}
+
+
+/*** SLIDER ***/
+#radius {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    outline: none;
+    background: #ddd;
+    transition: background 0.3s ease;
+}
+
+    #radius::-webkit-slider-runnable-track {
+        height: 6px;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+    #radius::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #4ea7e7;
+        cursor: pointer;
+        margin-top: -7px; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+    }
+
+        #radius::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+    #radius::-moz-range-track {
+        height: 6px;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+    #radius::-moz-range-thumb {
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #4ea7e7;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease;
+    }
+
+        #radius::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+    #radius:active::-webkit-slider-thumb {
+        transform: scale(1.3);
+    }
+
+    #radius:active::-moz-range-thumb {
+   

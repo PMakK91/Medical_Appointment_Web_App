@@ -3,6 +3,7 @@ using MedicalAppointmentWebApp.Data.Enums;
 using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -10,23 +11,48 @@ namespace MedicalAppointmentWebApp.Services
 {
 
 
-    public class DoctorService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IImageService imageService) : IDoctorService
+    public class DoctorService(IDoctorRepository doctorRepository, IPracticeRepository practiceRepository, IImageService imageService , IAppointmentRepository appointmentRepository) : IDoctorService
     {
 
 
-        public async Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(string term, double? lon, double? lat, int page = 1, int pageSize = 10)
+        public async Task<DoctorSearchViewModel> SearchAllActiveDoctorsAsync(
+            string? term, 
+            double? lon,  
+            double? lat, 
+            int gender,
+            float? areaDistance, 
+            int page = 1, 
+            int pageSize = 10,  
+            string? sortBy = null)
         {
-            (IEnumerable<Doctor>, int) doctorsAndCount = await doctorRepository.SearchActiveAsync(term, lon, lat, page, pageSize);
+            (IEnumerable<Doctor> doctors, int totalCount) =  await doctorRepository.SearchActiveAsync(term!, lon, lat, gender, areaDistance, page, pageSize, sortBy);
+
+            List<DoctorSearchResultItemViewModel> doctorItems = new();
+
+            foreach (var doctor in doctors)
+            {
+                var result = await appointmentRepository.GetFirstAvailableSlotForDoctorAsync(doctor.Id , lon, lat, areaDistance);
+
+                doctorItems.Add(new DoctorSearchResultItemViewModel
+                {
+                    Doctor = doctor,
+                    FirstAvailableSlot = result.Slot,
+                    Practice = result.Practice!
+                });
+            }
 
             return new DoctorSearchViewModel
             {
-                Doctors = doctorsAndCount.Item1,
+                Doctors = doctorItems,
                 Term = term,
                 Lon = lon,
                 Lat = lat,
+                Gender = gender,
+                AreaDistance = areaDistance,
                 CurrentPage = page,
                 PageSize = pageSize,
-                TotalItems = doctorsAndCount.Item2
+                TotalItems = totalCount,
+                SortBy = sortBy
             };
         }
 
@@ -54,9 +80,17 @@ namespace MedicalAppointmentWebApp.Services
                 if (errorMessage != null) return errorMessage;
             }
 
+            doctor.Email = request.Email ?? doctor.Email;
+            doctor.Phone = request.Phone ?? doctor.Phone;
             doctor.Bio = request.Bio ?? "";
+            if (request.Password != null)
+            {
+                string hashedPassword = new PasswordHasher<Doctor>().HashPassword(doctor, request.Password);
+                doctor.Password = hashedPassword;
+            }
+
             await doctorRepository.SaveAsync();
-            
+
 
             return null;
         }

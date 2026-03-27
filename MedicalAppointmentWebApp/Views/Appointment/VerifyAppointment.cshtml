@@ -31,8 +31,16 @@
             </div>
 
             <div class="row">
-                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα Ραντεβού</div> <div class="text-start fc-black fs-16 fw-100 col-6">
-                    @Model.Time.ToShortDateString() @Model.Time.ToShortTimeString()
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ημερομηνία</div>
+                <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Time.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 text-start fc-grey fs-16 fw-100">Ώρα</div>
+                <div class="text-start fc-black fs-16 fw-100 col-6">
+                    @Model.Time.ToString("HH:mm")
                 </div>
             </div>
 
@@ -54,18 +62,7 @@
                 Επιβεβαίωση
             </button>
         </form>
-       <!-- <form asp-controller="Appointment" asp-action="RejectAppointment">
-            <button class="mx-auto btn btn-primary w-100 primary-btn mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="butt" stroke-linejoin="miter" aria-hidden="true">
-                    <path d="M18 6 L6 18"></path>
-                    <path d="M6 6 L18 18"></path>
-                </svg>
-                Απόρριψη
-            </button>
-        </form>
-         -->
+
 
     </div>
 </div>

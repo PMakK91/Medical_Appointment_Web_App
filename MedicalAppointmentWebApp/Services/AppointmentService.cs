@@ -1,6 +1,8 @@
-﻿using MedicalAppointmentWebApp.Models;
+﻿using MedicalAppointmentWebApp.Data.Enums;
+using MedicalAppointmentWebApp.Models;
 using MedicalAppointmentWebApp.Models.ViewModels;
 using MedicalAppointmentWebApp.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedicalAppointmentWebApp.Services
 {
@@ -42,13 +44,20 @@ namespace MedicalAppointmentWebApp.Services
                 return null;
             }
 
+
             User? patient = await userRepository.FindUserByIdAsync(request.PatientId);
             if (patient is null)
             {
                 return null;
             }
 
-            Appointment? appointment = new Appointment();
+            Appointment? appointment = await appointmentRepository.GetAppointmentByTimeAsync(request.Time, practice.Id);
+            if (appointment != null)
+            {
+                return null;
+            }
+
+            appointment = new Appointment();
 
             appointment.Practice = practice;
             appointment.Doctor = doctor;
@@ -56,14 +65,58 @@ namespace MedicalAppointmentWebApp.Services
             appointment.Time = request.Time;
             appointment.Status = Data.Enums.AppointmentStatus.Scheduled;
 
-            appointmentRepository.InsertAppointment(appointment);
-            await appointmentRepository.SaveAsync();
+            appointment = await appointmentRepository.TryInsertAppointmentAsync(appointment);
+            if (appointment is null)
+            {
+                return null;
+            }
 
-            await emailService.SendAppointmentBookedEmailtoPatient(patient.Email, appointment);
-            await emailService.SendAppointmentBookedEmailtoDoctor(doctor.Email, appointment);
+            await emailService.SendAppointmentBookedEmailtoDoctor(appointment);
+            await emailService.SendAppointmentBookedEmailtoPatient(appointment);
 
             return appointment;
         }
+
+
+        public async Task<Appointment?> CancelAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.Canceled);
+
+            await emailService.SendAppointmentCanceledEmailtoPatient(appointment);
+            await emailService.SendAppointmentCanceledEmailtoDoctor(appointment);
+
+            return appointment;
+        }
+
+        public async Task<Appointment?> CompleteAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.Completed);
+            return appointment;
+        }
+
+
+        public async Task<Appointment?> NoShowAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+            {
+                return null;
+            }
+            appointmentRepository.UpdateAppointmentStatus(appointmentId, AppointmentStatus.No_Show);
+            return appointment;
+        }
+
+
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(Guid patientId)
         {
@@ -78,6 +131,23 @@ namespace MedicalAppointmentWebApp.Services
         public async Task<IEnumerable<Appointment>> GetAppointmentsByMonthAndPracticeIdAsync(DateTime date, Guid practiceId)
         {
             return await appointmentRepository.GetAppointmentsInfoByMonthAndPracticeIdAsync(date, practiceId);
+        }
+
+        public async Task<Appointment?> ArriveAtAppointmentAsync(Guid appointmentId)
+        {
+            Appointment? appointment = await GetAppointmentByIdAsync(appointmentId);
+            if (appointment is null)
+                return null;
+
+            await ChangeAppointmentStatusAsync(appointment, AppointmentStatus.Completed);
+
+            return appointment;
+        }
+
+        public async Task ChangeAppointmentStatusAsync(Appointment appointment, AppointmentStatus appointmentStatus)
+        {
+            appointment.Status = appointmentStatus;
+            await appointmentRepository.SaveAsync();
         }
     }
 }

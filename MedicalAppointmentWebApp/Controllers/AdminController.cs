@@ -14,7 +14,7 @@ namespace MedicalAppointmentWebApp.Controllers
     {
         public async Task<IActionResult> PendingRegistrationFormsAsync(string term, int page = 1, int pageSize = 10)
         {
-            DoctorSearchViewModel registrationForms = await adminService.GetPendingRegistrations(term, page, pageSize);
+            DoctorRegistrationSearchViewModel registrationForms = await adminService.GetPendingRegistrations(term, page, pageSize);
             return View(registrationForms);
         }
 

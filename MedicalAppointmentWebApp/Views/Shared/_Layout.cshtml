@@ -38,25 +38,12 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                       
 
-                        <li class="nav-item">
-                            <a href="@Url.Action(action: "Index", controller: "Doctor", new { term = "", page = 1, pageSize = 10 })" class="nav-link text-dark">Doctors</a>
-                        </li>
-                        -->
                         @if (User.Identity != null && User.IsInRole("Doctor"))
                         {
-                            @* <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="MyPractices">Τα Γραφεία Μου</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Practice" asp-action="Enroll">Εγγραφή Γραφείου</a>
-                            </li> *@
+                         
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("Calendar", "Doctor")">Ημερολόγιο</a>
                             </li>
@@ -68,11 +55,20 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" href="@Url.Action("MyPractices", "Practice")">Ιατρεία</a>
                             </li>
+
+                            
+                            <li class="nav-item">
+
+                                <a class="nav-link text-dark" asp-controller="Doctor" asp-action="ScanQR">QR Scanner</a>
+                            </li>
                         }
                         @if (User.Identity != null && User.IsInRole("Patient"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Appointment" asp-action="MyAppointments">Τα ραντεβού μου</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="User" asp-action="EditProfile">Το προφίλ μου</a>
                             </li>
                         }
                         @if (User.Identity != null && User.IsInRole("Doctor"))
@@ -105,6 +101,7 @@
                                     <button class="nav-link text-dark" type="submit">Αποσύνδεση</button>
                                 </form>
                             </li>
+                           
                         }
                         else
                         {
@@ -129,19 +126,16 @@
     <footer class="footer py-4 bg-white">
         <div class=" text-center">
             <p class="fc-black fs-14 fw-100 mb-1"> &copy; 2026 - MyDoctorNow</p>
-            <a class="fc-blue fs-14 text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Απόρρητο</a>
+          
+
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
   
-   
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&libraries=places&language=el&region=GR&loading=async&callback=initpracticeAddressAutocomplete"
-    async
-    defer>
-</script>
 
 
 
