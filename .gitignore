@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /MedicalAppointmentWebApp/Controllers/TestController.cs
 /MedicalAppointmentWebApp/appsettings.json
+/MedicalAppointmentWebApp/Views/Shared/_Layout.cshtml
