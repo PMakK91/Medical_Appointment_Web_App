@@ -5,15 +5,19 @@
 @{
     ViewData["Title"] = "QR Scanner";
 }
+<div class="wrapper d-flex align-items-center">
+    <div class="mx-auto w-100">
 
-<div class="container-fluid p-3">
+
+        <h1 class="title mb-2 fc-black">Κάμερα</h1>
+        <p class="subtitle mb-5">Ενεργοποιήστε την κάμερα και έπειτα πατήστε το κουμπί "Σκανάρισμα" για να σκανάρετε το QR</p>
+
+
+<div class="">
     <div class="row mb-4">
-        <div class="col-12">
-            <div class="card overflow-hidden">
-                <div class="card-header text-center py-3">
-                    <h5 class="mb-0"><i class="bi bi-camera"></i>Κάμερα</h5>
-                </div>
-                <div class="card-body p-0 position-relative" style="min-height: 300px;">
+            <div class=" camera-container overflow-hidden">
+
+                <div class=" p-0 position-relative" style="min-height: 300px;">
                     <video id="webcam" autoplay playsinline class="w-100" style="height: 350px; object-fit: cover;"></video>
                     <canvas id="canvas" style="display:none;"></canvas>
 
@@ -21,48 +25,47 @@
                          style="width: 200px; height: 200px; border-width: 2px !important; border-style: dashed !important;">
                     </div>
                 </div>
-                <div class="card-footer py-3">
+                <div class="  py-3">
                     <form id="cameraForm" asp-controller="Doctor" asp-action="ScanQRFromCamera" method="post">
                         <input type="hidden" name="base64Image" id="base64Image" />
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-secondary" onclick="startCamera()">
+                            <button type="button" class="btn primary-btn" onclick="startCamera()">
                                 <i class="bi bi-power"></i> Ενεργοποίηση Κάμερας
                             </button>
-                            <button type="button" id="btnScan" class="btn btn-primary" onclick="submitCameraScan()" disabled>
-                                <i class="bi bi-qr-code-scan"></i> Σκανάρισμα
+                            <button type="button" id="btnScan" class="btn primary-btn" onclick="submitCameraScan()" disabled>
+                                Σκανάρισμα
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
     </div>
 
-    <div class="text-center mb-4 text-muted">
-        <hr class="d-inline-block w-25"> <span class="align-middle">Ή</span> <hr class="d-inline-block w-25">
-    </div>
+    <div class="login-separator"><span>ή</span></div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
+    <div class="row mb-5">
                 <div class="card-header text-center py-3">
-                    <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Ανέβασμα Αρχείου</h5>
+                    <h2 class="mb-0 fs-18 fc-black"><i class="bi bi-file-earmark-arrow-up"></i> Ανέβασμα Αρχείου</h2>
                 </div>
+                <div class="camera-container">
+            
                 <div class="card-body">
                     <form asp-controller="Doctor" asp-action="ScanQR" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input type="file" name="qrFile" id="qrFile" class="form-control form-control-lg" accept="image/*" required />
+                            <input type="file" name="qrFile" id="qrFile" class="form-control" accept="image/*" required />
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Ανέβασμα & Έλεγχος</button>
+                            <button type="submit" class="btn primary-btn">Ανέβασμα & Έλεγχος</button>
                         </div>
                     </form>
                 </div>
-            </div>
+          
         </div>
     </div>
 </div>
+</div>
 
+</div>
 <script>
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('canvas');

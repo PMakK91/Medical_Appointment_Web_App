@@ -253,7 +253,7 @@ namespace MedicalAppointmentWebApp.Services
             DateTime rangeStart = startDate.Date;
             DateTime rangeEnd = rangeStart.AddMonths(2);
 
-            // Prefer local/server time consistently, unless everything in DB is UTC.
+
             DateTime now = DateTime.Now;
 
             IEnumerable<Appointment> appointments =
@@ -346,75 +346,6 @@ namespace MedicalAppointmentWebApp.Services
             };
         }
 
-        //private async Task<WeekScheduleViewModel> BuildWeekScheduleAsync(Practice practice, DateTime weekStart)
-        //{
-        //    List<TimeSlotViewModel> slots = new List<TimeSlotViewModel>();
-
-        //    IEnumerable<Appointment> appointments = await appointmentRepository.GetAllByPracticeAndTimeFrameAsync(weekStart, weekStart.AddDays(7), practice.Id);
-
-        //    for (int day = 0; day < 7; day++)
-        //    {
-        //        DateTime currentDay = weekStart.AddDays(day);
-
-        //        TimeSpan? shiftStart = day switch
-        //        {
-        //            0 => practice.MondayStart,
-        //            1 => practice.TuesdayStart,
-        //            2 => practice.WednesdayStart,
-        //            3 => practice.ThursdayStart,
-        //            4 => practice.FridayStart,
-        //            5 => practice.SaturdayStart,
-        //            6 => practice.SundayStart,
-        //            _ => null
-        //        };
-
-        //        TimeSpan? shiftEnd = day switch
-        //        {
-        //            0 => practice.MondayEnd,
-        //            1 => practice.TuesdayEnd,
-        //            2 => practice.WednesdayEnd,
-        //            3 => practice.ThursdayEnd,
-        //            4 => practice.FridayEnd,
-        //            5 => practice.SaturdayEnd,
-        //            6 => practice.SundayEnd,
-        //            _ => null
-        //        };
-
-        //        // If closed / not set, skip day
-        //        if (!shiftStart.HasValue || !shiftEnd.HasValue)
-        //            continue;
-
-        //        DateTime dayStart = currentDay.Date + shiftStart.Value;
-        //        DateTime dayEnd = currentDay.Date + shiftEnd.Value;
-
-        //        while (dayStart < dayEnd)
-        //        {
-        //            var slotEnd = dayStart.AddMinutes(practice.Duration);
-
-        //            // don’t create a slot that goes past the end of shift
-        //            if (slotEnd > dayEnd)
-        //                break;
-
-        //            TimeSlotViewModel slot = new TimeSlotViewModel
-        //            {
-        //                Start = dayStart,
-        //                End = slotEnd,
-        //                IsBooked = appointments.Any(a => a.Time == dayStart)
-        //            };
-
-        //            slots.Add(slot);
-
-        //            dayStart = slotEnd;
-        //        }
-        //    }
-
-        //    return new WeekScheduleViewModel
-        //    {
-        //        Practice = practice,
-        //        WeekStartDate = weekStart,
-        //        Slots = slots
-        //    };
-        //}
 
         private DateTime StartOfWeek(DateTime dateTime)
         {

@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    // -------- Tabs: show/hide forms --------
+    /*********Tabs: show/hide forms **********/
     $(function () {
         const $tabs = $(".register-tabs .register-tab");
         const $formPatient = $("#register-form-patient");
@@ -33,7 +33,7 @@
         setActiveTab(0); // default tab
     });
 
-    // -------- Password eye toggle (works for all) --------
+    /******** Password eye toggle********/
 
     $(document).on("click", ".password-toggle", function () {
         const $btn = $(this);
@@ -84,12 +84,12 @@
         }
 
         function syncValue(fromForm, toForm, name) {
-            // RADIO GROUP
+            // RADIO 
             const fromAnyRadio = fromForm.querySelector(`input[type="radio"][name="${name}"]`);
             const toAnyRadio = toForm.querySelector(`input[type="radio"][name="${name}"]`);
             if (fromAnyRadio && toAnyRadio) {
                 const fromChecked = getCheckedRadio(fromForm, name);
-                if (!fromChecked) return; // μην γράφεις τίποτα αν δεν έχει επιλεγεί
+                if (!fromChecked) return; 
 
                 const target = toForm.querySelector(
                     `input[type="radio"][name="${name}"][value="${fromChecked.value}"]`
@@ -98,7 +98,7 @@
                 return;
             }
 
-            // NORMAL INPUTS (text/tel/email/password/date/hidden etc.)
+            // NORMAL INPUTS
             const from = getField(fromForm, name);
             const to = getField(toForm, name);
             if (!from || !to) return;
@@ -113,7 +113,7 @@
 
         function wireSync(fromForm, toForm) {
             fieldsToSync.forEach(name => {
-                // radio group
+                // radio 
                 const radios = getRadios(fromForm, name);
                 if (radios && radios.length) {
                     radios.forEach(r => {
@@ -141,7 +141,7 @@
     })();
     
 
-    // ************ Specialization dropdown with search inside (doctor) **********/
+    // ************ Specialization dropdown with search inside (doctor registration form) **********/
     $(function () {
         const $btn = $("#specializationDropdownBtn");
         const $selectedText = $("#specializationSelectedText");

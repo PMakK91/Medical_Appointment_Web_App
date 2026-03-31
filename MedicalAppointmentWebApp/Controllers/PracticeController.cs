@@ -162,7 +162,6 @@ namespace MedicalAppointmentWebApp.Controllers
 
             editPracticeViewModel.Appointments = await practiceService.GetAppointmentsAffectedByChangeAsync(editPracticeViewModel);
 
-            // TODO αν δεν επηρεάζεται κανένα, προχωράμε χωρίς επιβεβαίωση
 
             string? errorMessage = await practiceService.UpdatePracticeInfoAsync(editPracticeViewModel);
             if (errorMessage != null)

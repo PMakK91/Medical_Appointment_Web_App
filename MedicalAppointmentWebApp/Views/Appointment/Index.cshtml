@@ -5,6 +5,11 @@
     ViewData["Title"] = "Πληροφορίες Ραντεβού";
     Layout = "_Layout";
 }
+<!---GOOGLE MAPS API ----->
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsMPBVJ_u5YLmRIrIti_U0YRp3UhOi8-Q&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<!-------------->
+
 
 
 <div class="wrapper  align-items-center mb-5 mt-4">
@@ -144,7 +149,14 @@ href="https://www.google.com/maps?q=@Model.Practice.Lat,@Model.Practice.Lon">Π�
 
 
 
-@if ((User.IsInRole("Patient") || User.IsInRole("Doctor")) && Model.Time > DateTime.Now && Model.Status == AppointmentStatus.Scheduled)
+@using System.Security.Claims
+
+@{
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    Guid.TryParse(currentUserId, out var userGuid);
+}
+
+@if (Model.Status == AppointmentStatus.Scheduled && Model.Patient.Id == userGuid)
 {
     <div class="registration-info mx-auto mt-3">
         <div class="">
@@ -183,8 +195,10 @@ href="https://www.google.com/maps?q=@Model.Practice.Lat,@Model.Practice.Lon">Π�
             </button>
         </form>
 
-        @if (User.IsInRole("Doctor") && Model.Time < DateTime.Now)
-        {
+
+
+@if ( Model.Time > DateTime.Now  && Model.Doctor.Id == userGuid)
+{
             <form asp-controller="Appointment"
                   asp-action="NoShowAppointment"
                   asp-route-id="@Model.Id"
